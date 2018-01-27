@@ -1,15 +1,15 @@
 # CSCI 3130 - Software Engineering, Winter 2018
 This project is a group project for the Winter 2018 offering of Software Engineering.
 
-#Overview
+# Overview
 
 The project will consist of the development of an athlete monitor application that allows users to develop self-administered, and coach-driven training routines.  The application is primarily a monitoring and communication tool.
 
-#Features
+# Features
 
 TBD
 
-#Team
+# Team
 The project team consists of (in alphabetical order, by last name):
 
 Victor Bares
@@ -20,7 +20,7 @@ Elliott Darbyshire
 Lee Lunn
 Zach Wilkins
 
-#Tool Stack
+# Tool Stack
 The following tools are used in the development lifecycle:
 
 Android Studio
@@ -32,7 +32,7 @@ Espresso
 Firebase
 ...
 
-#Issues Tracking
+# Issues Tracking
 
 The team uses GitHub Issues and Milestones for tracking ongoing development and release cycles.  Labels are based on the [Sane GitHub Labels](https://medium.com/@dave_lunny/sane-github-labels-c5d2e6004b63) approach, with certain adaptations adopted from the open source [TEAMMATES](https://github.com/TEAMMATES/teammates) project.
 
