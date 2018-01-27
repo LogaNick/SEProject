@@ -3,34 +3,46 @@ This project is a group project for the Winter 2018 offering of Software Enginee
 
 # Overview
 
-The project will consist of the development of an athlete monitor application that allows users to develop self-administered, and coach-driven training routines.  The application is primarily a monitoring and communication tool.
+The project will consist of the development of an athlete monitor application that allows users to develop self-administered, and coach-driven training routines.  The application is primarily am exercise routine monitor and communication tool.
 
-# Features
+# Stable Features
+
+No iterations have been released.
+
+# Iteration 1 Planned Features
+
+TBD
+
+# Iteration 2 Planned Features
+
+TBD
+
+# Iteration 3 Planned Features
 
 TBD
 
 # Team
 The project team consists of (in alphabetical order, by last name):
 
-Victor Bares
-Nicholas Barreyre
-Nick Burris
-Brent Crane
-Elliott Darbyshire
-Lee Lunn
-Zach Wilkins
+* Victor Bares
+* Nicholas Barreyre
+* Nick Burris
+* Brent Crane
+* Elliott Darbyshire
+* Lee Lunn
+* Zach Wilkins
 
 # Tool Stack
 The following tools are used in the development lifecycle:
 
-Android Studio
-GitHub
-Waffle
-Google Drive
-Slack
-Espresso
-Firebase
-...
+* Android Studio
+* GitHub
+* Waffle
+* Google Drive
+* Slack
+* Espresso
+* Firebase
+* ...
 
 # Issues Tracking
 
