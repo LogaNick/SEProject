@@ -14,7 +14,7 @@ No iterations have been released.
 Iteration 0 includes the software engineering activities required to seed the agile development cycle.  It includes:
 
 1. Setting up the Github environment;
-1. Itegrating Waffle;
+1. Integrating Waffle;
 1. Setting up team communication in Slack;
 1. Ensuring Android Studio is functional for all team members;
 1. Setting up project management repository; 
