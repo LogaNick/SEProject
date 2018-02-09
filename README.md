@@ -23,7 +23,15 @@ Iteration 0 includes the software engineering activities required to seed the ag
 
 # Iteration 1 Planned Features
 
-TBD
+Iteration 1 features will include:
+
+1. Account registration
+1. Login/Logout 
+1. Activity creation
+1. Record activity information
+1. Manual input of activity data
+1. Personal statistics
+1. Team creation
 
 # Iteration 2 Planned Features
 
@@ -47,14 +55,14 @@ The project team consists of (in alphabetical order, by last name):
 # Tool Stack
 The following tools are used in the development lifecycle:
 
-* Android Studio
-* GitHub
-* Waffle
-* Google Drive
-* Slack
-* Espresso
-* Firebase
-* ...
+* [Android Studio](https://developer.android.com/studio/index.html)
+* [GitHub](https://github.com/)
+* [Waffle](https://github.com/waffleio/waffle.io)
+* [Google Drive](https://www.google.com/drive/)
+* [Slack](https://slack.com/)
+* [Espresso](https://developer.android.com/training/testing/espresso/index.html)
+* [Firebase](https://firebase.google.com/)
+* [CircleCI](https://circleci.com/)
 
 # Issues Tracking
 
