@@ -9,6 +9,8 @@ The project will consist of the development of an athlete monitor application th
 
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/NicholasBarreyre/SEProject.svg?columns=To%20Do,In%20Progress,Ready%20For%20Review,Done)](https://waffle.io/NicholasBarreyre/SEProject)
 
+[![CircleCI](https://circleci.com/gh/NicholasBarreyre/SEProject/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/NicholasBarreyre/SEProject/tree/master)
+
 # Stable Features
 
 No iterations have been released.
