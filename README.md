@@ -3,7 +3,11 @@ This project is a group project for the Winter 2018 offering of Software Enginee
 
 # Overview
 
-The project will consist of the development of an athlete monitor application that allows users to develop self-administered, and coach-driven training routines.  The application is primarily am exercise routine monitor and communication tool.
+The project will consist of the development of an athlete monitor application that allows users to develop self-administered, and coach-driven training routines.  The application is primarily an exercise routine monitor and communication tool.
+
+# Statistics
+
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/NicholasBarreyre/SEProject.svg?columns=To%20Do,In%20Progress,Ready%20For%20Review,Done)](https://waffle.io/NicholasBarreyre/SEProject)
 
 # Stable Features
 
