@@ -11,16 +11,23 @@ import static org.junit.Assert.*;
  */
 public class UserLoginTest {
     @Test
-    public void loginTest() throws Exception {
+    public void validLoginTest() throws Exception {
         String username = "testusername";
         String password = "testpassword";
-
         User user;
-        UserManager userManager = new UserManager;
+        UserManager userManager = new UserManager();
 
         user = userManager.login(username, password);
-
-        assertNotNull(user); //invalid credentials returns null
         assertTrue(user.getUsername().equals(username)); //authenticated user has same name as user returned
+    }
+
+    @Test
+    public void invalidLoginTest() throws Exception {
+        String username = "nulluser";
+        String password = "testpass";
+        UserManager userManager = new UserManager();
+
+        User user = userManager.login(username, password);
+        assertNull(user);
     }
 }
