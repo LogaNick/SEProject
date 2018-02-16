@@ -3,9 +3,9 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 /**
  * This class contains personal information that will be displayed
  * on a user profile page. To instantiate an object of this class, a
- * UserStatisticsBuilder must be used.
+ * UserInformationBuilder must be used.
  */
-public class UserStatistics {
+public class UserInformation {
 
 	//TODO Add support for a picture
 	public String firstName;
@@ -18,7 +18,7 @@ public class UserStatistics {
 	public String athleteType;
 	public String personalStatement;
 
-	private UserStatistics(UserStatisticsBuilder builder) {
+	private UserInformation(UserInformationBuilder builder) {
 		firstName = builder.firstName;
 		lastName = builder.lastName;
 		age = builder.age;
@@ -29,10 +29,10 @@ public class UserStatistics {
 	}
 
 	/**
-	 * This class is used to instantiate a UserStatistics object. It uses
+	 * This class is used to instantiate a UserInformation object. It uses
 	 * the builder design pattern.
 	 */
-	static class UserStatisticsBuilder {
+	static class UserInformationBuilder {
 		private String firstName;
 		private String lastName;
 		private int age;
@@ -43,7 +43,7 @@ public class UserStatistics {
 		private String athleteType = "";
 		private String personalStatement = "";
 
-		public UserStatisticsBuilder(String firstName, String lastName) throws RuntimeException {
+		public UserInformationBuilder(String firstName, String lastName) throws RuntimeException {
 			if (firstName == null || lastName == null)
 				throw new RuntimeException("Name fields must not be null!");
 
@@ -51,35 +51,35 @@ public class UserStatistics {
 			this.lastName = lastName;
 		}
 
-		public UserStatisticsBuilder age(int age) {
+		public UserInformationBuilder age(int age) {
 			this.age = age;
 			return this;
 		}
 
-		public UserStatisticsBuilder height(int height) {
+		public UserInformationBuilder height(int height) {
 			this.height = height;
 			return this;
 		}
 
-		public UserStatisticsBuilder weight(int weight) {
+		public UserInformationBuilder weight(int weight) {
 			this.weight = weight;
 			return this;
 		}
 
-		public UserStatisticsBuilder athleteType(String athleteType) {
+		public UserInformationBuilder athleteType(String athleteType) {
 			if (athleteType != null)
 				this.athleteType = athleteType;
 			return this;
 		}
 
-		public UserStatisticsBuilder personalStatement(String personalStatement) {
+		public UserInformationBuilder personalStatement(String personalStatement) {
 			if (personalStatement != null)
 				this.personalStatement = personalStatement;
 			return this;
 		}
 
-		public UserStatistics build() {
-			return new UserStatistics(this);
+		public UserInformation build() {
+			return new UserInformation(this);
 		}
 	}
 }
