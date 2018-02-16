@@ -16,7 +16,7 @@ public class UserLoginTest {
         String password = "testpassword";
 
         User user;
-        UserManager usermanager = new UserManager;
+        UserManager userManager = new UserManager;
 
         user = userManager.login(username, password);
 

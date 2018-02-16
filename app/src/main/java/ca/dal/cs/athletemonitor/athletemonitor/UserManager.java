@@ -9,7 +9,7 @@ public class UserManager {
         // firebase code here
 
         // mockup code
-        return User(username, password);
+        return new User(username, password);
 
     }
 }
