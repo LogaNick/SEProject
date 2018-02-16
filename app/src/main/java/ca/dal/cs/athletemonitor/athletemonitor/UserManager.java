@@ -5,4 +5,11 @@ package ca.dal.cs.athletemonitor.athletemonitor;
  */
 
 public class UserManager {
+    public User login(String username, String password) {
+        // firebase code here
+
+        // mockup code
+        return User(username, password);
+
+    }
 }
