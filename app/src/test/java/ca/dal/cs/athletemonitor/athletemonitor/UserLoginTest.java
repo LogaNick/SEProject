@@ -10,6 +10,11 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class UserLoginTest {
+
+    /*
+     * Test that the User object returned by userManager's login method returns a User with
+     * the appropriate username (matches the argument given)
+     */
     @Test
     public void validLoginTest() throws Exception {
         String username = "testusername";
@@ -21,6 +26,10 @@ public class UserLoginTest {
         assertTrue(user.getUsername().equals(username)); //authenticated user has same name as user returned
     }
 
+    /*
+     * Test that the a null User is returned by the userManager's login method when a username
+     * and password tuple which does not exist in Firebase are given as arguments
+     */
     @Test
     public void invalidLoginTest() throws Exception {
         String username = "nulluser";
