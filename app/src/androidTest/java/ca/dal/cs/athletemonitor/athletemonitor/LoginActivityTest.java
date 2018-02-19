@@ -85,6 +85,7 @@ public class LoginActivityTest {
         //perform signin button click
         onView(withId(R.id.btnSignin)).perform(click());
 
+        //test correct response on successful login
         onView(withId(R.id.lblLoginResult)).check(matches(withText(R.string.loginSuccess)));
         onView(withId(R.id.btnSignin)).check(matches(withText(R.string.loginSuccess)));
 
