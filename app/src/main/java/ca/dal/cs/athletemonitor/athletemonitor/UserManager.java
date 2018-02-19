@@ -1,5 +1,8 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by Lee on 2018-02-16.
  *
@@ -17,6 +20,7 @@ public class UserManager {
      * In the case of an invalid user-name or password, null will be returned
      */
     public User login(String username, String password) {
+
         if (username.equals("nulluser")) return null;
         return new User(username, password);
     }
