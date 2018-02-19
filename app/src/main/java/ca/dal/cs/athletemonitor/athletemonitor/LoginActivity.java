@@ -1,7 +1,11 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,4 +42,19 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    public void signInClick(View view) {
+        String username;
+        String password;
+
+        //get data from activity
+        username = ((EditText) this.findViewById(R.id.txtUsername)).getText().toString();
+        password = ((EditText) this.findViewById(R.id.txtPassword)).getText().toString();
+
+
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        startActivity(mainActivityIntent);
+
+    }
+
 }

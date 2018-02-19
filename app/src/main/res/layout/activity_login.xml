@@ -11,6 +11,7 @@
         android:layout_width="211dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:onClick="signInClick"
         android:text="@string/ButtonText_SignIn"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintHorizontal_bias="0.502"
