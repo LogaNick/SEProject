@@ -51,6 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         username = ((EditText) this.findViewById(R.id.txtUsername)).getText().toString();
         password = ((EditText) this.findViewById(R.id.txtPassword)).getText().toString();
 
+        //validate login information. if login information is valid then switch to main activity
+        //with the loaded user information, otherwise, display invalid credentials message
+
+
+
+
+
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         startActivity(mainActivityIntent);

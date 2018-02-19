@@ -21,6 +21,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 //import for intended() and hasComponent()
 import static android.support.test.espresso.intent.Intents.intended;
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * UI Test for Login Activity
@@ -77,5 +79,38 @@ public class LoginActivityUITest {
         onView(withId(R.id.txtPassword)).perform(typeText(passwordInputTestText));
         closeSoftKeyboard();
         onView(withId(R.id.txtPassword)).check(matches(withText(passwordInputTestText)));
+    }
+
+
+    /**
+     * Test for true positive on existing user
+     *
+     * Will pass in a username that does exist in the user accounts to the validate method and
+     * assert that the return value of validate is true
+     *
+     * @throws Exception
+     */
+    @Test
+    public void userExistsTest() throws Exception {
+        User testUser = new User("testAccount3", "testPassword");
+        AccountManager.createUser(testUser);
+        assertTrue(AccountManager.userExists(testUser.getUsername()));
+
+        // TODO: Add code to delete test user
+    }
+
+    /**
+     * Test for false positive on existing user
+     *
+     * Will pass in a username that does not exist in the user accounts to the validate method
+     * and assert that the return value of validate is false
+     *
+     * @throws Exception
+     */
+    @Test
+    public void userDoesNotExistTest() throws Exception {
+        User testUser = new User("testAccount", "password");
+        assertFalse(AccountManager.userExists(testUser.getUsername()));
+
     }
 }
