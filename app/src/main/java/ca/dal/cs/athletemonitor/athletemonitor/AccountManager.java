@@ -1,8 +1,5 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.app.Application;
-
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -10,13 +7,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
- * This class performs authentication
+ * This class performs management of a user account
  */
-
 public class AccountManager {
-    public static boolean onUserExists(boolean result) { return result; }
-
-
+    /**
+     * Listener interface for checking if a user exists.
+     *
+     * Callers of userExists must implement this listener interface.
+     */
+    public interface UserExistsListener {
+        public void onUserExists(boolean result);
+    }
 
     /**
      * Determines whether or not the specified user exists in the database
@@ -25,35 +26,30 @@ public class AccountManager {
      *
      * @return True if user exists, otherwise false
      */
-    public static boolean userExists(String username) {
+    public static void userExists(final String username, final UserExistsListener listener) {
+        //retrieve a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersReference = database.getReference("users/" + username);
+        DatabaseReference usersReference = database.getReference("users/");
 
-        final User user = new User("", "");
-
-        //usersReference.getKey().equals(username);
-
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("username").getValue().equals("testAccount")) {
-
-                    FirebaseDatabase.getInstance().getReference("users/").child("blahblah").setValue("bbbbbbb");
-
+                //if the username is a child of the users node then fire the user exists event
+                //indicating true, otherwise, fire event with false outcome
+                if (dataSnapshot.hasChild(username)) {
+                    listener.onUserExists(true);
                 }
-                //user.setPassword( dataSnapshot.getValue(User.class).getPassword());
-                //AccountManager.onUserExists(true);
+                else {
+                    listener.onUserExists(false);
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
-
-        return true;
     }
 
     /**

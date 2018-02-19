@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class UserLoginTest {
-
     /*
      * Test that the User object returned by userManager's login method returns a User with
      * the appropriate username (matches the argument given)

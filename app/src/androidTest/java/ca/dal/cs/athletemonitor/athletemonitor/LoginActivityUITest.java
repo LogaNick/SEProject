@@ -81,7 +81,6 @@ public class LoginActivityUITest {
         onView(withId(R.id.txtPassword)).check(matches(withText(passwordInputTestText)));
     }
 
-
     /**
      * Test for true positive on existing user
      *
@@ -92,9 +91,16 @@ public class LoginActivityUITest {
      */
     @Test
     public void userExistsTest() throws Exception {
-        User testUser = new User("testAccount3", "testPassword");
+        User testUser = new User("testAccount5", "testPassword");
         AccountManager.createUser(testUser);
-        assertTrue(AccountManager.userExists(testUser.getUsername()));
+
+        AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
+            @Override
+            public void onUserExists(boolean result) {
+                assertTrue(result);
+            }
+
+        });
 
         // TODO: Add code to delete test user
     }
@@ -109,8 +115,13 @@ public class LoginActivityUITest {
      */
     @Test
     public void userDoesNotExistTest() throws Exception {
-        User testUser = new User("testAccount", "password");
-        assertFalse(AccountManager.userExists(testUser.getUsername()));
+        User testUser = new User("idon'texist", "testPassword");
 
+        AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
+            @Override
+            public void onUserExists(boolean result) {
+                assertFalse("User should not exist, but user is found.", result);
+            }
+        });
     }
 }
