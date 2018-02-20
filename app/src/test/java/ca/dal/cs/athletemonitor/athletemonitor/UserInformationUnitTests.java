@@ -18,7 +18,7 @@ public class UserInformationUnitTests {
 	private static final int TEST_AGE = 20;
 	private static final int TEST_HEIGHT = 191;
 	private static final int TEST_WEIGHT = 98;
-	private static final  String TEST_ATHLETE_TYPE = "Hockey Player";
+	private static final String TEST_ATHLETE_TYPE = "Hockey Player";
 	private static final String TEST_STATEMENT = "I want to win the Stanley Cup";
 	private static final String TEST_EMPTY_STRING = "";
 

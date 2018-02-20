@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">Athlete Monitor</string>
+    <string name="title_activity_user_information">Personal Information</string>
+
+    <!--These strings are to be used in UserInformationActivity-->
+    <string name="activity_user_information_age">Age:</string>
+    <string name="activity_user_information_height">Height:</string>
+    <string name="activity_user_information_weight">Weight:</string>
+    <string name="activity_user_information_athlete_type">Athlete Type:</string>
+    <!--These are format strings in the UI-->
+    <string name="activity_user_information_format_name">%s %s</string>
+    <string name="activity_user_information_format_statement">%s</string>
+    <string name="activity_user_information_format_age">%d</string>
+    <string name="activity_user_information_format_height">%d cm</string>
+    <string name="activity_user_information_format_weight">%d kg</string>
+    <string name="activity_user_information_format_athlete_type">%s</string>
+    <!--These are default strings in the UI-->
+    <string name="activity_user_information_default_name">Your Name</string>
+    <string name="activity_user_information_default_statement">Your Personal Statement</string>
+    <string name="activity_user_information_default_age">0</string>
+    <string name="activity_user_information_default_height">0 cm</string>
+    <string name="activity_user_information_default_weight">0 kg</string>
+    <string name="activity_user_information_default_athlete_type">Athlete</string>
+    <!--These strings are for testing-->
+    <string name="user_information_test_first_name">Auston</string>
+    <string name="user_information_test_last_name">Matthews</string>
+    <string name="user_information_test_age">20</string>
+    <string name="user_information_test_height">191</string>
+    <string name="user_information_test_height_cm">191 cm</string>
+    <string name="user_information_test_weight">98</string>
+    <string name="user_information_test_weight_kg">98 kg</string>
+    <string name="user_information_test_athlete_type">Hockey Player</string>
+    <string name="user_information_test_statement">I want to win the Stanley Cup</string>
 </resources>
