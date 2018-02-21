@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 public class UserInformationActivity extends AppCompatActivity {
+
+	public String userId;
 
 	/**
 	 * This method connects to Firebase, retrieving the user information
@@ -74,6 +77,12 @@ public class UserInformationActivity extends AppCompatActivity {
 		);
 	}
 
+	private void editInformation(View view) {
+		Intent intent = new Intent(this, null);
+		intent.putExtra("USER_ID", userId);
+		startActivity(intent);
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,10 +91,11 @@ public class UserInformationActivity extends AppCompatActivity {
 		setSupportActionBar(toolbar);
 
 		String userId = "mockup";
+		this.userId = userId;
 
 		UserInformation info = retrieveInfo(userId);
 		changeDisplayedInfo(info);
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.editInfo);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
