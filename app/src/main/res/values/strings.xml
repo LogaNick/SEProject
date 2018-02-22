@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Athlete Monitor</string>
     <string name="title_activity_user_information">Personal Information</string>
+    <string name="title_activity_user_information_edit">Edit Personal Information</string>
 
+    <!--These strings are to be used for DB actions in UserInformationActivity-->
+    <string name="activity_user_information_firebase">user_information/%s</string>
     <!--These strings are to be used in UserInformationActivity-->
     <string name="activity_user_information_age">Age:</string>
     <string name="activity_user_information_height">Height:</string>

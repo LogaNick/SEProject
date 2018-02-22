@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="ca.dal.cs.athletemonitor.athletemonitor.UserInformationEditActivity"
+    tools:showIn="@layout/activity_user_information_edit">
+
+    <!--android:text="@string/activity_user_information_default_statement"-->
+
+    <EditText
+        android:id="@+id/statementEditText"
+        android:layout_width="271dp"
+        android:layout_height="69dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="EXAMPLE"
+        android:textAlignment="center"
+        android:textColor="@color/much_darker_gray"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.185" />
+
+    <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/activity_user_information_default_name"
+        android:textColor="@android:color/black"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.053" />
+
+    <View
+        android:id="@+id/separatorBar"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:layout_marginBottom="23dp"
+        android:layout_marginTop="179dp"
+        android:background="@color/much_darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/ageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="278dp"
+        android:text="@string/activity_user_information_age"
+        android:textAlignment="textEnd"
+        android:textColor="@color/much_darker_gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/weightView"
+        app:layout_constraintTop_toBottomOf="@+id/separatorBar" />
+
+    <TextView
+        android:id="@+id/heightView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/activity_user_information_height"
+        android:textColor="@color/much_darker_gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ageView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/weightView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/activity_user_information_weight"
+        android:textColor="@color/much_darker_gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heightView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/athleteTypeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/activity_user_information_athlete_type"
+        android:textColor="@color/much_darker_gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weightView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/ageEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/activity_user_information_default_age"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/ageView"
+        app:layout_constraintStart_toEndOf="@+id/ageView"
+        app:layout_constraintTop_toTopOf="@+id/ageView" />
+
+    <EditText
+        android:id="@+id/heightEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/activity_user_information_default_height"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/heightView"
+        app:layout_constraintStart_toEndOf="@+id/heightView"
+        app:layout_constraintTop_toTopOf="@+id/heightView" />
+
+    <EditText
+        android:id="@+id/weightEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/activity_user_information_default_weight"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/weightView"
+        app:layout_constraintStart_toEndOf="@+id/weightView"
+        app:layout_constraintTop_toTopOf="@+id/weightView" />
+
+    <EditText
+        android:id="@+id/athleteTypeEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:text="@string/activity_user_information_default_athlete_type"
+        android:textAlignment="textStart"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/athleteTypeView"
+        app:layout_constraintStart_toEndOf="@+id/athleteTypeView"
+        app:layout_constraintTop_toTopOf="@+id/athleteTypeView" />
+
+</android.support.constraint.ConstraintLayout>

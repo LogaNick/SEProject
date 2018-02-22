@@ -3,15 +3,32 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+/**
+ * This class describes a screen where the user can view their
+ * personal information, and begin an activity to edit it (if they so choose).
+ */
 public class UserInformationActivity extends AppCompatActivity {
 
-	public String userId;
+	private String userId;
+	private UserInformation info;
+
+	protected static final String USER_INFORMATION = "USER_INFORMATION";
+	protected static final String USER_ID = "USER_ID";
+
+	private static final String TAG = "UserInformationActivity";
+	private static final int EDIT_INFO_REQUEST = 0;
 
 	/**
 	 * This method connects to Firebase, retrieving the user information
@@ -19,28 +36,29 @@ public class UserInformationActivity extends AppCompatActivity {
 	 * @param userId the ID for the user to display
 	 * @return the user info corresponding with the ID if successful, null otherwise
 	 */
-	private UserInformation retrieveInfo(String userId) {
+	private void retrieveInfo(final String userId) {
 
-		//TODO Mockup for now, need to access Firebase
-		final String MOCKUP_FIRST_NAME = getString(R.string.user_information_test_first_name);
-		final String MOCKUP_LAST_NAME = getString(R.string.user_information_test_last_name);
-		//TODO Handle NumberFormatException
-		final int MOCKUP_AGE = Integer.parseInt(getString(R.string.user_information_test_age));
-		final int MOCKUP_HEIGHT = Integer.parseInt(getString(R.string.user_information_test_height));
-		final int MOCKUP_WEIGHT = Integer.parseInt(getString(R.string.user_information_test_weight));
-		final String MOCKUP_ATHLETE_TYPE = getString(R.string.user_information_test_athlete_type);
-		final String MOCKUP_STATEMENT = getString(R.string.user_information_test_statement);
+		FirebaseDatabase db = FirebaseDatabase.getInstance();
+		DatabaseReference myRef
+				= db.getReference(getString(R.string.activity_user_information_firebase, userId));
 
-		UserInformation info =
-				new UserInformation.UserInformationBuilder(MOCKUP_FIRST_NAME, MOCKUP_LAST_NAME)
-						.age(MOCKUP_AGE)
-						.height(MOCKUP_HEIGHT)
-						.weight(MOCKUP_WEIGHT)
-						.athleteType(MOCKUP_ATHLETE_TYPE)
-						.personalStatement(MOCKUP_STATEMENT)
-						.build();
+		myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				info = dataSnapshot.getValue(UserInformation.class);
+				Log.d(TAG, "Retrieved " + userId + " from Firebase.");
+				if (info != null)
+					changeDisplayedInfo(info);
+				else
+					info = new UserInformation();
+			}
 
-		return info;
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+				Log.w(TAG, "Failed to retrieve " + userId + " from Firebase.");
+			}
+		});
+
 	}
 
 	/**
@@ -77,10 +95,22 @@ public class UserInformationActivity extends AppCompatActivity {
 		);
 	}
 
-	private void editInformation(View view) {
-		Intent intent = new Intent(this, null);
-		intent.putExtra("USER_ID", userId);
-		startActivity(intent);
+	/** This method starts the edit information activity. */
+	private void startEditInformation(View view) {
+		Intent intent = new Intent(this, UserInformationEditActivity.class);
+		intent.putExtra(USER_ID, userId);
+		intent.putExtra(USER_INFORMATION, info);
+		startActivityForResult(intent, EDIT_INFO_REQUEST);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == EDIT_INFO_REQUEST) {
+			if (resultCode == RESULT_OK) {
+				info = data.getParcelableExtra(USER_INFORMATION);
+				changeDisplayedInfo(info);
+			}
+		}
 	}
 
 	@Override
@@ -90,17 +120,20 @@ public class UserInformationActivity extends AppCompatActivity {
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		String userId = "mockup";
+
+		String userId = "testauston";
+		//TODO Pass username in intent that starts this activity
+//		Intent intent = getIntent();
+//		String userId = intent.getStringExtra(USER_ID);
 		this.userId = userId;
 
-		UserInformation info = retrieveInfo(userId);
-		changeDisplayedInfo(info);
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.editInfo);
+		retrieveInfo(userId);
+
+		FloatingActionButton fab = findViewById(R.id.editInfo);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show();
+				startEditInformation(view);
 			}
 		});
 	}
