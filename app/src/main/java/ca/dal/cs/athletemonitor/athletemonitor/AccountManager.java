@@ -47,7 +47,8 @@ public class AccountManager {
                     //compare passwords, if they match add the user to the logged in users list
                     //and return a successful login attempt, otherwise, report a failed login
                     if (userLoggingIn.getPassword().equals(user.getPassword())) {
-                        //TODO: Add code for adding user to list of logged in users
+                        AccountManager.setUserLoginState(user.getUsername(), true);
+
                         listener.onResult(true);
                     } else {
                         listener.onResult(false);
@@ -61,6 +62,26 @@ public class AccountManager {
         });
     }
 
+    /**
+     * Sets whether a user is marked as being online or not.  Users are tagged as online will
+     * have a node in the online_users branch of the database
+     *
+     * @param username Name of user to tag online/offline
+     * @param online Online state of user.  True if online, False if offline
+     */
+    public static void setUserLoginState(String username, boolean online) {
+        //retrieve a reference to the online users node
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("online_users/");
+
+        //if the user is to be tagged as online, write an entry in the online users branch
+        //otherwise, delete any existing entry
+        if (online) {
+            usersReference.child(username).setValue(true);
+        } else {
+            usersReference.child(username).removeValue();
+        }
+    }
 
     /**
      * Determines whether or not the specified user exists in the database
