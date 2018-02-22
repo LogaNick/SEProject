@@ -30,6 +30,13 @@ public class AccountManager {
         void onCreateUserResult(User user);
     }
 
+    /**
+     * Determines whether the specified users username and password match those stored in the
+     * database.
+     *
+     * @param user User to be authenticated
+     * @param listener Callback on authentication result
+     */
     public static void authenticate(final User user, final BooleanResultListener listener) {
         //retrieve a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
