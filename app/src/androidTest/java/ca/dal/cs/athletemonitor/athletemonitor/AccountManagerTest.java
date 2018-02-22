@@ -20,6 +20,39 @@ public class AccountManagerTest {
             LoginActivity.class);
 
     /**
+     * Tests user authentication
+     *
+     * Will pass test if username exists in the database and supplied password matches
+     * password as stored in database
+     */
+    @Test
+    public void signInTest() {
+        //construct a test user and add them to the accounts list
+        User testUser = createTestUser();
+        AccountManager.createUser(createTestUser());
+
+        //attempt to sign in
+        AccountManager.authenticate(testUser, assertTrueBooleanResult());
+
+        //delete test user from database
+        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+    }
+
+    @Test
+    public void signOutTest() {
+        //construct a test user, add them to the accounts list and sign the user in
+        User testUser = createTestUser();
+        AccountManager.createUser(createTestUser());
+        AccountManager.authenticate(testUser, assertTrueBooleanResult());
+
+        //attempt to sign out
+        AccountManager.signOut(testUser, assertTrueBooleanResult());
+
+        //delete test user from database
+        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+    }
+
+    /**
      * Tests creation of a new user
      *
      * Will pass if new account is added to the users branch of database
@@ -39,15 +72,6 @@ public class AccountManagerTest {
                AccountManager.deleteUser(testUser, assertTrueBooleanResult());
            }
        });
-    }
-
-    /**
-     * Test helper method to generate the standard testing user account
-     *
-     * @return Pre-determined user object with known information for testing purposes
-     */
-    private User createTestUser() {
-        return new User("test_user", "test_password");
     }
 
     /**
@@ -134,5 +158,14 @@ public class AccountManagerTest {
                 assertTrue(result);
             }
         };
+    }
+
+    /**
+     * Test helper method to generate the standard testing user account
+     *
+     * @return Pre-determined user object with known information for testing purposes
+     */
+    private User createTestUser() {
+        return new User("test_user", "test_password");
     }
 }
