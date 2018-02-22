@@ -59,6 +59,9 @@ public class AccountManagerTest {
            @Override
            public void onCreateUserResult(User user) {
                assertNotNull(user);
+
+               //if the user was created successfully, remove before exiting
+               AccountManager.deleteUser(testUser, assertTrueBooleanResult());
            }
        });
     }
