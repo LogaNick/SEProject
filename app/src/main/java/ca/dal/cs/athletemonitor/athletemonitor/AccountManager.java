@@ -21,6 +21,15 @@ public class AccountManager {
         public void onUserExists(boolean result);
     }
 
+    /**
+     * Listener interface for checking if a user exists.
+     *
+     * Callers of userExists must implement this listener interface.
+     */
+    public interface CreateUserListener {
+        public void onCreateUserResult(User user);
+    }
+
 
 
     /**
@@ -61,10 +70,33 @@ public class AccountManager {
      *
      * @param newUser User details
      */
-    public static void createUser(User newUser) {
+    public static void createUser(final User newUser) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users");
-        usersReference.child(newUser.getUsername()).setValue(newUser);
+        usersReference.child(newUser.getUsername()).setValue(newUser, null);
+    }
+
+    /**
+     * Creates a new user account and called the specific listener when complete
+     *
+     * @param newUser User details
+     * @param createUserListener Callback for completion
+     */
+    public static void createUser(final User newUser, final CreateUserListener createUserListener) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users");
+        usersReference.child(newUser.getUsername()).setValue(newUser, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (createUserListener != null) {
+                    if (databaseError == null) {
+                        createUserListener.onCreateUserResult(newUser);
+                    } else {
+                        createUserListener.onCreateUserResult(null);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -77,6 +109,7 @@ public class AccountManager {
     public static void deleteUser(User user, final BooleanResultListener booleanResultListener) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users/" + user.getUsername());
+
         usersReference.removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
