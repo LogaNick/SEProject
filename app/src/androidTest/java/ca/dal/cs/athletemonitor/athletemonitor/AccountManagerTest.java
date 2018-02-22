@@ -68,7 +68,7 @@ public class AccountManagerTest {
     }
 
     /**
-     * Tests that a user that has been authenticated is tagged as being logged in
+     * Tests that a user that has been authenticated is tagged as logged in
      *
      * Will pass if there exists a child node in the online_users reference equal to the users
      * username.
@@ -76,7 +76,7 @@ public class AccountManagerTest {
      * @throws Exception
      */
     @Test
-    public void setUserLoggedInTest() throws Exception {
+    public void setUserLoggedInTrueTest() throws Exception {
        //create a test user and set them as online
        User testUser = createTestUser();
 
@@ -104,6 +104,48 @@ public class AccountManagerTest {
             }
         });
     }
+
+    /**
+     * Tests that a user that has been authenticated is tagged as logged in
+     *
+     * Will pass if there exists a child node in the online_users reference equal to the users
+     * username.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void setUserLoggedInFalseTest() throws Exception {
+        //create a test user and set them as online
+        User testUser = createTestUser();
+
+        //set the user as online then set them as offline
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
+
+        //attempt to retrieve a reference to the logged in user
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("online_users/" + testUser.getUsername());
+
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if the reference exists, then the user is tagged as logged in and we should fail
+                //the test, otherwise it should succeed
+                if (dataSnapshot.exists()) {
+                    assertFalse(true);
+                } else {
+                    assertFalse(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+
 
 //    @Test
 //    public void signOutTest() {
