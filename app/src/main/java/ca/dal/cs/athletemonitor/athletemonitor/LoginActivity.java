@@ -19,28 +19,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users/");
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("lee")) {
-                    //myRef.child("messages").setValue("lee_exists");
-                    //do stuff
-
-                }
-                int i = 1;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
     }
 
     public void signInClick(View view) {
@@ -53,11 +31,6 @@ public class LoginActivity extends AppCompatActivity {
 
         //validate login information. if login information is valid then switch to main activity
         //with the loaded user information, otherwise, display invalid credentials message
-
-
-
-
-
 
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         startActivity(mainActivityIntent);
