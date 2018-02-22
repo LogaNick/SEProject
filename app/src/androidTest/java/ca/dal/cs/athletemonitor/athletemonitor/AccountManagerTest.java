@@ -26,7 +26,7 @@ public class AccountManagerTest {
      * password as stored in database
      */
     @Test
-    public void signInTest() {
+    public void signInSuccessTest() {
         //construct a test user and add them to the accounts list
         User testUser = createTestUser();
         AccountManager.createUser(createTestUser());
@@ -38,19 +38,43 @@ public class AccountManagerTest {
         AccountManager.deleteUser(testUser, assertTrueBooleanResult());
     }
 
+    /**
+     * Tests user authentication
+     *
+     * Will pass test if username exists in the database and supplied password matches
+     * password as stored in database
+     */
     @Test
-    public void signOutTest() {
-        //construct a test user, add them to the accounts list and sign the user in
+    public void signInFailureTest() {
+        //construct a test user and add them to the accounts list
         User testUser = createTestUser();
         AccountManager.createUser(createTestUser());
-        AccountManager.authenticate(testUser, assertTrueBooleanResult());
 
-        //attempt to sign out
-        AccountManager.signOut(testUser, assertTrueBooleanResult());
+        //change test user's local password
+        testUser.setPassword("newpassword");
+
+        //attempt to sign in using invalid credentials
+        AccountManager.authenticate(testUser, assertFalseBooleanResult());
 
         //delete test user from database
         AccountManager.deleteUser(testUser, assertTrueBooleanResult());
     }
+
+
+
+//    @Test
+//    public void signOutTest() {
+//        //construct a test user, add them to the accounts list and sign the user in
+//        User testUser = createTestUser();
+//        AccountManager.createUser(createTestUser());
+//        AccountManager.authenticate(testUser, assertTrueBooleanResult());
+//
+//        //attempt to sign out
+//        AccountManager.signOut(testUser, assertTrueBooleanResult());
+//
+//        //delete test user from database
+//        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+//    }
 
     /**
      * Tests creation of a new user
@@ -156,6 +180,20 @@ public class AccountManagerTest {
             @Override
             public void onResult(boolean result) {
                 assertTrue(result);
+            }
+        };
+    }
+
+    /**
+     * Creates a BooleanResultListener with default behaviour of asserting a false result
+     *
+     * @return Listener with assertTrue behaviour
+     */
+    private BooleanResultListener assertFalseBooleanResult() {
+        return new BooleanResultListener() {
+            @Override
+            public void onResult(boolean result) {
+                assertFalse(result);
             }
         };
     }
