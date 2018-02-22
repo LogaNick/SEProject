@@ -52,7 +52,7 @@ public class AccountManagerTest {
      * @throws Exception
      */
     @Test
-    private void createUserTest() throws Exception {
+    public void createUserTest() throws Exception {
        final User testUser = createTestUser();
 
        AccountManager.createUser(testUser, new AccountManager.CreateUserListener() {
