@@ -13,7 +13,7 @@
         android:layout_marginBottom="8dp"
         android:onClick="signInClick"
         android:text="@string/ButtonText_SignIn"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/lblRegisterPrompt"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -50,7 +50,7 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/lblRegisterPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -84,9 +84,9 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/lblLoginResult"
-        android:layout_width="212dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/lblMessage"
+        android:layout_width="352dp"
+        android:layout_height="104dp"
         android:layout_marginTop="8dp"
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
