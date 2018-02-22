@@ -1,6 +1,13 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.support.test.rule.ActivityTestRule;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -60,7 +67,43 @@ public class AccountManagerTest {
         AccountManager.deleteUser(testUser, assertTrueBooleanResult());
     }
 
+    /**
+     * Tests that a user that has been authenticated is tagged as being logged in
+     *
+     * Will pass if there exists a child node in the online_users reference equal to the users
+     * username.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void setUserLoggedInTest() throws Exception {
+       //create a test user and set them as online
+       User testUser = createTestUser();
 
+       AccountManager.setUserLoginState(testUser.getUsername(), true);
+
+        //attempt to retrieve a reference to the logged in user
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("online_users/" + testUser.getUsername());
+
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if the reference exists, then the user is tagged as logged in
+                if (dataSnapshot.exists()) {
+                    assertTrue(true);
+                } else {
+                    assertTrue(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 
 //    @Test
 //    public void signOutTest() {
