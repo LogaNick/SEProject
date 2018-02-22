@@ -28,6 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 //import for intended() and hasComponent()
 import static android.support.test.espresso.intent.Intents.intended;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -42,6 +43,25 @@ public class AccountManagerTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<LoginActivity>(
             LoginActivity.class);
+
+    /**
+     * Tests creation of a new user
+     *
+     * Will pass if new account is added to the users branch of database
+     *
+     * @throws Exception
+     */
+    @Test
+    private void createUserTest() throws Exception {
+       final User testUser = createTestUser();
+
+       AccountManager.createUser(testUser, new AccountManager.CreateUserListener() {
+           @Override
+           public void onCreateUserResult(User user) {
+               assertNotNull(user);
+           }
+       });
+    }
 
     /**
      * Test helper method to generate the standard testing user account
