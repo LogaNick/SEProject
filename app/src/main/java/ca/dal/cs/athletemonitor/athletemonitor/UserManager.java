@@ -1,8 +1,5 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 /**
  * Created by Lee on 2018-02-16.
  *

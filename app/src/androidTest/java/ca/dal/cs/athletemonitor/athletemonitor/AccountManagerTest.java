@@ -1,32 +1,11 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.app.ActivityManager;
-import android.content.Context;
-import android.os.Debug;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
-import android.util.Log;
-
 import org.junit.Rule;
 import org.junit.Test;
 
-
-import java.util.logging.Logger;
-
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
-import static android.support.test.espresso.Espresso.closeSoftKeyboard;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
-//import for intended() and hasComponent()
-import static android.support.test.espresso.intent.Intents.intended;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -36,12 +15,8 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class AccountManagerTest {
-    private String usernameInputTestText = "username";
-    private String passwordInputTestText = "password";
-
-
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<LoginActivity>(
+    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
             LoginActivity.class);
 
     /**
@@ -49,7 +24,7 @@ public class AccountManagerTest {
      *
      * Will pass if new account is added to the users branch of database
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void createUserTest() throws Exception {
@@ -72,9 +47,7 @@ public class AccountManagerTest {
      * @return Pre-determined user object with known information for testing purposes
      */
     private User createTestUser() {
-        User user = new User("test_user", "test_password");
-
-        return user;
+        return new User("test_user", "test_password");
     }
 
     /**
@@ -83,7 +56,7 @@ public class AccountManagerTest {
      * Will pass in a username that does exist in the user accounts to the validate method and
      * assert that the return value of validate is true
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void userExistsTest() throws Exception {
@@ -107,11 +80,11 @@ public class AccountManagerTest {
      * Will pass if a username that does not exist in the user accounts is passed to the userExists
      * method.  Asserts that the return value of is false
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void userDoesNotExistTest() throws Exception {
-        User testUser = new User("idon'texist", "testPassword");
+        User testUser = new User("i don't exist", "testPassword");
 
         AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
             @Override
@@ -128,7 +101,7 @@ public class AccountManagerTest {
      * and then a deleteUser call is made.  If the delete operation is completed without errors
      * the test is assumed to be passed.
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void deleteUserTest() throws Exception {
@@ -139,7 +112,7 @@ public class AccountManagerTest {
             @Override
             public void onUserExists(boolean result) {
                 //if the user doesn't exist, create it first
-                if (result == false) {
+                if (!result) {
                     AccountManager.createUser(testUser);
                 }
 

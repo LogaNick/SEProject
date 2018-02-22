@@ -1,26 +1,18 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.app.ActivityManager;
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
+
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
 import org.junit.Test;
 
-
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-//import for intended() and hasComponent()
-import static android.support.test.espresso.intent.Intents.intended;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -34,13 +26,13 @@ public class LoginActivityUITest {
 
 
     @Rule
-    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<LoginActivity>(
+    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
             LoginActivity.class);
 
     /**
      * Test username with empty string
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void usernameEmptyTest() throws Exception {
@@ -48,9 +40,9 @@ public class LoginActivityUITest {
     }
 
     /**
-     * Test username textbox with input
+     * Test username text box with input
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void usernameInputTextTest() throws Exception {
@@ -62,7 +54,7 @@ public class LoginActivityUITest {
     /**
      * Test password with empty string
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void passwordEmptyTest() throws Exception {
@@ -70,9 +62,9 @@ public class LoginActivityUITest {
     }
 
     /**
-     * Test username textbox with input
+     * Test password text box with input
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void passwordInputTextTest() throws Exception {
@@ -87,7 +79,7 @@ public class LoginActivityUITest {
      * Will pass in a username that does exist in the user accounts to the validate method and
      * assert that the return value of validate is true
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void userExistsTest() throws Exception {
@@ -111,11 +103,11 @@ public class LoginActivityUITest {
      * Will pass in a username that does not exist in the user accounts to the validate method
      * and assert that the return value of validate is false
      *
-     * @throws Exception
+     * @throws Exception Generic exception
      */
     @Test
     public void userDoesNotExistTest() throws Exception {
-        User testUser = new User("idon'texist", "testPassword");
+        User testUser = new User("i don't exist", "testPassword");
 
         AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
             @Override

@@ -18,7 +18,7 @@ public class AccountManager {
      * Callers of userExists must implement this listener interface.
      */
     public interface UserExistsListener {
-        public void onUserExists(boolean result);
+        void onUserExists(boolean result);
     }
 
     /**
@@ -27,7 +27,7 @@ public class AccountManager {
      * Callers of userExists must implement this listener interface.
      */
     public interface CreateUserListener {
-        public void onCreateUserResult(User user);
+        void onCreateUserResult(User user);
     }
 
 
@@ -37,7 +37,6 @@ public class AccountManager {
      *
      * @param username Name of the user to look up
      *
-     * @return True if user exists, otherwise false
      */
     public static void userExists(final String username, final UserExistsListener listener) {
         //retrieve a reference to the users node
