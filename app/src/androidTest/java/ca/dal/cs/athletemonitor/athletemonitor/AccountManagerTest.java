@@ -172,9 +172,9 @@ public class AccountManagerTest {
     public void createUserTest() throws Exception {
        final User testUser = createTestUser();
 
-       AccountManager.createUser(testUser, new AccountManager.CreateUserListener() {
+       AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
            @Override
-           public void onCreateUserResult(User user) {
+           public void onUserPopulated(User user) {
                assertNotNull(user);
 
                //if the user was created successfully, remove before exiting

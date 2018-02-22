@@ -26,9 +26,12 @@ public class AccountManager {
      *
      * Callers of userExists must implement this listener interface.
      */
-    public interface CreateUserListener {
-        void onCreateUserResult(User user);
+    public interface UserObjectListener {
+        void onUserPopulated(User user);
     }
+
+
+
 
     /**
      * Determines whether the specified users username and password match those stored in the
@@ -140,9 +143,9 @@ public class AccountManager {
      * not exist prior to calling this method.
      *
      * @param newUser User details
-     * @param createUserListener Callback for completion
+     * @param userObjectListener Callback for completion
      */
-    public static void createUser(final User newUser, final CreateUserListener createUserListener) {
+    public static void createUser(final User newUser, final UserObjectListener userObjectListener) {
         //get a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users");
@@ -152,12 +155,12 @@ public class AccountManager {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 //if we have a listener, report the result
-                if (createUserListener != null) {
+                if (userObjectListener != null) {
                     //if no database errors occurred, assume successful operation
                     if (databaseError == null) {
-                        createUserListener.onCreateUserResult(newUser);
+                        userObjectListener.onUserPopulated(newUser);
                     } else {
-                        createUserListener.onCreateUserResult(null);
+                        userObjectListener.onUserPopulated(null);
                     }
                 }
             }
