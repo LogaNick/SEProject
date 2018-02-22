@@ -77,18 +77,26 @@ public class AccountManager {
     }
 
     /**
-     * Creates a new user account and called the specific listener when complete
+     * Creates a new user account and called the specific listener when complete.
+     *
+     * Note: This method causes a destructive write.  Callers should ensure that the user does
+     * not exist prior to calling this method.
      *
      * @param newUser User details
      * @param createUserListener Callback for completion
      */
     public static void createUser(final User newUser, final CreateUserListener createUserListener) {
+        //get a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users");
+
+        //attempt to write the data
         usersReference.child(newUser.getUsername()).setValue(newUser, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                //if we have a listener, report the result
                 if (createUserListener != null) {
+                    //if no database errors occurred, assume successful operation
                     if (databaseError == null) {
                         createUserListener.onCreateUserResult(newUser);
                     } else {
