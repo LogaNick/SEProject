@@ -30,6 +30,36 @@ public class AccountManager {
         void onCreateUserResult(User user);
     }
 
+    public static void authenticate(final User user, final BooleanResultListener listener) {
+        //retrieve a reference to the users node
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/" + user.getUsername());
+
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if the reference exists, convert it to a user instance
+                if (dataSnapshot.exists()) {
+                    User userLoggingIn = dataSnapshot.getValue(User.class);
+
+                    //compare passwords, if they match add the user to the logged in users list
+                    //and return a successful login attempt, otherwise, report a failed login
+                    if (userLoggingIn.getPassword().equals(user.getPassword())) {
+                        //TODO: Add code for adding user to list of logged in users
+                        listener.onResult(true);
+                    } else {
+                        listener.onResult(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 
 
     /**
