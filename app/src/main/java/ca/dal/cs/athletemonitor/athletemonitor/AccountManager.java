@@ -6,6 +6,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
+
 /**
  * This class performs management of a user account
  */
@@ -18,6 +20,8 @@ public class AccountManager {
     public interface UserExistsListener {
         public void onUserExists(boolean result);
     }
+
+
 
     /**
      * Determines whether or not the specified user exists in the database
@@ -39,10 +43,10 @@ public class AccountManager {
                 //if the username is a child of the users node then fire the user exists event
                 //indicating true, otherwise, fire event with false outcome
                 if (dataSnapshot.hasChild(username)) {
-                    listener.onUserExists(true);
+                    if (listener != null) listener.onUserExists(true);
                 }
                 else {
-                    listener.onUserExists(false);
+                    if (listener != null) listener.onUserExists(false);
                 }
             }
 
@@ -61,5 +65,29 @@ public class AccountManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users");
         usersReference.child(newUser.getUsername()).setValue(newUser);
+    }
+
+    /**
+     * Delete a user account from the database
+     *
+     * @param user User to be removed
+     *
+     * @param booleanResultListener Callback to be called on completion
+     */
+    public static void deleteUser(User user, final BooleanResultListener booleanResultListener) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/" + user.getUsername());
+        usersReference.removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (booleanResultListener != null) {
+                    if (databaseError == null) {
+                        booleanResultListener.onResult(true);
+                    } else {
+                        booleanResultListener.onResult(false);
+                    }
+                }
+            }
+        });
     }
 }
