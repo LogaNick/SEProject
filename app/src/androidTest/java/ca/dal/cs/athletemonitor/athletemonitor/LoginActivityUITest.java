@@ -1,13 +1,18 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import ca.dal.cs.athletemonitor.athletemonitor.AccountManagerTest;
+import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
 
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
@@ -30,15 +35,12 @@ public class LoginActivityUITest {
     private String usernameInputTestText = "username";
     private String passwordInputTestText = "password";
 
-    /*
-        23 Feb 2018 -- deactivated in favour of rule that allows intents to be created
+//    @Rule
+//    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
+//            LoginActivity.class);
 
-    @Rule
-    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
-            LoginActivity.class);
-    */
-    @Rule
-    public IntentsTestRule<LoginActivity> intentsTestRule = new IntentsTestRule<>(LoginActivity.class);
+   @Rule
+   public IntentsTestRule<LoginActivity> intentsTestRule = new IntentsTestRule<>(LoginActivity.class);
 
     /**
      * Test username with empty string
@@ -87,20 +89,58 @@ public class LoginActivityUITest {
     /**
      * Test successful login when sign in button is clicked
      *
+     * TODO: THIS TEST USES LOCKS TO WAIT FOR ASYNC OPERATIONS TO COMPLETE, IT SEEMS VERY HACKERY...BETTER APPROACHES???
+     *
      * @throws Exception Generic exception
      */
     @Test
     public void signInSuccessTest() throws Exception {
         //generate a test user and add it to the user accounts list
-        User testUser = TestingHelper.createTestUser();
+        final User testUser = TestingHelper.createTestUser();
+        final Object synchronizer = new Object();
 
+        //use the user information to populate the controls
+        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                synchronized (synchronizer) {
+                    synchronizer.notify();
+                }
+            }
+        });
 
+        synchronized(synchronizer) {
+            Log.d("signInSuccessTestDebug", "Waiting for test account creation to finish...");
+            synchronizer.wait();
+        }
 
-        //perform sign in button click
+        Log.d("signInSuccessTestDebug", "Test account created...populating controls");
+
+        //use the user information to populate the controls
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
+        closeSoftKeyboard();
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
+        closeSoftKeyboard();
+
+        Log.d("signInSuccessTestDebug", "Controls populated, performing click...");
         onView(withId(R.id.btnSignIn)).perform(click());
 
-        //test if main activity has been launched
+
+        //clean up test user
+        AccountManager.deleteUser(testUser, new BooleanResultListener() {
+            @Override
+            public void onResult(boolean result) {
+                synchronized (synchronizer) {
+                    synchronizer.notify();
+                }
+            }
+        });
+
+        synchronized(synchronizer) {
+            Log.d("signInSuccessTestDebug", "Waiting for test account deletion to finish...");
+            synchronizer.wait();
+        }
+
         intended(hasComponent(MainActivity.class.getName()));
     }
-
 }
