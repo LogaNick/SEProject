@@ -1,10 +1,14 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.support.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
@@ -37,7 +41,9 @@ public class AccountManager {
      * @param username Username of the user to be loaded
      * @param listener Callback to handle response
      */
-    public static void getUser(String username, final UserObjectListener listener) {
+    public static void getUser(String username, @NonNull final UserObjectListener listener) {
+        Objects.requireNonNull(listener, "Null value for UserObjectListener is not valid.");
+
         //retrieve a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users/" + username);
@@ -47,9 +53,6 @@ public class AccountManager {
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //early exit condition, we have no listener
-                if (listener == null) return;
-
                 //if the reference exists, convert it to a user instance and pass to listener
                 //otherwise return null
                 if (dataSnapshot.exists()) {
@@ -132,7 +135,9 @@ public class AccountManager {
      *
      * @param username Name of the user to look up
      */
-    public static void userExists(final String username, final UserExistsListener listener) {
+    public static void userExists(final String username, @NonNull final UserExistsListener listener) {
+        Objects.requireNonNull(listener, "Null value for UserExistsListener is not valid.");
+
         //retrieve a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users/");
@@ -144,9 +149,7 @@ public class AccountManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //if the username is a child of the users node then fire the user exists event
                 //indicating true, otherwise, fire event with false outcome
-                if (listener != null) {
-                    listener.onUserExists(dataSnapshot.hasChild(username));
-                }
+                listener.onUserExists(dataSnapshot.hasChild(username));
             }
 
             @Override

@@ -30,10 +30,10 @@ public class LoginActivity extends AppCompatActivity {
         AccountManager.authenticate(new User(username, password), new BooleanResultListener() {
             @Override
             public void onResult(boolean result) {
-                Log.d("AM_DEBUG", "true login");
+                //if authenticate returns true, login is valid.  Switch to main activity
+                //with the loaded user information, otherwise, display invalid credentials message
                 if (result) {
-                    //validate login information. if login information is valid then switch to main activity
-                    //with the loaded user information, otherwise, display invalid credentials message
+
                     ((TextView) thisActivity.findViewById(R.id.lblMessage)).setText(R.string.loginSuccess);
 
                     Intent mainActivityIntent = new Intent(thisActivity, MainActivity.class);

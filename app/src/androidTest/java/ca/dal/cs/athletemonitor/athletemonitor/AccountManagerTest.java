@@ -251,7 +251,7 @@ public class AccountManagerTest {
      */
     @Test
     public void userDoesNotExistTest() throws Exception {
-        User testUser = new User("i don't exist", "testPassword");
+        User testUser = new User("doesnotexist", "testPassword");
 
         AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
             @Override
