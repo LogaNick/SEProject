@@ -30,7 +30,7 @@ public class MainActivityTest {
      */
     @Test
     public void testGoToExerciseButton() throws Exception {
-        //Try to get the button.
+        //Try to click the button.
         onView(withId(R.id.goToExerciseActivityButton)).perform(click());
         intended(hasComponent(ExerciseActivity.class.getName()));
     }
