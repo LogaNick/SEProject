@@ -12,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // For now, use default login
+        new UserManager().login("user", "pass");
 
         findViewById(R.id.goToExerciseActivityButton).setOnClickListener(new View.OnClickListener() {
             @Override
