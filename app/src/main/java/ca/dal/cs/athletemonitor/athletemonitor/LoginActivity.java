@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signInClick(View view) throws InterruptedException {
         //get data from activity
-        String username = ((EditText) this.findViewById(R.id.txtUsername)).getText().toString();
+        final String username = ((EditText) this.findViewById(R.id.txtUsername)).getText().toString();
         String password = ((EditText) this.findViewById(R.id.txtPassword)).getText().toString();
         final Activity thisActivity = this;
 
@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                     ((TextView) thisActivity.findViewById(R.id.lblMessage)).setText(R.string.loginSuccess);
 
                     Intent mainActivityIntent = new Intent(thisActivity, MainActivity.class);
+                    mainActivityIntent.putExtra("username", username);
                     startActivity(mainActivityIntent);
                 } else {
                     ((TextView)thisActivity.findViewById(R.id.lblMessage)).setText(R.string.loginFailure);
