@@ -13,8 +13,10 @@ import org.junit.Test;
 
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -27,13 +29,64 @@ public class AccountManagerTest {
             LoginActivity.class);
 
     /**
+     * Tests the successful generation of a user object instance from user account information
+     * in the database.
+     *
+     * Will pass if user object is populated with the user information from the database
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getUserSuccessTest() throws Exception {
+        //construct a test user and add them to the accounts list for testing
+        final User testUser = createTestUser();
+        AccountManager.createUser(createTestUser());
+
+        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                assertNotNull(user);
+                assertEquals(user.getUsername(), testUser.getUsername());
+
+                //delete test user from database
+                AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+            }
+        });
+    }
+
+    /**
+     * Tests that not user information is generated for users that do not exist in the database.
+     *
+     * Will pass if user object is null on reading account that doesn't exist
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getUserDoesNotExistTest() throws Exception {
+        //construct a test user and ensure it is removed from the database
+        final User testUser = createTestUser();
+        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+
+        //attempt to retrieve user information
+        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                assertNull(user);
+            }
+        });
+    }
+
+
+    /**
      * Tests user authentication
      *
      * Will pass test if username exists in the database and supplied password matches
      * password as stored in database
+     *
+     * @throws Exception Generic exception
      */
     @Test
-    public void signInSuccessTest() {
+    public void signInSuccessTest() throws Exception {
         //construct a test user and add them to the accounts list
         User testUser = createTestUser();
         AccountManager.createUser(createTestUser());
@@ -50,9 +103,11 @@ public class AccountManagerTest {
      *
      * Will pass test if username exists in the database and supplied password matches
      * password as stored in database
+     *
+     * @throws Exception Generic exception
      */
     @Test
-    public void signInFailureTest() {
+    public void signInFailureTest() throws Exception {
         //construct a test user and add them to the accounts list
         User testUser = createTestUser();
         AccountManager.createUser(createTestUser());
