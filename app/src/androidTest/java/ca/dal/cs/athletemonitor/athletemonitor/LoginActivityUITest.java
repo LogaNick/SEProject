@@ -13,9 +13,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 /**
  * UI Test for Login Activity
  */
@@ -23,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 public class LoginActivityUITest {
     private String usernameInputTestText = "username";
     private String passwordInputTestText = "password";
-
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
@@ -73,47 +69,6 @@ public class LoginActivityUITest {
         onView(withId(R.id.txtPassword)).check(matches(withText(passwordInputTestText)));
     }
 
-    /**
-     * Test for true positive on existing user
-     *
-     * Will pass in a username that does exist in the user accounts to the validate method and
-     * assert that the return value of validate is true
-     *
-     * @throws Exception Generic exception
-     */
-    @Test
-    public void userExistsTest() throws Exception {
-        User testUser = new User("testAccount7", "testPassword");
-        AccountManager.createUser(testUser);
 
-        AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
-            @Override
-            public void onUserExists(boolean result) {
-                assertTrue(result);
-            }
 
-        });
-
-        // TODO: Add code to delete test user
-    }
-
-    /**
-     * Test for false positive on existing user
-     *
-     * Will pass in a username that does not exist in the user accounts to the validate method
-     * and assert that the return value of validate is false
-     *
-     * @throws Exception Generic exception
-     */
-    @Test
-    public void userDoesNotExistTest() throws Exception {
-        User testUser = new User("i don't exist", "testPassword");
-
-        AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
-            @Override
-            public void onUserExists(boolean result) {
-                assertFalse("User should not exist, but user is found.", result);
-            }
-        });
-    }
 }
