@@ -125,8 +125,8 @@ public class LoginActivityUITest {
         Log.d("signInSuccessTestDebug", "Controls populated, performing click...");
         onView(withId(R.id.btnSignIn)).perform(click());
 
-
         //clean up test user
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
         AccountManager.deleteUser(testUser, new BooleanResultListener() {
             @Override
             public void onResult(boolean result) {
@@ -142,5 +142,47 @@ public class LoginActivityUITest {
         }
 
         intended(hasComponent(MainActivity.class.getName()));
+    }
+
+    /**
+     * Test unsuccessful login due to non existing user
+     *
+     * TODO: THIS TEST USES LOCKS TO WAIT FOR ASYNC OPERATIONS TO COMPLETE, IT SEEMS VERY HACKERY...BETTER APPROACHES???
+     *
+     * @throws Exception Generic exception
+     */
+    @Test
+    public void signInInvalidUserTest() throws Exception {
+        //generate a test user and add it to the user accounts list
+        final User testUser = TestingHelper.createTestUser();
+        final Object synchronizer = new Object();
+
+        AccountManager.deleteUser(testUser, new BooleanResultListener() {
+            @Override
+            public void onResult(boolean result) {
+                synchronized (synchronizer) {
+                    synchronizer.notify();
+                }
+            }
+        });
+
+        synchronized(synchronizer) {
+            Log.d("signInInvalidUserTest", "Waiting for test account deletion to finish...");
+            synchronizer.wait();
+        }
+
+        Log.d("signInInvalidUserTest", "Populating controls");
+
+        //use the user information to populate the controls
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
+        closeSoftKeyboard();
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
+        closeSoftKeyboard();
+
+        Log.d("signInInvalidUserTest", "Controls populated, performing click...");
+        onView(withId(R.id.btnSignIn)).perform(click());
+
+        onView(withId(R.id.lblMessage)).check(matches(withText(R.string.loginFailure)));
+
     }
 }
