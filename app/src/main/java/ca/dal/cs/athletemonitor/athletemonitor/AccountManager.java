@@ -93,6 +93,8 @@ public class AccountManager {
                     } else {
                         listener.onResult(false);
                     }
+                } else {
+                    listener.onResult(false);
                 }
             }
 
