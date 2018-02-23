@@ -142,16 +142,10 @@ public class AccountManager {
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //early exit condition, we have no listener
-                if (listener == null) return;
-
                 //if the username is a child of the users node then fire the user exists event
                 //indicating true, otherwise, fire event with false outcome
-                if (dataSnapshot.hasChild(username)) {
-                    listener.onUserExists(true);
-                }
-                else {
-                    listener.onUserExists(false);
+                if (listener != null) {
+                    listener.onUserExists(dataSnapshot.hasChild(username));
                 }
             }
 
