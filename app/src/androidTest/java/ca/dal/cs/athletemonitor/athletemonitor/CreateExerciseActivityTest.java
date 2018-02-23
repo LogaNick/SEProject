@@ -35,5 +35,6 @@ public class CreateExerciseActivityTest {
         onView(withId(R.id.newExerciseDescription));
         onView(withId(R.id.newExerciseTime));
         onView(withId(R.id.newExerciseSubmitButton));
+        onView(withId(R.id.newExerciseTimeUnits));
     }
 }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Athlete Monitor</string>
+    <string-array name="ExerciseTimeUnits">
+        <item>Seconds</item>
+        <item>Minutes</item>
+        <item>Hours</item>
+    </string-array>
 </resources>

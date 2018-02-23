@@ -55,10 +55,25 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newExerciseTimeUnits" />
+
+    <Spinner
+        android:id="@+id/newExerciseTimeUnits"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="83dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:entries="@array/ExerciseTimeUnits"
+        app:layout_constraintBottom_toTopOf="@+id/newExerciseSubmitButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newExerciseTime" />
 
