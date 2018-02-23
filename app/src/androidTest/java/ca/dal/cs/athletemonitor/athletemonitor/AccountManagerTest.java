@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
+import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -39,8 +40,8 @@ public class AccountManagerTest {
     @Test
     public void getUserSuccessTest() throws Exception {
         //construct a test user and add them to the accounts list for testing
-        final User testUser = createTestUser();
-        AccountManager.createUser(createTestUser());
+        final User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(TestingHelper.createTestUser());
 
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
@@ -49,7 +50,7 @@ public class AccountManagerTest {
                 assertEquals(user.getUsername(), testUser.getUsername());
 
                 //delete test user from database
-                AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
             }
         });
     }
@@ -64,8 +65,8 @@ public class AccountManagerTest {
     @Test
     public void getUserDoesNotExistTest() throws Exception {
         //construct a test user and ensure it is removed from the database
-        final User testUser = createTestUser();
-        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+        final User testUser = TestingHelper.createTestUser();
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
 
         //attempt to retrieve user information
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
@@ -88,14 +89,14 @@ public class AccountManagerTest {
     @Test
     public void signInSuccessTest() throws Exception {
         //construct a test user and add them to the accounts list
-        User testUser = createTestUser();
-        AccountManager.createUser(createTestUser());
+        User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(TestingHelper.createTestUser());
 
         //attempt to sign in
-        AccountManager.authenticate(testUser, assertTrueBooleanResult());
+        AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
 
         //delete test user from database
-        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 
     /**
@@ -109,17 +110,17 @@ public class AccountManagerTest {
     @Test
     public void signInFailureTest() throws Exception {
         //construct a test user and add them to the accounts list
-        User testUser = createTestUser();
-        AccountManager.createUser(createTestUser());
+        User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(TestingHelper.createTestUser());
 
         //change test user's local password
         testUser.setPassword("newpassword");
 
         //attempt to sign in using invalid credentials
-        AccountManager.authenticate(testUser, assertFalseBooleanResult());
+        AccountManager.authenticate(testUser, TestingHelper.assertFalseBooleanResult());
 
         //delete test user from database
-        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 
     /**
@@ -133,7 +134,7 @@ public class AccountManagerTest {
     @Test
     public void setUserLoggedInTrueTest() throws Exception {
        //create a test user and set them as online
-       User testUser = createTestUser();
+       User testUser = TestingHelper.createTestUser();
 
        AccountManager.setUserLoginState(testUser.getUsername(), true);
 
@@ -171,7 +172,7 @@ public class AccountManagerTest {
     @Test
     public void setUserLoggedInFalseTest() throws Exception {
         //create a test user and set them as online
-        User testUser = createTestUser();
+        User testUser = TestingHelper.createTestUser();
 
         //set the user as online then set them as offline
         AccountManager.setUserLoginState(testUser.getUsername(), false);
@@ -225,7 +226,7 @@ public class AccountManagerTest {
      */
     @Test
     public void createUserTest() throws Exception {
-       final User testUser = createTestUser();
+       final User testUser = TestingHelper.createTestUser();
 
        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
            @Override
@@ -233,7 +234,7 @@ public class AccountManagerTest {
                assertNotNull(user);
 
                //if the user was created successfully, remove before exiting
-               AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+               AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
            }
        });
     }
@@ -248,8 +249,8 @@ public class AccountManagerTest {
      */
     @Test
     public void userExistsTest() throws Exception {
-        final User testUser = createTestUser();
-        AccountManager.createUser(createTestUser());
+        final User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(TestingHelper.createTestUser());
 
         AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
             @Override
@@ -294,7 +295,7 @@ public class AccountManagerTest {
     @Test
     public void deleteUserTest() throws Exception {
         //get the test account
-        final User testUser = createTestUser();
+        final User testUser = TestingHelper.createTestUser();
 
         AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
             @Override
@@ -305,45 +306,10 @@ public class AccountManagerTest {
                 }
 
                 //delete the user
-                AccountManager.deleteUser(testUser, assertTrueBooleanResult());
+                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
             }
         });
     }
 
-    /**
-     * Creates a BooleanResultListener with default behaviour of asserting a true result as true
-     *
-     * @return Listener with assertTrue behaviour
-     */
-    private BooleanResultListener assertTrueBooleanResult() {
-        return new BooleanResultListener() {
-            @Override
-            public void onResult(boolean result) {
-                assertTrue(result);
-            }
-        };
-    }
 
-    /**
-     * Creates a BooleanResultListener with default behaviour of asserting a false result
-     *
-     * @return Listener with assertTrue behaviour
-     */
-    private BooleanResultListener assertFalseBooleanResult() {
-        return new BooleanResultListener() {
-            @Override
-            public void onResult(boolean result) {
-                assertFalse(result);
-            }
-        };
-    }
-
-    /**
-     * Test helper method to generate the standard testing user account
-     *
-     * @return Pre-determined user object with known information for testing purposes
-     */
-    private User createTestUser() {
-        return new User("test_user", "test_password");
-    }
 }

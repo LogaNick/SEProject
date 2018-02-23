@@ -1,5 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import ca.dal.cs.athletemonitor.athletemonitor.AccountManagerTest;
+import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
@@ -89,6 +91,11 @@ public class LoginActivityUITest {
      */
     @Test
     public void signInSuccessTest() throws Exception {
+        //generate a test user and add it to the user accounts list
+        User testUser = TestingHelper.createTestUser();
+
+
+
         //perform sign in button click
         onView(withId(R.id.btnSignIn)).perform(click());
 
