@@ -20,7 +20,7 @@ public class TestingHelper {
         return new BooleanResultListener() {
             @Override
             public void onResult(boolean result) {
-                assertTrue(result);
+                assertTrue("True value expected, seen False...", result);
             }
         };
     }
@@ -34,7 +34,7 @@ public class TestingHelper {
         return new BooleanResultListener() {
             @Override
             public void onResult(boolean result) {
-                assertFalse(result);
+                assertFalse("False value expected, seen True...", result);
             }
         };
     }

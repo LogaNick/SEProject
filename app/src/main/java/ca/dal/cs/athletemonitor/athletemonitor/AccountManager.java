@@ -47,6 +47,9 @@ public class AccountManager {
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //early exit condition, we have no listener
+                if (listener == null) return;
+
                 //if the reference exists, convert it to a user instance and pass to listener
                 //otherwise return null
                 if (dataSnapshot.exists()) {
@@ -61,7 +64,6 @@ public class AccountManager {
             }
         });
     }
-
 
     /**
      * Determines whether the specified users username and password match those stored in the
@@ -80,6 +82,8 @@ public class AccountManager {
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean authResult = false; //always assume authentication fails until proven otherwise
+
                 //if the reference exists, convert it to a user instance
                 if (dataSnapshot.exists()) {
                     User userLoggingIn = dataSnapshot.getValue(User.class);
@@ -88,14 +92,12 @@ public class AccountManager {
                     //and return a successful login attempt, otherwise, report a failed login
                     if (userLoggingIn.getPassword().equals(user.getPassword())) {
                         AccountManager.setUserLoginState(user.getUsername(), true);
-
-                        listener.onResult(true);
-                    } else {
-                        listener.onResult(false);
+                        authResult = true;
                     }
-                } else {
-                    listener.onResult(false);
                 }
+
+                //call the listener if there is one with the result of authentication
+                if (listener != null) listener.onResult(authResult);
             }
 
             @Override
@@ -129,7 +131,6 @@ public class AccountManager {
      * Determines whether or not the specified user exists in the database
      *
      * @param username Name of the user to look up
-     *
      */
     public static void userExists(final String username, final UserExistsListener listener) {
         //retrieve a reference to the users node
@@ -141,13 +142,16 @@ public class AccountManager {
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //early exit condition, we have no listener
+                if (listener == null) return;
+
                 //if the username is a child of the users node then fire the user exists event
                 //indicating true, otherwise, fire event with false outcome
                 if (dataSnapshot.hasChild(username)) {
-                    if (listener != null) listener.onUserExists(true);
+                    listener.onUserExists(true);
                 }
                 else {
-                    if (listener != null) listener.onUserExists(false);
+                    listener.onUserExists(false);
                 }
             }
 
@@ -186,14 +190,14 @@ public class AccountManager {
         usersReference.child(newUser.getUsername()).setValue(newUser, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                //if we have a listener, report the result
-                if (userObjectListener != null) {
-                    //if no database errors occurred, assume successful operation
-                    if (databaseError == null) {
-                        userObjectListener.onUserPopulated(newUser);
-                    } else {
-                        userObjectListener.onUserPopulated(null);
-                    }
+                //early exit condition, no one is listening for the result
+                if (userObjectListener == null) return;
+
+                //if no database errors occurred, assume successful operation
+                if (databaseError == null) {
+                    userObjectListener.onUserPopulated(newUser);
+                } else {
+                    userObjectListener.onUserPopulated(null);
                 }
             }
         });
@@ -213,12 +217,14 @@ public class AccountManager {
         usersReference.removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (booleanResultListener != null) {
-                    if (databaseError == null) {
-                        booleanResultListener.onResult(true);
-                    } else {
-                        booleanResultListener.onResult(false);
-                    }
+                //early exit condition, no one is listening for the result
+                if (booleanResultListener == null) return;
+
+                //if there are no reported errors, delete succeeded
+                if (databaseError == null) {
+                    booleanResultListener.onResult(true);
+                } else {
+                    booleanResultListener.onResult(false);
                 }
             }
         });

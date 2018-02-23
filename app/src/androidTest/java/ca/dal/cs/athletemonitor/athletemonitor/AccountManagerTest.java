@@ -46,8 +46,9 @@ public class AccountManagerTest {
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                assertNotNull(user);
-                assertEquals(user.getUsername(), testUser.getUsername());
+                assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null",user);
+                assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
+                        user.getUsername(), testUser.getUsername());
 
                 //delete test user from database
                 AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
@@ -72,7 +73,7 @@ public class AccountManagerTest {
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                assertNull(user);
+                assertNull("Expecting null user reference, but found user account " + testUser.getUsername(),user);
             }
         });
     }
@@ -148,11 +149,7 @@ public class AccountManagerTest {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //if the reference exists, then the user is tagged as logged in
-                if (dataSnapshot.exists()) {
-                    assertTrue(true);
-                } else {
-                    assertTrue(false);
-                }
+                assertTrue("Expecting non-empty result from database, but no data returned...", dataSnapshot.exists());
             }
 
             @Override
@@ -188,11 +185,7 @@ public class AccountManagerTest {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //if the reference exists, then the user is tagged as logged in and we should fail
                 //the test, otherwise it should succeed
-                if (dataSnapshot.exists()) {
-                    assertFalse(true);
-                } else {
-                    assertFalse(false);
-                }
+                assertFalse("Expecting non-empty result from database, but no data returned...", dataSnapshot.exists());
             }
 
             @Override
@@ -200,22 +193,6 @@ public class AccountManagerTest {
             }
         });
     }
-
-
-
-//    @Test
-//    public void signOutTest() {
-//        //construct a test user, add them to the accounts list and sign the user in
-//        User testUser = createTestUser();
-//        AccountManager.createUser(createTestUser());
-//        AccountManager.authenticate(testUser, assertTrueBooleanResult());
-//
-//        //attempt to sign out
-//        AccountManager.signOut(testUser, assertTrueBooleanResult());
-//
-//        //delete test user from database
-//        AccountManager.deleteUser(testUser, assertTrueBooleanResult());
-//    }
 
     /**
      * Tests creation of a new user
@@ -231,7 +208,7 @@ public class AccountManagerTest {
        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
            @Override
            public void onUserPopulated(User user) {
-               assertNotNull(user);
+               assertNotNull("Expecting valid user object, but seen null...", user);
 
                //if the user was created successfully, remove before exiting
                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
@@ -255,7 +232,8 @@ public class AccountManagerTest {
         AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
             @Override
             public void onUserExists(boolean result) {
-                assertTrue(result);
+                assertTrue("Expecting account " + testUser.getUsername() +
+                        " to be found, but it was not...", result);
 
                 //delete the test user before exiting test
                 AccountManager.deleteUser(testUser, null);
@@ -310,6 +288,4 @@ public class AccountManagerTest {
             }
         });
     }
-
-
 }

@@ -35,10 +35,6 @@ public class LoginActivityUITest {
     private String usernameInputTestText = "username";
     private String passwordInputTestText = "password";
 
-//    @Rule
-//    public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
-//            LoginActivity.class);
-
    @Rule
    public IntentsTestRule<LoginActivity> intentsTestRule = new IntentsTestRule<>(LoginActivity.class);
 
@@ -89,30 +85,15 @@ public class LoginActivityUITest {
     /**
      * Test successful login when sign in button is clicked
      *
-     * TODO: THIS TEST USES LOCKS TO WAIT FOR ASYNC OPERATIONS TO COMPLETE, IT SEEMS VERY HACKERY...BETTER APPROACHES???
-     *
      * @throws Exception Generic exception
      */
     @Test
     public void signInSuccessTest() throws Exception {
         //generate a test user and add it to the user accounts list
         final User testUser = TestingHelper.createTestUser();
-        final Object synchronizer = new Object();
 
         //use the user information to populate the controls
-        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                synchronized (synchronizer) {
-                    synchronizer.notify();
-                }
-            }
-        });
-
-        synchronized(synchronizer) {
-            Log.d("signInSuccessTestDebug", "Waiting for test account creation to finish...");
-            synchronizer.wait();
-        }
+        AccountManager.createUser(testUser, null);
 
         Log.d("signInSuccessTestDebug", "Test account created...populating controls");
 
@@ -127,19 +108,7 @@ public class LoginActivityUITest {
 
         //clean up test user
         AccountManager.setUserLoginState(testUser.getUsername(), false);
-        AccountManager.deleteUser(testUser, new BooleanResultListener() {
-            @Override
-            public void onResult(boolean result) {
-                synchronized (synchronizer) {
-                    synchronizer.notify();
-                }
-            }
-        });
-
-        synchronized(synchronizer) {
-            Log.d("signInSuccessTestDebug", "Waiting for test account deletion to finish...");
-            synchronizer.wait();
-        }
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
 
         intended(hasComponent(MainActivity.class.getName()));
     }
@@ -147,29 +116,19 @@ public class LoginActivityUITest {
     /**
      * Test unsuccessful login due to non existing user
      *
-     * TODO: THIS TEST USES LOCKS TO WAIT FOR ASYNC OPERATIONS TO COMPLETE, IT SEEMS VERY HACKERY...BETTER APPROACHES???
-     *
      * @throws Exception Generic exception
      */
     @Test
     public void signInInvalidUserTest() throws Exception {
         //generate a test user and add it to the user accounts list
         final User testUser = TestingHelper.createTestUser();
-        final Object synchronizer = new Object();
 
+        //ensure the test account does not exist
         AccountManager.deleteUser(testUser, new BooleanResultListener() {
             @Override
             public void onResult(boolean result) {
-                synchronized (synchronizer) {
-                    synchronizer.notify();
-                }
             }
         });
-
-        synchronized(synchronizer) {
-            Log.d("signInInvalidUserTest", "Waiting for test account deletion to finish...");
-            synchronizer.wait();
-        }
 
         Log.d("signInInvalidUserTest", "Populating controls");
 
@@ -183,6 +142,5 @@ public class LoginActivityUITest {
         onView(withId(R.id.btnSignIn)).perform(click());
 
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.loginFailure)));
-
     }
 }
