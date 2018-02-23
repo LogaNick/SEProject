@@ -30,7 +30,37 @@ public class AccountManager {
         void onUserPopulated(User user);
     }
 
+    /**
+     * Retrieves the user account associated with the specified username.  User will be available
+     * to the provided callback.
+     *
+     * @param username Username of the user to be loaded
+     * @param listener Callback to handle response
+     */
+    public static void getUser(String username, final UserObjectListener listener) {
+        //retrieve a reference to the users node
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/" + username);
 
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if the reference exists, convert it to a user instance and pass to listener
+                //otherwise return null
+                if (dataSnapshot.exists()) {
+                    listener.onUserPopulated(dataSnapshot.getValue(User.class));
+                } else {
+                    listener.onUserPopulated(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 
 
     /**
