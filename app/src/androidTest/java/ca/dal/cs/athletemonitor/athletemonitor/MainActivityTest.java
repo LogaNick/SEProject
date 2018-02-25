@@ -33,7 +33,6 @@ public class MainActivityTest {
         Intent i = new Intent();
         i.putExtra("username", "testuser");
         mActivityRule.launchActivity(i);
-        new UserManager().login("testuser", "pass");
     }
 
     /**

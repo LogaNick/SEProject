@@ -39,11 +39,6 @@ public class ExerciseActivityTest {
     public IntentsTestRule<ExerciseActivity> mActivityRule =
             new IntentsTestRule(ExerciseActivity.class, false, false);
 
-    @BeforeClass
-    public static void setupUser(){
-        new UserManager().login("testuser", "pass");
-    }
-
     @Before
     public void setupActivity(){
         Intent i = new Intent();
