@@ -1,6 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 
+import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -28,11 +29,14 @@ import static org.hamcrest.CoreMatchers.not;
 public class CreateExerciseActivityTest {
     @Rule
     public IntentsTestRule<CreateExerciseActivity> mActivityRule =
-            new IntentsTestRule(CreateExerciseActivity.class);
+            new IntentsTestRule(CreateExerciseActivity.class, false, false);
 
     @Before
     public void setupUser(){
-        new UserManager().login("user", "pass");
+        Intent i = new Intent();
+        i.putExtra("username", "testuser");
+        mActivityRule.launchActivity(i);
+        new UserManager().login("testuser", "pass");
     }
 
     /**

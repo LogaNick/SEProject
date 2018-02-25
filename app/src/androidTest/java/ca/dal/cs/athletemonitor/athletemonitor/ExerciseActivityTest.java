@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.LinearLayout;
@@ -34,11 +35,18 @@ import static org.junit.Assert.*;
 public class ExerciseActivityTest {
     @Rule
     public IntentsTestRule<ExerciseActivity> mActivityRule =
-            new IntentsTestRule(ExerciseActivity.class);
+            new IntentsTestRule(ExerciseActivity.class, false, false);
 
     @BeforeClass
     public static void setupUser(){
-        new UserManager().login("user", "pass");
+        new UserManager().login("testuser", "pass");
+    }
+
+    @Before
+    public void setupActivity(){
+        Intent i = new Intent();
+        i.putExtra("username", "testuser");
+        mActivityRule.launchActivity(i);
     }
 
     /**

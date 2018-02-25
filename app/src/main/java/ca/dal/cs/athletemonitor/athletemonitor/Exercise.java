@@ -13,6 +13,11 @@ public class Exercise {
     private int time;
     private TimeUnit timeUnit;
 
+    /**
+     * No args constructor used primarily for database based initialization of exercise objects
+     */
+    public Exercise() { /* intentionally left blank */ }
+
     public Exercise(String name, String description, int time, TimeUnit timeUnit) {
         if (!(Exercise.validateAll(name, description, time))) {
             throw new IllegalArgumentException("Invalid Exercise parameters");

@@ -11,7 +11,8 @@ public class User {
     private String username; //login username and unique identifier
     private String password; //login password
 
-    private List<Exercise> userExercises;
+    // Initialize exercises list
+    private List<Exercise> userExercises = new ArrayList<Exercise>();
 
     /**
      * No args constructor used primarily for database based initialization of user objects
@@ -27,9 +28,6 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-
-        // Initialize exercises list
-        userExercises = new ArrayList<Exercise>();
     }
 
     public List<Exercise> getUserExercises() {

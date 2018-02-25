@@ -35,29 +35,35 @@ public class CreateExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Get the logged in user instance
-                User user = UserManager.getUserInstance();
-                if(user == null){
-                    throw new IllegalStateException("Not logged in");
-                }
+                AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
+                    @Override
+                    public void onUserPopulated(User user) {
+                        if (user == null) {
+                            throw new IllegalStateException("Not logged in");
+                        }
 
-                // Get the exercise data from the fields
-                String name = ((TextView)findViewById(R.id.newExerciseName)).getText().toString();
-                String description = ((TextView)findViewById(R.id.newExerciseDescription)).getText().toString();
-                String timeString = ((TextView)findViewById(R.id.newExerciseTime)).getText().toString();
-                int time = 0;
-                if(!timeString.equals("")){
-                    time = Integer.parseInt(timeString);
-                }
-                TimeUnit unit = timeUnitNames.get(((Spinner)findViewById(R.id.newExerciseTimeUnits)).getSelectedItem().toString());
+                        // Get the exercise data from the fields
+                        String name = ((TextView) findViewById(R.id.newExerciseName)).getText().toString();
+                        String description = ((TextView) findViewById(R.id.newExerciseDescription)).getText().toString();
+                        String timeString = ((TextView) findViewById(R.id.newExerciseTime)).getText().toString();
+                        int time = 0;
+                        if (!timeString.equals("")) {
+                            time = Integer.parseInt(timeString);
+                        }
+                        TimeUnit unit = timeUnitNames.get(((Spinner) findViewById(R.id.newExerciseTimeUnits)).getSelectedItem().toString());
 
-                // Validate fields and submit data
-                if(Exercise.validateAll(name, description, time)){
-                    // Add exercise to user
-                    user.addUserExercise(new Exercise(name, description, time, unit));
-                    // Switch back to exercise activity
-                    Intent exerciseActivityIntent = new Intent(CreateExerciseActivity.this, ExerciseActivity.class);
-                    startActivity(exerciseActivityIntent);
-                }
+                        // Validate fields and submit data
+                        if (Exercise.validateAll(name, description, time)) {
+                            // Add exercise to user
+                            user.addUserExercise(new Exercise(name, description, time, unit));
+                            AccountManager.updateUser(user);
+                            // Switch back to exercise activity
+                            Intent exerciseActivityIntent = new Intent(CreateExerciseActivity.this, ExerciseActivity.class);
+                            exerciseActivityIntent.putExtras(getIntent().getExtras());
+                            startActivity(exerciseActivityIntent);
+                        }
+                    }
+                });
             }
         });
 

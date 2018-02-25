@@ -14,6 +14,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import static android.app.PendingIntent.getActivity;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 public class ExerciseActivity extends AppCompatActivity {
 
@@ -27,39 +29,47 @@ public class ExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent createExerciseActivityIntent = new Intent(ExerciseActivity.this, CreateExerciseActivity.class);
+                createExerciseActivityIntent.putExtras(getIntent().getExtras());
                 startActivity(createExerciseActivityIntent);
             }
         });
 
-        // Get the layout to add exercises to
-        LinearLayout layout = findViewById(R.id.exerciseLinearLayout);
+        AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                // Get the layout to add exercises to
+                LinearLayout layout = findViewById(R.id.exerciseLinearLayout);
 
-        boolean alternateColor = false;
+                boolean alternateColor = false;
 
-        // Get the user's list of exercises
-        List<Exercise> exercises = UserManager.getUserInstance().getUserExercises();
-        // Iterate and add exercises to screen
-        for(Exercise exercise : exercises){
-            // Build a new TextView for this exercise
-            TextView exerciseText = new TextView(this);
-            exerciseText.setText(exercise.getName());
-            exerciseText.setTextSize(28);
-            exerciseText.setPadding(0,30,0,30);
-            if(alternateColor) exerciseText.setBackgroundColor(Color.LTGRAY);
-            exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 4,0,0);
-            exerciseText.setLayoutParams(params);
+                // Get the user's list of exercises
+                List<Exercise> exercises = user.getUserExercises();
+                // Iterate and add exercises to screen
+                for (Exercise exercise : exercises) {
+                    // Build a new TextView for this exercise
+                    TextView exerciseText = new TextView(ExerciseActivity.this);
+                    exerciseText.setText(exercise.getName());
+                    exerciseText.setTextSize(28);
+                    exerciseText.setPadding(0, 30, 0, 30);
+                    if (alternateColor) exerciseText.setBackgroundColor(Color.LTGRAY);
+                    exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 4, 0, 0);
+                    exerciseText.setLayoutParams(params);
 
-            // Add a click listener to show more information
-            exerciseText.setOnClickListener(new DialogOnClickListener(exercise));
-            // Add the text view to the screen
-            layout.addView(exerciseText);
+                    // Add a click listener to show more information
+                    exerciseText.setOnClickListener(new DialogOnClickListener(exercise));
+                    // Add the text view to the screen
+                    layout.addView(exerciseText);
 
-            alternateColor = !alternateColor;
-        }
+                    alternateColor = !alternateColor;
+                }
+            }
+        });
+
+
 
     }
 

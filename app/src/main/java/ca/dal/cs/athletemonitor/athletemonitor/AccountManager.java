@@ -159,6 +159,17 @@ public class AccountManager {
     }
 
     /**
+     * Update a user account
+     *
+     * @param updatedUser User details
+     */
+    public static void updateUser(final User updatedUser){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
+        usersReference.setValue(updatedUser, null);
+    }
+
+    /**
      * Creates a new user account
      *
      * @param newUser User details
