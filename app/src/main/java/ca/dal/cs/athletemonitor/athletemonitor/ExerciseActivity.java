@@ -68,9 +68,6 @@ public class ExerciseActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
     }
 
     // Custom click listener implementation, so that we can access the exercise data.
@@ -93,7 +90,6 @@ public class ExerciseActivity extends AppCompatActivity {
                     .setTitle(exercise.getName())
                     .setMessage("\n"+exercise.getDescription()+"\n\n"+exercise.getTime()+" "+exercise.getTimeUnit().toString().toLowerCase())
                      .show();
-
         }
     }
 }
