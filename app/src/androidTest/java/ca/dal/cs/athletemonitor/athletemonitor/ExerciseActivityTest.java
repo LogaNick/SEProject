@@ -11,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
+
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -47,6 +49,7 @@ public class ExerciseActivityTest {
         Intent i = new Intent();
         i.putExtra("username", "testuser");
         mActivityRule.launchActivity(i);
+        TestingHelper.resetTestUserExercises();
     }
 
     /**

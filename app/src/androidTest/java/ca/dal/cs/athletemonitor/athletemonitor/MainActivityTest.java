@@ -1,10 +1,13 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 
+import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +25,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class MainActivityTest {
     @Rule
     public IntentsTestRule<MainActivity> mActivityRule =
-            new IntentsTestRule(MainActivity.class);
+            new IntentsTestRule(MainActivity.class, false, false);
+
+    @Before
+    public void loginToTestUser() {
+        AccountManager.authenticate(new User("testuser", "abc"), null);
+        Intent i = new Intent();
+        i.putExtra("username", "testuser");
+        mActivityRule.launchActivity(i);
+        new UserManager().login("testuser", "pass");
+    }
 
     /**
      * Test that the button to transfer to the exercise activity works.
