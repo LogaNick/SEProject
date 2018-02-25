@@ -1,14 +1,19 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
+
+import static android.app.PendingIntent.getActivity;
 
 public class ExerciseActivity extends AppCompatActivity {
 
@@ -48,10 +53,37 @@ public class ExerciseActivity extends AppCompatActivity {
             params.setMargins(0, 4,0,0);
             exerciseText.setLayoutParams(params);
 
+            // Add a click listener to show more information
+            exerciseText.setOnClickListener(new DialogOnClickListener(exercise));
             // Add the text view to the screen
             layout.addView(exerciseText);
 
             alternateColor = !alternateColor;
+        }
+
+    }
+
+    // Custom click listener implementation, so that we can access the exercise data.
+    class DialogOnClickListener implements View.OnClickListener{
+        Exercise exercise;
+        public DialogOnClickListener(Exercise exercise){
+            this.exercise = exercise;
+        }
+        @Override
+        public void onClick(View v){
+            AlertDialog.Builder builder = new AlertDialog.Builder(ExerciseActivity.this);
+            LayoutInflater inflater = ExerciseActivity.this.getLayoutInflater();
+
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setTitle(exercise.getName())
+                    .setMessage("\n"+exercise.getDescription()+"\n\n"+exercise.getTime()+" "+exercise.getTimeUnit().toString().toLowerCase())
+                     .show();
+
         }
     }
 }

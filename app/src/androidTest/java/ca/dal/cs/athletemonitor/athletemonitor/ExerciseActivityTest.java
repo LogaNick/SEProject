@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -17,9 +18,13 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -66,11 +71,18 @@ public class ExerciseActivityTest {
         onView(withId(R.id.newExerciseName)).perform(typeText("Run"));
         onView(withId(R.id.newExerciseDescription)).perform(typeText("Run outside"));
         onView(withId(R.id.newExerciseTime)).perform(typeText("5"), closeSoftKeyboard());
+        onView(withId(R.id.newExerciseTimeUnits)).perform(click());
+        onData(allOf(is(instanceOf(String.class)),is("Minutes")))
+                .perform(click());
 
         // Click submit button
         onView(withId(R.id.newExerciseSubmitButton)).perform(click());
 
         // Check that the new exercise is there
         onView(withParent(withId(R.id.exerciseLinearLayout))).check(matches(withText("Run")));
+
+        // Check that the dialog box works
+        onView(withParent(withId(R.id.exerciseLinearLayout))).perform(click());
+        onView(allOf(withText("Run outside"),withText("5 minutes")));
     }
 }
