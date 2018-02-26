@@ -13,7 +13,6 @@ import static org.junit.Assert.assertTrue;
 /**
  * Unit tests for the Exercise class
  */
-
 public class ExerciseTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();

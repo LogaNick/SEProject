@@ -18,7 +18,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 public class ExerciseActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +50,16 @@ public class ExerciseActivity extends AppCompatActivity {
                     exerciseText.setText(exercise.getName());
                     exerciseText.setTextSize(28);
                     exerciseText.setPadding(0, 30, 0, 30);
+
                     if (alternateColor) exerciseText.setBackgroundColor(Color.LTGRAY);
+
                     exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 4, 0, 0);
+
                     exerciseText.setLayoutParams(params);
 
                     // Add a click listener to show more information
@@ -73,13 +76,14 @@ public class ExerciseActivity extends AppCompatActivity {
     // Custom click listener implementation, so that we can access the exercise data.
     class DialogOnClickListener implements View.OnClickListener{
         Exercise exercise;
+
         public DialogOnClickListener(Exercise exercise){
             this.exercise = exercise;
         }
+
         @Override
         public void onClick(View v){
             AlertDialog.Builder builder = new AlertDialog.Builder(ExerciseActivity.this);
-            LayoutInflater inflater = ExerciseActivity.this.getLayoutInflater();
 
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
@@ -88,8 +92,8 @@ public class ExerciseActivity extends AppCompatActivity {
                         }
                     })
                     .setTitle(exercise.getName())
-                    .setMessage("\n"+exercise.getDescription()+"\n\n"+exercise.getTime()+" "+exercise.getTimeUnit().toString().toLowerCase())
-                     .show();
+                    .setMessage("\n" + exercise.getDescription() + "\n\n" + exercise.getTime() + " " + exercise.getTimeUnit().toString().toLowerCase())
+                    .show();
         }
     }
 }

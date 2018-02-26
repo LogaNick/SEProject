@@ -47,9 +47,11 @@ public class CreateExerciseActivity extends AppCompatActivity {
                         String description = ((TextView) findViewById(R.id.newExerciseDescription)).getText().toString();
                         String timeString = ((TextView) findViewById(R.id.newExerciseTime)).getText().toString();
                         int time = 0;
+
                         if (!timeString.equals("")) {
                             time = Integer.parseInt(timeString);
                         }
+
                         TimeUnit unit = timeUnitNames.get(((Spinner) findViewById(R.id.newExerciseTimeUnits)).getSelectedItem().toString());
 
                         // Validate fields and submit data
@@ -80,10 +82,10 @@ public class CreateExerciseActivity extends AppCompatActivity {
                 String description = ((TextView)findViewById(R.id.newExerciseDescription)).getText().toString();
                 String timeString = ((TextView)findViewById(R.id.newExerciseTime)).getText().toString();
                 int time = 0;
+
                 if(!timeString.equals("")){
                     time = Integer.parseInt(timeString);
                 }
-                TimeUnit unit = timeUnitNames.get(((Spinner)findViewById(R.id.newExerciseTimeUnits)).getSelectedItem().toString());
 
                 ((Button)findViewById(R.id.newExerciseSubmitButton)).setEnabled(Exercise.validateAll(name, description, time));
             }
