@@ -15,11 +15,11 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/button8"
+            android:id="@+id/goToExerciseActivityButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="Exercises" />
 
         <Button
             android:id="@+id/button7"

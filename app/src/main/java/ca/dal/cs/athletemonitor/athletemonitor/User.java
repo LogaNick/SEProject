@@ -1,5 +1,8 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class represents the account information of a user, including all data associated with
  * functionality of the app.
@@ -7,6 +10,9 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 public class User {
     private String username; //login username and unique identifier
     private String password; //login password
+
+    // Initialize exercises list
+    private List<Exercise> userExercises = new ArrayList<Exercise>();
 
     /**
      * No args constructor used primarily for database based initialization of user objects
@@ -22,6 +28,14 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public List<Exercise> getUserExercises() {
+        return userExercises;
+    }
+
+    public void addUserExercise(Exercise exercise){
+        userExercises.add(exercise);
     }
 
     /**

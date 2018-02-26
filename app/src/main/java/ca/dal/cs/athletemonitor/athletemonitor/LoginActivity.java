@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signInClick(View view) throws InterruptedException {
         //get data from activity
-        final String username = ((EditText) this.findViewById(R.id.txtUsername)).getText().toString();
+        final String username = ((EditText) this.findViewById(R.id.txtUsername)).getText().toString().trim();
         String password = ((EditText) this.findViewById(R.id.txtPassword)).getText().toString();
         final Activity thisActivity = this;
 

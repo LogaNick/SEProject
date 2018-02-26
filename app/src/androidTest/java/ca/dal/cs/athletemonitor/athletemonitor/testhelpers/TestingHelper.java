@@ -1,5 +1,9 @@
 package ca.dal.cs.athletemonitor.athletemonitor.testhelpers;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
 import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
@@ -46,5 +50,21 @@ public class TestingHelper {
      */
     public static User createTestUser() {
         return new User("test_user", "test_password");
+    }
+
+    /**
+     * Test helper to authenticate the testuser
+     */
+    public static void authTestUser(){
+        AccountManager.authenticate(new User("testuser", "abc"), null);
+    }
+
+    /**
+     * Test helper to reset the testuser's exercise list
+     */
+    public static void resetTestUserExercises(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/testuser");
+        usersReference.child("userExercises").setValue(null);
     }
 }

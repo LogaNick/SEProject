@@ -18,19 +18,27 @@ public class MainActivity extends AppCompatActivity {
         // in.  If username doesn't exist, go to sign in.
         //TODO: implement User as Parcelable
         //TODO: initialize a User object with user data to pass around to other activities
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras == null || !extras.containsKey("username")) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         } else {
             ((Button)this.findViewById(R.id.btnSignin)).setText("Signout " + extras.getString("username"));
         }
+
+        // Add the exercise button click listener
+        findViewById(R.id.goToExerciseActivityButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent exerciseActivityIntent = new Intent(MainActivity.this, ExerciseActivity.class);
+                exerciseActivityIntent.putExtra("username", extras.getString("username"));
+                startActivity(exerciseActivityIntent);
+            }
+        });
     }
 
     public void startLogin(View view) {
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivity(loginIntent);
     }
-
-
 }
