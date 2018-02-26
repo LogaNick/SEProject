@@ -16,6 +16,12 @@ import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
  * This class performs management of a user account
  */
 public class AccountManager {
+
+    /**
+     * lastAuth holds the username of the last authenticated user
+     */
+    private static String lastAuth = "";
+
     /**
      * Listener interface for checking if a user exists.
      *
@@ -95,6 +101,7 @@ public class AccountManager {
                     //and return a successful login attempt, otherwise, report a failed login
                     if (userLoggingIn.getPassword().equals(user.getPassword())) {
                         AccountManager.setUserLoginState(user.getUsername(), true);
+                        lastAuth = user.getUsername();
                         authResult = true;
                     }
                 }
@@ -164,9 +171,12 @@ public class AccountManager {
      * @param updatedUser User details
      */
     public static void updateUser(final User updatedUser){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
-        usersReference.setValue(updatedUser, null);
+        // Ensure that the user is the currently authenticated user
+        if(lastAuth.equals(updatedUser.getUsername())){
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
+            usersReference.setValue(updatedUser, null);
+        }
     }
 
     /**

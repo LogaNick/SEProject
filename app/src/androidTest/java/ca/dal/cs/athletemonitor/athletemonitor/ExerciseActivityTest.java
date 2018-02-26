@@ -25,6 +25,7 @@ import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -38,6 +39,11 @@ public class ExerciseActivityTest {
     @Rule
     public IntentsTestRule<ExerciseActivity> mActivityRule =
             new IntentsTestRule(ExerciseActivity.class, false, false);
+
+    @BeforeClass
+    public static void setupEnvironment(){
+        authTestUser();
+    }
 
     @Before
     public void setupActivity(){

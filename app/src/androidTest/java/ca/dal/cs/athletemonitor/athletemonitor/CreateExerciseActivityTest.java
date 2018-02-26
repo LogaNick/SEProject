@@ -7,6 +7,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
 import static org.hamcrest.CoreMatchers.not;
 
 /**
@@ -32,6 +34,11 @@ public class CreateExerciseActivityTest {
     @Rule
     public IntentsTestRule<CreateExerciseActivity> mActivityRule =
             new IntentsTestRule(CreateExerciseActivity.class, false, false);
+
+    @BeforeClass
+    public static void setupEnvironment(){
+        authTestUser();
+    }
 
     @Before
     public void setupUser(){

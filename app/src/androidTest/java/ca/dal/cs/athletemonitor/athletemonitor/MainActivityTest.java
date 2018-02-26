@@ -29,7 +29,9 @@ public class MainActivityTest {
 
     @Before
     public void loginToTestUser() {
+        // Authenticate user and set login state to false so Firebase does not keep testuser online
         AccountManager.authenticate(new User("testuser", "abc"), null);
+        AccountManager.setUserLoginState("testuser", false);
         Intent i = new Intent();
         i.putExtra("username", "testuser");
         mActivityRule.launchActivity(i);
