@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * UI Test for Login Activity
  */
-
+//TODO: ACCOUNT MANAGER CLASS NEEDS TO BE MOCKED
 public class AccountManagerTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
@@ -34,7 +34,7 @@ public class AccountManagerTest {
     /**
      * Tests the successful generation of a user object instance from user account information
      * in the database.
-     * <p>
+     *
      * Will pass if user object is populated with the user information from the database
      *
      * @throws Exception
@@ -43,7 +43,7 @@ public class AccountManagerTest {
     public void getUserSuccessTest() throws Exception {
         //construct a test user and add them to the accounts list for testing
         final User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(TestingHelper.createTestUser());
+        AccountManager.createUser(testUser);
 
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
@@ -60,7 +60,7 @@ public class AccountManagerTest {
 
     /**
      * Tests that not user information is generated for users that do not exist in the database.
-     * <p>
+     *
      * Will pass if user object is null on reading account that doesn't exist
      *
      * @throws Exception
@@ -83,7 +83,7 @@ public class AccountManagerTest {
 
     /**
      * Tests user authentication
-     * <p>
+     *
      * Will pass test if username exists in the database and supplied password matches
      * password as stored in database
      *
@@ -104,7 +104,7 @@ public class AccountManagerTest {
 
     /**
      * Tests user authentication
-     * <p>
+     *
      * Will pass test if username exists in the database and supplied password matches
      * password as stored in database
      *
@@ -114,7 +114,7 @@ public class AccountManagerTest {
     public void signInFailureTest() throws Exception {
         //construct a test user and add them to the accounts list
         User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(TestingHelper.createTestUser());
+        AccountManager.createUser(testUser);
 
         //change test user's local password
         testUser.setPassword("newpassword");
@@ -128,7 +128,7 @@ public class AccountManagerTest {
 
     /**
      * Tests that a user that has been authenticated is tagged as logged in
-     * <p>
+     *
      * Will pass if there exists a child node in the online_users reference equal to the users
      * username.
      *
@@ -138,8 +138,11 @@ public class AccountManagerTest {
     public void setUserLoggedInTrueTest() throws Exception {
         //create a test user and set them as online
         User testUser = TestingHelper.createTestUser();
+        sleep(3000);
 
         AccountManager.setUserLoginState(testUser.getUsername(), true);
+
+        sleep(3000);
 
         //attempt to retrieve a reference to the logged in user
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -162,7 +165,7 @@ public class AccountManagerTest {
 
     /**
      * Tests that a user that has been authenticated is tagged as logged in
-     * <p>
+     *
      * Will pass if there exists a child node in the online_users reference equal to the users
      * username.
      *
@@ -198,7 +201,7 @@ public class AccountManagerTest {
 
     /**
      * Tests creation of a new user
-     * <p>
+     *
      * Will pass if new account is added to the users branch of database
      *
      * @throws Exception Generic exception
@@ -220,7 +223,7 @@ public class AccountManagerTest {
 
     /**
      * Test for true positive on existing user
-     * <p>
+     *
      * Will pass in a username that does exist in the user accounts to the validate method and
      * assert that the return value of validate is true
      *
@@ -245,7 +248,7 @@ public class AccountManagerTest {
 
     /**
      * Test for false positive on existing user
-     * <p>
+     *
      * Will pass if a username that does not exist in the user accounts is passed to the userExists
      * method.  Asserts that the return value of is false
      *
@@ -265,7 +268,7 @@ public class AccountManagerTest {
 
     /**
      * Test for deleting a user account.
-     * <p>
+     *
      * First checks if the test user exists in the database.  If it does not exist, it is created
      * and then a deleteUser call is made.  If the delete operation is completed without errors
      * the test is assumed to be passed.
@@ -303,24 +306,21 @@ public class AccountManagerTest {
 
         //create the test user in firebase in order to authenticate
         AccountManager.createUser(testUser);
+        sleep(1000);
 
-        //authenticate user (logs in user, user login state should be true)
-        AccountManager.authenticate(testUser, new BooleanResultListener() {
-            @Override
-            public void onResult(boolean result) {
-                //ensure user is logged in before continuing test
-                assertTrue("User could not be signed in...", result);
+        AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
+        sleep(1000);
 
-                //test if isLoggedIn returns true (user logged in)
-                AccountManager.isLoggedIn(testUser, TestingHelper.assertTrueBooleanResult());
+        //test if isLoggedIn returns true (user logged in)
+        AccountManager.isLoggedIn(testUser, TestingHelper.assertTrueBooleanResult());
+        sleep(1000);
 
-                //sign the user out
-                AccountManager.setUserLoginState(testUser.getUsername(), false);
+        //sign the user out
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
+        sleep(1000);
 
-                // clean up firebase by deleting test user
-                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-            }
-        });
+        // clean up firebase by deleting test user
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 
     /**
