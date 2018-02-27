@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent createTeamActivityIntent = new Intent(MainActivity.this, CreateTeamActivity.class);
+                createTeamActivityIntent.putExtra("username", extras.getString("username"));
                 startActivity(createTeamActivityIntent);
             }
         });
