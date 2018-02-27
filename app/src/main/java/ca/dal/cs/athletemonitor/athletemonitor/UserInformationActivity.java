@@ -120,11 +120,8 @@ public class UserInformationActivity extends AppCompatActivity {
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-
-		String userId = "testauston";
-		//TODO Pass username in intent that starts this activity
-//		Intent intent = getIntent();
-//		String userId = intent.getStringExtra(USER_ID);
+		Intent intent = getIntent();
+		String userId = intent.getStringExtra(USER_ID);
 		this.userId = userId;
 
 		retrieveInfo(userId);
