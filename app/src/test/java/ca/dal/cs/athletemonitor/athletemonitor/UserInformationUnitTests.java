@@ -1,5 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.os.Parcel;
+
 import org.junit.Test;
 import ca.dal.cs.athletemonitor.athletemonitor.UserInformation.UserInformationBuilder;
 
@@ -75,4 +77,23 @@ public class UserInformationUnitTests {
 		assertEquals(TEST_STATEMENT, info.personalStatement);
 	}
 
+	@Test
+	public void checkGetters() {
+        UserInformation info =
+                new UserInformationBuilder(TEST_FIRST_NAME, TEST_LAST_NAME)
+                        .age(TEST_AGE)
+                        .height(TEST_HEIGHT)
+                        .weight(TEST_WEIGHT)
+                        .athleteType(TEST_ATHLETE_TYPE)
+                        .personalStatement(TEST_STATEMENT)
+                        .build();
+
+        assertEquals(TEST_FIRST_NAME, info.getFirstName());
+        assertEquals(TEST_LAST_NAME, info.getLastName());
+        assertEquals(TEST_AGE, info.getAge());
+        assertEquals(TEST_HEIGHT, info.getHeight());
+        assertEquals(TEST_WEIGHT, info.getWeight());
+        assertEquals(TEST_ATHLETE_TYPE, info.getAthleteType());
+        assertEquals(TEST_STATEMENT, info.getPersonalStatement());
+    }
 }
