@@ -18,11 +18,14 @@
         </activity>
         <activity
             android:name=".ExerciseActivity"
-            android:label="Exercises"></activity>
+            android:label="Exercises" />
         <activity
             android:name=".CreateExerciseActivity"
-            android:label="New Exercise"></activity>
-        <activity android:name=".LoginActivity"/>
+            android:label="New Exercise" />
+        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".CreateTeamActivity"
+            android:label="New Team" />
     </application>
 
 </manifest>
