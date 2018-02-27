@@ -5,10 +5,14 @@ import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import android.accounts.Account;
+import android.app.Activity;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import org.hamcrest.Matcher;
 import org.junit.Rule;
@@ -25,7 +29,10 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+import static java.lang.Thread.sleep;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -142,7 +149,6 @@ public class LoginActivityUITest {
 
         Log.d("signInInvalidUserTest", "Controls populated, performing click...");
         onView(withId(R.id.btnSignIn)).perform(click());
-
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.loginFailure)));
     }
 
@@ -154,27 +160,22 @@ public class LoginActivityUITest {
     @Test
     public void accountRegisterSuccessTest() throws Exception {
         //create a test user to register
-        User testUser = TestingHelper.createTestUser();
+        final User testUser = TestingHelper.createTestUser();
+        final Activity loginActivity = intentsTestRule.getActivity();
 
-        // populate activity controls
+        //populate controls with login information
         onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
         closeSoftKeyboard();
         onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
         closeSoftKeyboard();
 
-        //click register button
         onView(withId(R.id.btnRegister)).perform(click());
+        sleep(1000);
+        
+        onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountCreated)));
 
-        //check if account was created
-        AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
-            @Override
-            public void onUserExists(boolean result) {
-                assertTrue(result);
-                onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountCreated)));
-            }
-        });
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
-
 
     /**
      * Tests Register button click creates account could not create account
@@ -185,23 +186,20 @@ public class LoginActivityUITest {
     public void accountRegisterFailureTest() throws Exception {
         //create a test user to register
         final User testUser = TestingHelper.createTestUser();
+        final Activity loginActivity = intentsTestRule.getActivity();
 
-        //create an account in order to detect duplicate account
-        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                // populate activity controls
-                onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
-                closeSoftKeyboard();
-                onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
-                closeSoftKeyboard();
+        AccountManager.createUser(testUser, null);
+       // sleep(5000);
+        //populate controls with login information
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
+        closeSoftKeyboard();
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
+        closeSoftKeyboard();
 
-                //click register button
-                onView(withId(R.id.btnRegister)).perform(click());
+        onView(withId(R.id.btnRegister)).perform(click());
+        //sleep(5000);
+        onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountNotCreated)));
 
-                assertNull(user);
-                onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountNotCreated)));
-            }
-        });
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 }
