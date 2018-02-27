@@ -119,6 +119,8 @@ public class LoginActivityUITest {
         AccountManager.setUserLoginState(testUser.getUsername(), false);
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
 
+        sleep(3000);
+
         intended(hasComponent(MainActivity.class.getName()));
     }
 
@@ -149,6 +151,9 @@ public class LoginActivityUITest {
 
         Log.d("signInInvalidUserTest", "Controls populated, performing click...");
         onView(withId(R.id.btnSignIn)).perform(click());
+
+        sleep(3000);
+
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.loginFailure)));
     }
 
@@ -171,7 +176,7 @@ public class LoginActivityUITest {
 
         onView(withId(R.id.btnRegister)).perform(click());
         sleep(1000);
-        
+
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountCreated)));
 
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
