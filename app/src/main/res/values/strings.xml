@@ -1,5 +1,17 @@
 <resources>
+
     <string name="app_name">Athlete Monitor</string>
+    <string-array name="ExerciseTimeUnits">
+      <item>Seconds</item>
+      <item>Minutes</item>
+      <item>Hours</item>
+    </string-array>
+    <string name="ButtonText_SignIn">Sign In</string>
+    <string name="ButtonText_RegisterAccount">Register one here...</string>
+    <string name="TextView_NoAccount">Don\'t have an account?</string>
+    <string name="TextView_WelcomeBack">We missed you, sign in below!</string>
+    <string name="loginSuccess">Welcome back!</string>
+    <string name="loginFailure">Invalid username or password.</string>
     <string name="title_activity_user_information">Personal Information</string>
     <string name="title_activity_user_information_edit">Edit Personal Information</string>
 

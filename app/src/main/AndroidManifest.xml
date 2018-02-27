@@ -10,27 +10,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".UserInformationActivity"
-            android:label="@string/title_activity_user_information"
-            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+            	<action android:name="android.intent.action.MAIN" />
+            	<category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserInformationEditActivity"
-            android:label="@string/title_activity_user_information_edit"
+            android:name=".ExerciseActivity"
+            android:label="Exercises"></activity>
+        <activity
+            android:name=".CreateExerciseActivity"
+            android:label="New Exercise"></activity>
+        <activity android:name=".LoginActivity"/>
+		<activity
+            android:name=".UserInformationActivity"
+            android:label="@string/title_activity_user_information"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+		<activity>
+			android:name=".UserInformationEditActivity"
+			android:label="@string/title_activity_user_information_edit"
+			android:theme="@style/AppTheme.NoActionBar">
+		</activity>
+
     </application>
 
 </manifest>

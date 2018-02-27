@@ -19,7 +19,7 @@ No iterations have been released.
 
 Iteration 0 includes the software engineering activities required to seed the agile development cycle.  It includes:
 
-1. Setting up the Github environment;
+1. Setting up the GitHub environment;
 1. Integrating Waffle;
 1. Setting up team communication in Slack;
 1. Ensuring Android Studio is functional for all team members;
@@ -89,7 +89,7 @@ Of the labels used that are not managed by Waffle, there are three main categori
    1. In Progress: Currently being handled by the assigned team member.
    1. In Review: Under code and correctness evaluation.
    1. Merge: Issue reviewed, passes integration and unit testing, and is waiting to be merged.
-   1. On Hold: Waiting for progress required with other isues, or awaiting assessment for being abandoned.
+   1. On Hold: Waiting for progress required with other issues, or awaiting assessment for being abandoned.
    1. Review Needed: Unit and integration tests pass, awaiting for code and correctness evaluation.
 
 1. Type: The type of issue

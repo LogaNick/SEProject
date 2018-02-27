@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "110949252444-rorbii5jdtpg6qfjl3agvpkhqqj9i0ve.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ca.dal.cs.athletemonitor.athletemonitor",
-            "certificate_hash": "1b55ed96d32e5e995a0c434623515bcb08323f51"
-          }
-        },
-        {
           "client_id": "110949252444-9e484r4o0ot4ups38p0tuaghghu3shc9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
