@@ -45,4 +45,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void onRegisterButtonClick(View view) {
+        //get data from activity
+        final String username = ((EditText) this.findViewById(R.id.txtUsername)).getText().toString().trim();
+        String password = ((EditText) this.findViewById(R.id.txtPassword)).getText().toString();
+
+        Log.d("CREATING_USER", "Creating user..");
+        AccountManager.createUser(new User(username, password), new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                Log.d("CREATING_USER", "Callback entered");
+                if (user != null) {
+                    Log.d("CREATING_USER", "Account created...username: " + user.getUsername());
+                    ((TextView) LoginActivity.this.findViewById(R.id.lblMessage)).setText(R.string.accountCreated);
+                } else {
+                    Log.d("CREATING_USER", "User not created");
+                    ((TextView) LoginActivity.this.findViewById(R.id.lblMessage)).setText(R.string.accountNotCreated);
+                }
+            }
+        });
+    }
 }

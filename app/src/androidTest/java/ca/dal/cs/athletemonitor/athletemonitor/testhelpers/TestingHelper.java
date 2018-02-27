@@ -49,7 +49,9 @@ public class TestingHelper {
      * @return Pre-determined user object with known information for testing purposes
      */
     public static User createTestUser() {
-        return new User("test_user", "test_password");
+        int randomNum = (int) (Math.random() * 1000);
+
+        return new User("test_user" + randomNum, "test_password");
     }
 
     /**
@@ -66,5 +68,11 @@ public class TestingHelper {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users/testuser");
         usersReference.child("userExercises").setValue(null);
+    }
+
+    public static void resetTestTeam(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference teamsReference = database.getReference("teams");
+        teamsReference.child("testteam").setValue(null);
     }
 }

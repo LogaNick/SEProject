@@ -13,4 +13,6 @@
     <string name="loginSuccess">Welcome back!</string>
     <string name="loginFailure">Invalid username or password.</string>
     <string name="ButtonText_SignOut">Sign Out</string>
+    <string name="accountCreated">Account created.</string>
+    <string name="accountNotCreated">Cannot create account.</string>
 </resources>
