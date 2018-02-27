@@ -32,7 +32,7 @@ public class AccountManagerTest {
     /**
      * Tests the successful generation of a user object instance from user account information
      * in the database.
-     *
+     * <p>
      * Will pass if user object is populated with the user information from the database
      *
      * @throws Exception
@@ -46,7 +46,7 @@ public class AccountManagerTest {
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null",user);
+                assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null", user);
                 assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
                         user.getUsername(), testUser.getUsername());
 
@@ -58,7 +58,7 @@ public class AccountManagerTest {
 
     /**
      * Tests that not user information is generated for users that do not exist in the database.
-     *
+     * <p>
      * Will pass if user object is null on reading account that doesn't exist
      *
      * @throws Exception
@@ -73,7 +73,7 @@ public class AccountManagerTest {
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                assertNull("Expecting null user reference, but found user account " + testUser.getUsername(),user);
+                assertNull("Expecting null user reference, but found user account " + testUser.getUsername(), user);
             }
         });
     }
@@ -81,7 +81,7 @@ public class AccountManagerTest {
 
     /**
      * Tests user authentication
-     *
+     * <p>
      * Will pass test if username exists in the database and supplied password matches
      * password as stored in database
      *
@@ -102,7 +102,7 @@ public class AccountManagerTest {
 
     /**
      * Tests user authentication
-     *
+     * <p>
      * Will pass test if username exists in the database and supplied password matches
      * password as stored in database
      *
@@ -126,7 +126,7 @@ public class AccountManagerTest {
 
     /**
      * Tests that a user that has been authenticated is tagged as logged in
-     *
+     * <p>
      * Will pass if there exists a child node in the online_users reference equal to the users
      * username.
      *
@@ -134,10 +134,10 @@ public class AccountManagerTest {
      */
     @Test
     public void setUserLoggedInTrueTest() throws Exception {
-       //create a test user and set them as online
-       User testUser = TestingHelper.createTestUser();
+        //create a test user and set them as online
+        User testUser = TestingHelper.createTestUser();
 
-       AccountManager.setUserLoginState(testUser.getUsername(), true);
+        AccountManager.setUserLoginState(testUser.getUsername(), true);
 
         //attempt to retrieve a reference to the logged in user
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -160,7 +160,7 @@ public class AccountManagerTest {
 
     /**
      * Tests that a user that has been authenticated is tagged as logged in
-     *
+     * <p>
      * Will pass if there exists a child node in the online_users reference equal to the users
      * username.
      *
@@ -196,29 +196,29 @@ public class AccountManagerTest {
 
     /**
      * Tests creation of a new user
-     *
+     * <p>
      * Will pass if new account is added to the users branch of database
      *
      * @throws Exception Generic exception
      */
     @Test
     public void createUserTest() throws Exception {
-       final User testUser = TestingHelper.createTestUser();
+        final User testUser = TestingHelper.createTestUser();
 
-       AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
-           @Override
-           public void onUserPopulated(User user) {
-               assertNotNull("Expecting valid user object, but seen null...", user);
+        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                assertNotNull("Expecting valid user object, but seen null...", user);
 
-               //if the user was created successfully, remove before exiting
-               AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-           }
-       });
+                //if the user was created successfully, remove before exiting
+                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+            }
+        });
     }
 
     /**
      * Test for true positive on existing user
-     *
+     * <p>
      * Will pass in a username that does exist in the user accounts to the validate method and
      * assert that the return value of validate is true
      *
@@ -243,7 +243,7 @@ public class AccountManagerTest {
 
     /**
      * Test for false positive on existing user
-     *
+     * <p>
      * Will pass if a username that does not exist in the user accounts is passed to the userExists
      * method.  Asserts that the return value of is false
      *
@@ -263,7 +263,7 @@ public class AccountManagerTest {
 
     /**
      * Test for deleting a user account.
-     *
+     * <p>
      * First checks if the test user exists in the database.  If it does not exist, it is created
      * and then a deleteUser call is made.  If the delete operation is completed without errors
      * the test is assumed to be passed.
@@ -290,29 +290,50 @@ public class AccountManagerTest {
     }
 
     /**
-     * Test isLogged
-     *
+     * Test for isLoggedIn true positive
      *
      * @throws Exception Generic exception
      */
     @Test
-    public void isLoggedInTest() throws Exception {
-        //Create a test user
+    public void isLoggedInTrueTest() throws Exception {
+        //create a local user object instance
         final User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(TestingHelper.createTestUser());
 
-        //test for true positive
+        //create the test user in firebase in order to authenticate
+        AccountManager.createUser(testUser);
 
-        //Create an entry in the online_users node (in Firebase)
-        AccountManager.setUserLoginState(testUser.getUsername(), true);
+        //authenticate user (logs in user, user login state should be true)
+        AccountManager.authenticate(testUser, new BooleanResultListener() {
+            @Override
+            public void onResult(boolean result) {
+                //ensure user is logged in before continuing test
+                assertTrue("User could not be signed in...", result);
 
-        AccountManager.isLoggedIn(testUser, TestingHelper.assertTrueBooleanResult());
+                //test if isLoggedIn returns true (user logged in)
+                AccountManager.isLoggedIn(testUser, TestingHelper.assertTrueBooleanResult());
 
-        //test for false positive
+                //sign the user out
+                AccountManager.setUserLoginState(testUser.getUsername(), false);
 
-        //Create an entry in the online_users node (in Firebase)
-        AccountManager.setUserLoginState(testUser.getUsername(), false);
+                // clean up firebase by deleting test user
+                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+            }
+        });
+    }
 
+    /**
+     * Test for isLoggedIn true negative
+     *
+     * Test will pass if isLoggedIn returns false
+     *
+     * @throws Exception Generic exception
+     */
+    @Test
+    public void isLoggedInFalseTest() throws Exception {
+        //create a local user object instance
+        final User testUser = TestingHelper.createTestUser();
+
+        //test if isLoggedIn returns false (user not logged in)
         AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
     }
 }
