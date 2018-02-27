@@ -31,12 +31,12 @@ public class CreateTeamActivity extends AppCompatActivity {
 
                 if(Team.validateAll(name, motto)){
                     // Submit new team to database
-                    TeamManager.newTeam(new Team(name, motto));
-
-                    // Switch back to MainActivity
-                    Intent mainActivityIntent = new Intent(CreateTeamActivity.this, MainActivity.class);
-                    mainActivityIntent.putExtras(getIntent().getExtras());
-                    startActivity(mainActivityIntent);
+                    if(TeamManager.newTeam(new Team(name, motto))){
+                        // Switch back to MainActivity when successfully created team
+                        Intent mainActivityIntent = new Intent(CreateTeamActivity.this, MainActivity.class);
+                        mainActivityIntent.putExtras(getIntent().getExtras());
+                        startActivity(mainActivityIntent);
+                    }
                 }
             }
         });
