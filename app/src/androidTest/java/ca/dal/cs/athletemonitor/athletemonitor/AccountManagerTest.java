@@ -288,4 +288,31 @@ public class AccountManagerTest {
             }
         });
     }
+
+    /**
+     * Test isLogged
+     *
+     *
+     * @throws Exception Generic exception
+     */
+    @Test
+    public void isLoggedInTest() throws Exception {
+        //Create a test user
+        final User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(TestingHelper.createTestUser());
+
+        //test for true positive
+
+        //Create an entry in the online_users node (in Firebase)
+        AccountManager.setUserLoginState(testUser.getUsername(), true);
+
+        AccountManager.isLoggedIn(testUser, TestingHelper.assertTrueBooleanResult());
+
+        //test for false positive
+
+        //Create an entry in the online_users node (in Firebase)
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
+
+        AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
+    }
 }

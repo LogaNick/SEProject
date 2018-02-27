@@ -63,12 +63,12 @@ public class MainActivityTest {
         User testUser = TestingHelper.createTestUser();
 
         //Create an entry in the online_users node (in Firebase)
-        AccountManager.setUserLoginState(testUser.getUsername(), true);
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
 
         onView(withId(R.id.btnSignOut)).perform(click());
 
         //check that Firebase has been updated
-        //AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
+        AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
 
         //check that Login Activity has been started
         intended(hasComponent(LoginActivity.class.getName()));
