@@ -1,6 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -41,17 +43,20 @@ public class AccountManagerTest {
     public void getUserSuccessTest() throws Exception {
         //construct a test user and add them to the accounts list for testing
         final User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(TestingHelper.createTestUser());
-
-        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
+        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null",user);
-                assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
-                        user.getUsername(), testUser.getUsername());
+                AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
+                    @Override
+                    public void onUserPopulated(User user) {
+                        assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null",user);
+                        assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
+                                user.getUsername(), testUser.getUsername());
 
-                //delete test user from database
-                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+                        //delete test user from database
+                        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+                    }
+                });
             }
         });
     }
@@ -91,7 +96,7 @@ public class AccountManagerTest {
     public void signInSuccessTest() throws Exception {
         //construct a test user and add them to the accounts list
         User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(TestingHelper.createTestUser());
+        AccountManager.createUser(testUser);
 
         //attempt to sign in
         AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
@@ -227,7 +232,7 @@ public class AccountManagerTest {
     @Test
     public void userExistsTest() throws Exception {
         final User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(TestingHelper.createTestUser());
+        AccountManager.createUser(testUser);
 
         AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
             @Override

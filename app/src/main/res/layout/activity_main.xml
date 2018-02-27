@@ -22,13 +22,13 @@
             android:text="Exercises" />
 
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/createNewTeamButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="New Team" />
 
-        <Button
+		<Button
             android:id="@+id/goToUserInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

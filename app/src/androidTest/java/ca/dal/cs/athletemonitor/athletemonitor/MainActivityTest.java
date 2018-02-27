@@ -54,4 +54,15 @@ public class MainActivityTest {
         intended(hasComponent(UserInformationActivity.class.getName()));
     }
 
+    /**
+     * Test that the button to create a new team transfers to the new team activity.
+     * @throws Exception
+     */
+    @Test
+    public void testCreateNewTeamButton() throws Exception {
+        // Try to click the button.
+        onView(withId(R.id.createNewTeamButton)).perform(click());
+        intended(hasComponent(CreateTeamActivity.class.getName()));
+    }
+	
 }

@@ -17,11 +17,14 @@
         </activity>
         <activity
             android:name=".ExerciseActivity"
-            android:label="Exercises"></activity>
+            android:label="Exercises" />
         <activity
             android:name=".CreateExerciseActivity"
-            android:label="New Exercise"></activity>
-        <activity android:name=".LoginActivity"/>
+			android:label="New Exercise" />
+        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".CreateTeamActivity"
+            android:label="New Team" />
 		<activity
             android:name=".UserInformationActivity"
             android:label="@string/title_activity_user_information"
@@ -32,7 +35,6 @@
 			android:label="@string/title_activity_user_information_edit"
 			android:theme="@style/AppTheme.NoActionBar">
 		</activity>
-
     </application>
 
 </manifest>

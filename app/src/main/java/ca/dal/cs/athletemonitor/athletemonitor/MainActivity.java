@@ -46,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
                    userInfoIntent.putExtra(USER_ID, extras.getString("username"));
                    startActivity(userInfoIntent);
                }
+		});
+
+        // Add the team button click listener
+        findViewById(R.id.createNewTeamButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createTeamActivityIntent = new Intent(MainActivity.this, CreateTeamActivity.class);
+                createTeamActivityIntent.putExtra("username", extras.getString("username"));
+                startActivity(createTeamActivityIntent);
+            }
         });
     }
 
