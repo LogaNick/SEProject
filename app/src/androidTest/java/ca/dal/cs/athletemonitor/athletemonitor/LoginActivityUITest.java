@@ -4,6 +4,7 @@ import ca.dal.cs.athletemonitor.athletemonitor.AccountManagerTest;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+import android.accounts.Account;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
@@ -25,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -142,5 +144,64 @@ public class LoginActivityUITest {
         onView(withId(R.id.btnSignIn)).perform(click());
 
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.loginFailure)));
+    }
+
+    /**
+     * Tests Register button click creates account
+     *
+     * @throws Exception
+     */
+    @Test
+    public void accountRegisterSuccessTest() throws Exception {
+        //create a test user to register
+        User testUser = TestingHelper.createTestUser();
+
+        // populate activity controls
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
+        closeSoftKeyboard();
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
+        closeSoftKeyboard();
+
+        //click register button
+        onView(withId(R.id.btnRegister)).perform(click());
+
+        //check if account was created
+        AccountManager.userExists(testUser.getUsername(), new AccountManager.UserExistsListener() {
+            @Override
+            public void onUserExists(boolean result) {
+                assertTrue(result);
+                onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountCreated)));
+            }
+        });
+    }
+
+
+    /**
+     * Tests Register button click creates account could not create account
+     *
+     * @throws Exception
+     */
+    @Test
+    public void accountRegisterFailureTest() throws Exception {
+        //create a test user to register
+        final User testUser = TestingHelper.createTestUser();
+
+        //create an account in order to detect duplicate account
+        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                // populate activity controls
+                onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
+                closeSoftKeyboard();
+                onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
+                closeSoftKeyboard();
+
+                //click register button
+                onView(withId(R.id.btnRegister)).perform(click());
+
+                assertNull(user);
+                onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountNotCreated)));
+            }
+        });
     }
 }
