@@ -1,11 +1,14 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
                 exerciseActivityIntent.putExtra("username", extras.getString("username"));
                 startActivity(exerciseActivityIntent);
             }
+        });
+
+        findViewById(R.id.goToUserInfo).setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   Intent userInfoIntent = new Intent(MainActivity.this, UserInformationActivity.class);
+                   userInfoIntent.putExtra(USER_ID, extras.getString("username"));
+                   startActivity(userInfoIntent);
+               }
         });
     }
 
