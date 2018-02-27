@@ -61,14 +61,30 @@ public class Team {
         this.motto = motto;
     }
 
+    /**
+     * Validate a team name
+     * @param name Name of team
+     * @return Whether name is valid
+     */
     public static boolean validateName(String name){
         return name.length() > 0 && name.length() <= 20;
     }
 
+    /**
+     * Validate a team motto
+     * @param motto Motto of team
+     * @return Whether motto is valid
+     */
     public static boolean validateMotto(String motto){
         return motto.length() > 0 && motto.length() <= 50;
     }
 
+    /**
+     * Validate all team parameters
+     * @param name Name of team
+     * @param motto Motto of team
+     * @return Whether all are valid
+     */
     public static boolean validateAll(String name, String motto){
         return validateName(name) && validateMotto(motto);
     }
