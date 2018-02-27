@@ -11,7 +11,7 @@ public class Workout {
 
     private int id;
     private String name;
-    private ArrayList<Exercise> exercises;
+    private ArrayList<WorkoutExercise> exercises;
     private boolean active;
     private boolean completed;
 
@@ -33,12 +33,12 @@ public class Workout {
         return this.completed;
     }
 
-    public void addExercise (Exercise exercise)
+    public void addWorkoutExercise (WorkoutExercise exercise)
     {
         this.exercises.add(exercise);
     }
 
-    public ArrayList<Exercise> getExercises ()
+    public ArrayList<WorkoutExercise> getExercises ()
     {
         return this.exercises;
     }
