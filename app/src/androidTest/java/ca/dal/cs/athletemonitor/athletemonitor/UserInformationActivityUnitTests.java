@@ -1,7 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
@@ -10,10 +10,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
+import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_INFORMATION;
+import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class UserInformationActivityUnitTests {
@@ -29,14 +34,14 @@ public class UserInformationActivityUnitTests {
 	private static final String TEST_STATEMENT = "I want to win the Stanley Cup";
 
 	@Rule
-	public ActivityTestRule<UserInformationActivity> uiActivityRule =
-			new ActivityTestRule<>(UserInformationActivity.class, false, false);
+	public IntentsTestRule<UserInformationActivity> uiIntentRule =
+			new IntentsTestRule<>(UserInformationActivity.class, false, false);
 
 	@Before
 	public void prepIntentAndLaunch() {
 		Intent intent = new Intent();
 		intent.putExtra(USER_ID, TEST_ID);
-		uiActivityRule.launchActivity(intent);
+        uiIntentRule.launchActivity(intent);
 		try {
 			// Wait for database retrieval
 			Thread.sleep(1000);
@@ -52,6 +57,12 @@ public class UserInformationActivityUnitTests {
 		onView(withId(R.id.weightDisplayView)).check(matches(withText(TEST_WEIGHT + " kg")));
 		onView(withId(R.id.athleteTypeDisplayView)).check(matches(withText(TEST_ATHLETE_TYPE)));
 		onView(withId(R.id.statementTextView)).check(matches(withText(TEST_STATEMENT)));
+	}
+
+	@Test
+	public void checkEditButton() {
+		onView(withId(R.id.editInfo)).perform(click());
+		intended(hasComponent(UserInformationEditActivity.class.getName()));
 	}
 
 }

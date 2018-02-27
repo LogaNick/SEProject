@@ -1,7 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
@@ -9,13 +9,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.app.Activity.RESULT_OK;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_INFORMATION;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivityUnitTests.TEST_ID;
+import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class UserInformationEditActivityUnitTests {
@@ -38,15 +44,15 @@ public class UserInformationEditActivityUnitTests {
 				.build();
 
 	@Rule
-	public ActivityTestRule<UserInformationEditActivity> uiEditActivityRule =
-			new ActivityTestRule<>(UserInformationEditActivity.class, false, false);
+	public IntentsTestRule<UserInformationEditActivity> uiEditIntentRule =
+			new IntentsTestRule<>(UserInformationEditActivity.class, false, false);
 
 	@Before
 	public void prepIntentAndLaunch() {
 		Intent intent = new Intent();
 		intent.putExtra(USER_ID, TEST_ID);
 		intent.putExtra(USER_INFORMATION, TEST_INFO);
-		uiEditActivityRule.launchActivity(intent);
+        uiEditIntentRule.launchActivity(intent);
 	}
 
 	@Test
@@ -59,5 +65,105 @@ public class UserInformationEditActivityUnitTests {
 		onView(withId(R.id.athleteTypeEditText)).check(matches(withText(TEST_ATHLETE_TYPE)));
 		onView(withId(R.id.statementEditText)).check(matches(withText(TEST_STATEMENT)));
 	}
+
+	@Test
+    public void checkSaveButton() {
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        assertTrue(intent.hasExtra(USER_INFORMATION));
+        assertEquals(uiEditIntentRule.getActivityResult().getResultCode(), RESULT_OK);
+        assertTrue(uiEditIntentRule.getActivity().isFinishing());
+    }
+
+    @Test
+    public void editName() {
+        onView(withId(R.id.nameEditText))
+                .perform(
+                        clearText(),
+                        typeText(TEST_FIRST_NAME + " " + TEST_LAST_NAME),
+                        closeSoftKeyboard()
+                );
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getFirstName(), TEST_FIRST_NAME);
+        assertEquals(info.getLastName(), TEST_LAST_NAME);
+    }
+
+    @Test
+    public void editAge() {
+        onView(withId(R.id.ageEditText))
+                .perform(
+                        clearText(),
+                        typeText(Integer.toString(TEST_AGE)),
+                        closeSoftKeyboard()
+                );
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getAge(), TEST_AGE);
+    }
+
+    @Test
+    public void editHeight() {
+        onView(withId(R.id.heightEditText))
+                .perform(
+                        clearText(),
+                        typeText(Integer.toString(TEST_HEIGHT)),
+                        closeSoftKeyboard()
+                );
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getHeight(), TEST_HEIGHT);
+    }
+
+    @Test
+    public void editWeight() {
+        onView(withId(R.id.weightEditText))
+                .perform(
+                        clearText(),
+                        typeText(Integer.toString(TEST_WEIGHT)),
+                        closeSoftKeyboard()
+                );
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getWeight(), TEST_WEIGHT);
+    }
+
+    @Test
+    public void editAthleteType() {
+        onView(withId(R.id.athleteTypeEditText))
+                .perform(
+                        clearText(),
+                        typeText(TEST_ATHLETE_TYPE),
+                        closeSoftKeyboard()
+                );
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getAthleteType(), TEST_ATHLETE_TYPE);
+    }
+
+    @Test
+    public void editPersonalStatement() {
+        onView(withId(R.id.statementEditText))
+                .perform(
+                        clearText(),
+                        typeText(TEST_STATEMENT),
+                        closeSoftKeyboard()
+                );
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getPersonalStatement(), TEST_STATEMENT);
+    }
 
 }
