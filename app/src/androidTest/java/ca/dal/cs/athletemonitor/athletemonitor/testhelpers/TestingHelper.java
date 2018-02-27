@@ -49,7 +49,9 @@ public class TestingHelper {
      * @return Pre-determined user object with known information for testing purposes
      */
     public static User createTestUser() {
-        return new User("test_user", "test_password");
+        int randomNum = (int) (Math.random() * 1000);
+
+        return new User("test_user" + randomNum, "test_password");
     }
 
     /**
