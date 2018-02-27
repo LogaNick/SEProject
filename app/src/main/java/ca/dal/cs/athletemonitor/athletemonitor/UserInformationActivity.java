@@ -45,10 +45,12 @@ public class UserInformationActivity extends AppCompatActivity {
 		myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
-				info = dataSnapshot.getValue(UserInformation.class);
+				UserInformation information = dataSnapshot.getValue(UserInformation.class);
 				Log.d(TAG, "Retrieved " + userId + " from Firebase.");
-				if (info != null)
+				if (info != null) {
+				    info = information;
 					changeDisplayedInfo(info);
+				}
 			}
 
 			@Override
