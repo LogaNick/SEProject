@@ -247,4 +247,31 @@ public class AccountManager {
             }
         });
     }
+
+    /**
+     * Check if a user is logged in
+     *
+     * @param user User to be removed
+     *
+     * @param booleanResultListener Callback to be called on completion
+     */
+    public static void isLoggedIn(final User user, final BooleanResultListener booleanResultListener) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("online_users/");
+
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if the username is a child of the users node then fire the user exists event
+                //indicating true, otherwise, fire event with false outcome
+                booleanResultListener.onResult(dataSnapshot.hasChild(user.getUsername()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 }
