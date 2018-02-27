@@ -47,4 +47,11 @@ public class MainActivityTest {
         onView(withId(R.id.goToExerciseActivityButton)).perform(click());
         intended(hasComponent(ExerciseActivity.class.getName()));
     }
+
+    @Test
+    public void testGoToUserInfoButton() {
+        onView(withId(R.id.goToUserInfo)).perform(click());
+        intended(hasComponent(UserInformationActivity.class.getName()));
+    }
+
 }
