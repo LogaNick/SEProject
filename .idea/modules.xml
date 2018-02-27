@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SEProject.iml" filepath="$PROJECT_DIR$/SEProject.iml" />
+      <module fileurl="file://C:\Users\Brent\Documents\GitHub\SoftwareEngProject\SEProject.iml" filepath="C:\Users\Brent\Documents\GitHub\SoftwareEngProject\SEProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SoftwareEngProject.iml" filepath="$PROJECT_DIR$/.idea/SoftwareEngProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

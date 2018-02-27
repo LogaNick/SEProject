@@ -13,6 +13,7 @@ public class User {
 
     // Initialize exercises list
     private List<Exercise> userExercises = new ArrayList<Exercise>();
+    private List<Workout> userWorkouts = new ArrayList<Workout>();
 
     /**
      * No args constructor used primarily for database based initialization of user objects
@@ -37,6 +38,10 @@ public class User {
     public void addUserExercise(Exercise exercise){
         userExercises.add(exercise);
     }
+
+    public List<Workout> getUserWorkouts() { return userWorkouts; }
+
+    public void addUserWorkout(Workout workout) { userWorkouts.add(workout); }
 
     /**
      * Retrieves the username of the user

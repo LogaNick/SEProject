@@ -35,6 +35,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(exerciseActivityIntent);
             }
         });
+
+        // Add the workout button click listener
+        findViewById(R.id.goToWorkoutActivityButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
+                workoutActivityIntent.putExtra("username", extras.getString("username"));
+                startActivity(workoutActivityIntent);
+            }
+        });
     }
 
     public void startLogin(View view) {
