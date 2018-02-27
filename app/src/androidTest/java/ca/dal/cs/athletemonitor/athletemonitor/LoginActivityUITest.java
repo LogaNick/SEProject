@@ -194,7 +194,7 @@ public class LoginActivityUITest {
         final Activity loginActivity = intentsTestRule.getActivity();
 
         AccountManager.createUser(testUser, null);
-       // sleep(5000);
+
         //populate controls with login information
         onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
         closeSoftKeyboard();
@@ -202,7 +202,7 @@ public class LoginActivityUITest {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnRegister)).perform(click());
-        //sleep(5000);
+       
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountNotCreated)));
 
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
