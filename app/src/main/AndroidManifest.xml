@@ -27,7 +27,7 @@
             android:label="@string/title_activity_user_information"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-		<activity>
+		<activity
 			android:name=".UserInformationEditActivity"
 			android:label="@string/title_activity_user_information_edit"
 			android:theme="@style/AppTheme.NoActionBar">
