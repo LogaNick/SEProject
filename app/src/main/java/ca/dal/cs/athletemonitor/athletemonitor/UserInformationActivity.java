@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 public class UserInformationActivity extends AppCompatActivity {
 
 	private String userId;
-	private UserInformation info;
+	private UserInformation info = new UserInformation();
 
 	protected static final String USER_INFORMATION = "USER_INFORMATION";
 	protected static final String USER_ID = "USER_ID";
@@ -49,8 +49,6 @@ public class UserInformationActivity extends AppCompatActivity {
 				Log.d(TAG, "Retrieved " + userId + " from Firebase.");
 				if (info != null)
 					changeDisplayedInfo(info);
-				else
-					info = new UserInformation();
 			}
 
 			@Override

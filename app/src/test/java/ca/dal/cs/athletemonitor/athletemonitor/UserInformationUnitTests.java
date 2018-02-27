@@ -30,6 +30,19 @@ public class UserInformationUnitTests {
 	}
 
 	@Test
+	public void createInfoWithEmptyConstructor() {
+	    UserInformation info = new UserInformation();
+
+        assertEquals(TEST_EMPTY_STRING, info.firstName);
+        assertEquals(TEST_EMPTY_STRING, info.lastName);
+        assertEquals(0, info.age);
+        assertEquals(0, info.height);
+        assertEquals(0, info.weight);
+        assertEquals(TEST_EMPTY_STRING, info.athleteType);
+        assertEquals(TEST_EMPTY_STRING, info.personalStatement);
+    }
+
+	@Test
 	public void createInfoWithNullStatementType() {
 		UserInformation info = new UserInformationBuilder(TEST_FIRST_NAME, TEST_LAST_NAME)
 				.personalStatement(null)
@@ -77,6 +90,8 @@ public class UserInformationUnitTests {
 		assertEquals(TEST_STATEMENT, info.personalStatement);
 	}
 
+	/* The following tests check methods associated with Espresso. */
+
 	@Test
 	public void checkGetters() {
         UserInformation info =
@@ -96,4 +111,11 @@ public class UserInformationUnitTests {
         assertEquals(TEST_ATHLETE_TYPE, info.getAthleteType());
         assertEquals(TEST_STATEMENT, info.getPersonalStatement());
     }
+
+    @Test
+    public void checkDescribeContents() {
+	    UserInformation info = new UserInformation();
+	    assertEquals(0, info.describeContents());
+    }
+
 }
