@@ -67,4 +67,10 @@ public class TestingHelper {
         DatabaseReference usersReference = database.getReference("users/testuser");
         usersReference.child("userExercises").setValue(null);
     }
+
+    public static void resetTestTeam(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference teamsReference = database.getReference("teams");
+        teamsReference.child("testteam").setValue(null);
+    }
 }
