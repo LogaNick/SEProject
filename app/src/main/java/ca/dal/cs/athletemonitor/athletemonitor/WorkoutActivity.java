@@ -1,19 +1,14 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class WorkoutActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
 
+    // Needed private variables
     private Spinner spinner;
     private Button submitButton;
     private Workout currentWorkout;
@@ -36,10 +32,6 @@ public class WorkoutActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
-        Log.d("myTag", "Created!");
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
 
         AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
             @Override
@@ -47,17 +39,17 @@ public class WorkoutActivity extends AppCompatActivity implements
                 // Get the layout to add exercises to
                 layout = findViewById(R.id.workoutLinearLayout);
 
-                //boolean alternateColor = false;
-
                 // Get the user's list of exercises
                 workouts = user.getUserWorkouts();
-                //workouts = new ArrayList<Workout>();
+                // Dummy workout while workouts aren't fully implemented
                 Workout dummyWorkout = new Workout(0);
                 dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test", "testingexercise", 20, TimeUnit.HOURS)));
                 dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test2", "testingexercise2", 2, TimeUnit.SECONDS)));
                 workouts.add(dummyWorkout);
                 user.addUserWorkout(dummyWorkout);
+                AccountManager.updateUser(user);
 
+                // Spinner for workout selection, and its adapter
                 spinner = (Spinner) findViewById (R.id.spinner);
                 spinner.setOnItemSelectedListener(WorkoutActivity.this);
                 ArrayAdapter<Workout> adapter = new ArrayAdapter<Workout>(getApplicationContext(),
@@ -65,32 +57,29 @@ public class WorkoutActivity extends AppCompatActivity implements
                 adapter.setDropDownViewResource
                         (android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
-                //spinner.setSelection(position);
 
                 submitButton = findViewById(R.id.submitDataButton);
                 submitButton.setClickable(false);
             }
         });
     }
-    //}
 
+    // When a workout has been selected from the spinner
     public void onItemSelected (AdapterView<?> parent, View view, int pos, long id) {
+        // Get current workout, its position, whether it is completed and the exercises
         currentWorkout = workouts.get(pos);
         position = pos;
         boolean isCompleted = currentWorkout.isCompleted();
         final ArrayList<WorkoutExercise> exerciseList = currentWorkout.getExercises();
-        Log.d("exercise selected", "num exercises: " + exerciseList.size());
 
+        // For each exercise in the workout, add the required elements to the layout
         for (int i = 0; i< exerciseList.size(); i++) {
             currentExercise = exerciseList.get(i);
-            Log.d("hello", "yooooooo " + currentExercise.getName());
             // Build a new TextView for this exercise
             TextView exerciseText = new TextView(WorkoutActivity.this);
             exerciseText.setText(currentExercise.getName());
             exerciseText.setTextSize(28);
             exerciseText.setPadding(0, 10, 0, 10);
-
-            //if (alternateColor) exerciseText.setBackgroundColor(Color.LTGRAY);
 
             exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
@@ -101,12 +90,9 @@ public class WorkoutActivity extends AppCompatActivity implements
 
             exerciseText.setLayoutParams(params);
 
-            // Add a click listener to show more information
-            //workoutText.setOnClickListener(new WorkoutActivity.DialogOnClickListener(workout));
             // Add the text view to the screen
             layout.addView(exerciseText);
 
-            //RelativeLayout exerciseDataLayout = new RelativeLayout(WorkoutActivity.this);
             EditText inputData = new EditText(WorkoutActivity.this);
             TextView outOfField = new TextView(WorkoutActivity.this);
 
@@ -132,9 +118,13 @@ public class WorkoutActivity extends AppCompatActivity implements
             layout.addView(outOfField);
         }
 
+        // Only allow submission if the workout was not already complete
         if (isCompleted) {
             submitButton.setClickable(false);
-        } else {
+        }
+        // Otherwise check to see if exercises are completed, and update the UI respectively
+        else
+        {
             // Create on click listener for submit button
             submitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -169,9 +159,6 @@ public class WorkoutActivity extends AppCompatActivity implements
                                 catch(Exception e) {
 
                                 }
-
-
-                                //user.getUserWorkouts().get(position).getExercises().get(i).setData(dataValue);
                             }
                             currentWorkout.setCompleted(true);
                             AccountManager.updateUser(user);

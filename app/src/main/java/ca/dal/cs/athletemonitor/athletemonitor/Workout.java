@@ -12,7 +12,6 @@ public class Workout {
     private int id;
     private String name;
     private ArrayList<WorkoutExercise> exercises;
-    private boolean active;
     private boolean completed;
 
     public Workout(int id)
@@ -20,17 +19,16 @@ public class Workout {
         this.id = id;
         this.name = "Workout "+id;
         this.exercises = new ArrayList<>();
-        this.active = true;
-    }
-
-    public void setCompleted (boolean value)
-    {
-        this.completed = value;
     }
 
     public boolean isCompleted ()
     {
         return this.completed;
+    }
+
+    public void setCompleted (boolean value)
+    {
+        this.completed = value;
     }
 
     public void addWorkoutExercise (WorkoutExercise exercise)
@@ -52,6 +50,12 @@ public class Workout {
     {
         return this.name;
     }
+
+    public void setName (String n) { this.name = n; }
+
+    public int getId () { return this.id; }
+
+    public void setId(int id) { this.id = id; }
 
 }
 
