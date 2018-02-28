@@ -50,12 +50,13 @@ public class WorkoutActivity extends AppCompatActivity implements
                 //boolean alternateColor = false;
 
                 // Get the user's list of exercises
-                //workouts = user.getUserWorkouts();
-                workouts = new ArrayList<Workout>();
+                workouts = user.getUserWorkouts();
+                //workouts = new ArrayList<Workout>();
                 Workout dummyWorkout = new Workout(0);
                 dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test", "testingexercise", 20, TimeUnit.HOURS)));
                 dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test2", "testingexercise2", 2, TimeUnit.SECONDS)));
                 workouts.add(dummyWorkout);
+                user.addUserWorkout(dummyWorkout);
 
                 spinner = (Spinner) findViewById (R.id.spinner);
                 spinner.setOnItemSelectedListener(WorkoutActivity.this);
@@ -147,8 +148,8 @@ public class WorkoutActivity extends AppCompatActivity implements
 
             outOfField.setText("/ " + currentExercise.getTime() + " " + currentExercise.getTimeUnit());
 
-            if (!isCompleted) {
-                inputData.setText(currentExercise.getData());
+            if (isCompleted) {
+                inputData.setText(currentExercise.getData() +"");
                 inputData.setBackgroundColor(Color.LTGRAY);
                 inputData.setEnabled(false);
             }
@@ -160,8 +161,8 @@ public class WorkoutActivity extends AppCompatActivity implements
             layout.addView(outOfField);
         }
 
-        if (!isCompleted) {
-            submitButton.setClickable(true);
+        if (isCompleted) {
+            submitButton.setClickable(false);
         } else {
             // Create on click listener for submit button
             submitButton.setOnClickListener(new View.OnClickListener() {
