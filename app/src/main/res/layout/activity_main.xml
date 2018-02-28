@@ -22,19 +22,29 @@
             android:text="Exercises" />
 
         <Button
+            android:id="@+id/createNewTeamButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="New Team" />
+
+		<Button
+            android:id="@+id/goToUserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/activity_main_user_information" />
+
+        <Button
             android:id="@+id/goToWorkoutActivityButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Workouts" />
-
-        <Button
-            android:id="@+id/button6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button" />
     </LinearLayout>
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,14 +55,14 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/btnSignin"
+            android:id="@+id/btnSignOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="8dp"
-            android:onClick="startLogin"
-            android:text="@string/ButtonText_SignIn"
+            android:onClick="logOutButtonHandler"
+            android:text="@string/ButtonText_SignOut"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

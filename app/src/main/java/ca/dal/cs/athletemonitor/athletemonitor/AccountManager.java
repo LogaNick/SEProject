@@ -1,6 +1,8 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.accounts.Account;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -200,22 +202,41 @@ public class AccountManager {
      * @param userObjectListener Callback for completion
      */
     public static void createUser(final User newUser, final UserObjectListener userObjectListener) {
-        //get a reference to the users node
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersReference = database.getReference("users");
+        Log.d("AC.createUser", "AccountManager.createUser entered...");
 
-        //attempt to write the data
-        usersReference.child(newUser.getUsername()).setValue(newUser, new DatabaseReference.CompletionListener() {
+
+        AccountManager.userExists(newUser.getUsername(), new UserExistsListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                //early exit condition, no one is listening for the result
-                if (userObjectListener == null) return;
+            public void onUserExists(boolean result) {
+                Log.d("AC.createUser", "userExists callback entered result: " + result);
 
-                //if no database errors occurred, assume successful operation
-                if (databaseError == null) {
-                    userObjectListener.onUserPopulated(newUser);
+                // if the user exists, do not create account and return a null user object
+                // otherwise, create the account and return a populated user object
+                if (result) {
+                    if (userObjectListener != null) userObjectListener.onUserPopulated(null);
                 } else {
-                    userObjectListener.onUserPopulated(null);
+                    //get a reference to the users node
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference usersReference = database.getReference("users");
+
+                    //attempt to write the data
+                    usersReference.child(newUser.getUsername()).setValue(newUser, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            //early exit condition, no one is listening for the result
+                            if (userObjectListener == null) return;
+
+                            //if no database errors occurred, assume successful operation
+                            if (databaseError == null) {
+                                Log.d("AC.createUser", "creating user...created: username: " + newUser.getUsername());
+                                userObjectListener.onUserPopulated(newUser);
+                            } else {
+                                Log.d("AC.createUser", "creating user...database error");
+                                userObjectListener.onUserPopulated(null);
+                            }
+                        }
+                    });
+
                 }
             }
         });
@@ -244,6 +265,33 @@ public class AccountManager {
                 } else {
                     booleanResultListener.onResult(false);
                 }
+            }
+        });
+    }
+
+    /**
+     * Check if a user is logged in
+     *
+     * @param user User to be removed
+     *
+     * @param booleanResultListener Callback to be called on completion
+     */
+    public static void isLoggedIn(final User user, final BooleanResultListener booleanResultListener) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("online_users/");
+
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if the username is a child of the users node then fire the user exists event
+                //indicating true, otherwise, fire event with false outcome
+                booleanResultListener.onResult(dataSnapshot.hasChild(user.getUsername()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }

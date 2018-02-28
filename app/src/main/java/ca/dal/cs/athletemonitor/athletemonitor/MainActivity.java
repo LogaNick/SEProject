@@ -1,11 +1,14 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         } else {
-            ((Button)this.findViewById(R.id.btnSignin)).setText("Signout " + extras.getString("username"));
+            ((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + extras.getString("username"));
         }
 
         // Add the exercise button click listener
@@ -33,6 +36,25 @@ public class MainActivity extends AppCompatActivity {
                 Intent exerciseActivityIntent = new Intent(MainActivity.this, ExerciseActivity.class);
                 exerciseActivityIntent.putExtra("username", extras.getString("username"));
                 startActivity(exerciseActivityIntent);
+            }
+        });
+
+        findViewById(R.id.goToUserInfo).setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   Intent userInfoIntent = new Intent(MainActivity.this, UserInformationActivity.class);
+                   userInfoIntent.putExtra(USER_ID, extras.getString("username"));
+                   startActivity(userInfoIntent);
+               }
+		});
+
+        // Add the team button click listener
+        findViewById(R.id.createNewTeamButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createTeamActivityIntent = new Intent(MainActivity.this, CreateTeamActivity.class);
+                createTeamActivityIntent.putExtra("username", extras.getString("username"));
+                startActivity(createTeamActivityIntent);
             }
         });
 
@@ -47,8 +69,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void startLogin(View view) {
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        startActivity(loginIntent);
+    public void logOutButtonHandler(View view){
+        //Take user to the log in page and update Firebase's online_users node
+
+        //Start by taking the user offline in Firebase
+        final Bundle extras = getIntent().getExtras();
+        AccountManager.setUserLoginState(extras.getString("username"), false);
+
+        //Start the sign in activity
+        Intent signInActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(signInActivityIntent);
     }
 }
