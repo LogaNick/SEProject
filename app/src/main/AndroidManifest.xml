@@ -22,6 +22,9 @@
         <activity
             android:name=".CreateExerciseActivity"
             android:label="New Exercise"></activity>
+        <activity
+            android:name=".WorkoutActivity"
+            android:label="Workouts"></activity>
         <activity android:name=".LoginActivity"/>
     </application>
 
