@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class WorkoutActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
@@ -41,15 +40,7 @@ public class WorkoutActivity extends AppCompatActivity implements
 
                 // Get the user's list of exercises
                 workouts = user.getUserWorkouts();
-                // Dummy workout while workouts aren't fully implemented
-                /*
-                Workout dummyWorkout = new Workout(0);
-                dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test", "testingexercise", 20, TimeUnit.HOURS)));
-                dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test2", "testingexercise2", 2, TimeUnit.SECONDS)));
-                workouts.add(dummyWorkout);
-                user.addUserWorkout(dummyWorkout);
-                AccountManager.updateUser(user);
-                */
+
                 // Spinner for workout selection, and its adapter
                 spinner = (Spinner) findViewById (R.id.spinner);
                 spinner.setOnItemSelectedListener(WorkoutActivity.this);
