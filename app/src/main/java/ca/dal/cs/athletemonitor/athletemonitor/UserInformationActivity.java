@@ -47,7 +47,7 @@ public class UserInformationActivity extends AppCompatActivity {
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				UserInformation information = dataSnapshot.getValue(UserInformation.class);
 				Log.d(TAG, "Retrieved " + userId + " from Firebase.");
-				if (info != null) {
+				if (information != null) {
 				    info = information;
 					changeDisplayedInfo(info);
 				}
