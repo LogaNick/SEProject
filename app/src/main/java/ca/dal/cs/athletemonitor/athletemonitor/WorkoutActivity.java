@@ -41,8 +41,6 @@ public class WorkoutActivity extends AppCompatActivity implements
         //setSupportActionBar(toolbar);
 
 
-
-
         AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
@@ -52,16 +50,21 @@ public class WorkoutActivity extends AppCompatActivity implements
                 //boolean alternateColor = false;
 
                 // Get the user's list of exercises
-                workouts = user.getUserWorkouts();
-
+                //workouts = user.getUserWorkouts();
+                workouts = new ArrayList<Workout>();
+                Workout dummyWorkout = new Workout(0);
+                dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test", "testingexercise", 20, TimeUnit.HOURS)));
+                dummyWorkout.addWorkoutExercise(new WorkoutExercise(new Exercise("test2", "testingexercise2", 2, TimeUnit.SECONDS)));
+                workouts.add(dummyWorkout);
 
                 spinner = (Spinner) findViewById (R.id.spinner);
+                spinner.setOnItemSelectedListener(WorkoutActivity.this);
                 ArrayAdapter<Workout> adapter = new ArrayAdapter<Workout>(getApplicationContext(),
                         android.R.layout.simple_spinner_item, workouts);
                 adapter.setDropDownViewResource
                         (android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
-                spinner.setSelection(position);
+                //spinner.setSelection(position);
 
                 submitButton = findViewById(R.id.submitDataButton);
                 submitButton.setClickable(false);
@@ -104,16 +107,18 @@ public class WorkoutActivity extends AppCompatActivity implements
         position = pos;
         boolean isCompleted = currentWorkout.isCompleted();
         final ArrayList<WorkoutExercise> exerciseList = currentWorkout.getExercises();
+        Log.d("exercise selected", "num exercises: " + exerciseList.size());
 
         for (int i = 0; i< exerciseList.size(); i++) {
             currentExercise = exerciseList.get(i);
+            Log.d("hello", "yooooooo " + currentExercise.getName());
             // Build a new TextView for this exercise
             TextView exerciseText = new TextView(WorkoutActivity.this);
             exerciseText.setText(currentExercise.getName());
             exerciseText.setTextSize(28);
             exerciseText.setPadding(0, 10, 0, 10);
 
-            //if (alternateColor) workoutText.setBackgroundColor(Color.LTGRAY);
+            //if (alternateColor) exerciseText.setBackgroundColor(Color.LTGRAY);
 
             exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
@@ -147,6 +152,9 @@ public class WorkoutActivity extends AppCompatActivity implements
                 inputData.setBackgroundColor(Color.LTGRAY);
                 inputData.setEnabled(false);
             }
+
+            inputData.setLayoutParams(params);
+            outOfField.setLayoutParams(params);
 
             layout.addView(inputData);
             layout.addView(outOfField);
