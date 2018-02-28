@@ -69,35 +69,6 @@ public class WorkoutActivity extends AppCompatActivity implements
 
                 submitButton = findViewById(R.id.submitDataButton);
                 submitButton.setClickable(false);
-
-                // Iterate and add exercises to screen
-                /*
-                for (Workout workout : workouts) {
-                    // Build a new TextView for this exercise
-                    TextView workoutText = new TextView(WorkoutActivity.this);
-                    workoutText.setText(workout.getName());
-                    workoutText.setTextSize(28);
-                    workoutText.setPadding(0, 30, 0, 30);
-
-                    if (alternateColor) workoutText.setBackgroundColor(Color.LTGRAY);
-
-                    workoutText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 4, 0, 0);
-
-                    workoutText.setLayoutParams(params);
-
-                    // Add a click listener to show more information
-                    //workoutText.setOnClickListener(new WorkoutActivity.DialogOnClickListener(workout));
-                    // Add the text view to the screen
-                    layout.addView(workoutText);
-
-                    alternateColor = !alternateColor;
-                }
-                */
             }
         });
     }
