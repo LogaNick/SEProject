@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         } else {
-            ((Button)this.findViewById(R.id.btnSignin)).setText("Signout " + extras.getString("username"));
+            ((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + extras.getString("username"));
         }
 
         // Add the exercise button click listener
@@ -59,8 +59,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void startLogin(View view) {
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        startActivity(loginIntent);
+    public void logOutButtonHandler(View view){
+        //Take user to the log in page and update Firebase's online_users node
+
+        //Start by taking the user offline in Firebase
+        final Bundle extras = getIntent().getExtras();
+        AccountManager.setUserLoginState(extras.getString("username"), false);
+
+        //Start the sign in activity
+        Intent signInActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(signInActivityIntent);
     }
 }

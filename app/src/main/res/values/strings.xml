@@ -12,6 +12,7 @@
     <string name="TextView_WelcomeBack">We missed you, sign in below!</string>
     <string name="loginSuccess">Welcome back!</string>
     <string name="loginFailure">Invalid username or password.</string>
+    <string name="ButtonText_SignOut">Sign Out</string>
     <string name="accountCreated">Account created.</string>
     <string name="accountNotCreated">Cannot create account.</string>
     <string name="activity_main_user_information">User Info</string>

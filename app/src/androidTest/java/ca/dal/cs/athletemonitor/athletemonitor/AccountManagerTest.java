@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * UI Test for Login Activity
  */
-
+//TODO: ACCOUNT MANAGER CLASS NEEDS TO BE MOCKED
 public class AccountManagerTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
@@ -43,20 +43,17 @@ public class AccountManagerTest {
     public void getUserSuccessTest() throws Exception {
         //construct a test user and add them to the accounts list for testing
         final User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
+        AccountManager.createUser(testUser);
+
+        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
-                    @Override
-                    public void onUserPopulated(User user) {
-                        assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null",user);
-                        assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
-                                user.getUsername(), testUser.getUsername());
+                assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null", user);
+                assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
+                        user.getUsername(), testUser.getUsername());
 
-                        //delete test user from database
-                        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-                    }
-                });
+                //delete test user from database
+                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
             }
         });
     }
@@ -78,7 +75,7 @@ public class AccountManagerTest {
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                assertNull("Expecting null user reference, but found user account " + testUser.getUsername(),user);
+                assertNull("Expecting null user reference, but found user account " + testUser.getUsername(), user);
             }
         });
     }
@@ -117,7 +114,7 @@ public class AccountManagerTest {
     public void signInFailureTest() throws Exception {
         //construct a test user and add them to the accounts list
         User testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(TestingHelper.createTestUser());
+        AccountManager.createUser(testUser);
 
         //change test user's local password
         testUser.setPassword("newpassword");
@@ -139,10 +136,13 @@ public class AccountManagerTest {
      */
     @Test
     public void setUserLoggedInTrueTest() throws Exception {
-       //create a test user and set them as online
-       User testUser = TestingHelper.createTestUser();
+        //create a test user and set them as online
+        User testUser = TestingHelper.createTestUser();
+        sleep(3000);
 
-       AccountManager.setUserLoginState(testUser.getUsername(), true);
+        AccountManager.setUserLoginState(testUser.getUsername(), true);
+
+        sleep(3000);
 
         //attempt to retrieve a reference to the logged in user
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -208,17 +208,17 @@ public class AccountManagerTest {
      */
     @Test
     public void createUserTest() throws Exception {
-       final User testUser = TestingHelper.createTestUser();
+        final User testUser = TestingHelper.createTestUser();
 
-       AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
-           @Override
-           public void onUserPopulated(User user) {
-               assertNotNull("Expecting valid user object, but seen null...", user);
+        AccountManager.createUser(testUser, new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                assertNotNull("Expecting valid user object, but seen null...", user);
 
-               //if the user was created successfully, remove before exiting
-               AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-           }
-       });
+                //if the user was created successfully, remove before exiting
+                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+            }
+        });
     }
 
     /**
@@ -292,5 +292,50 @@ public class AccountManagerTest {
                 AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
             }
         });
+    }
+
+    /**
+     * Test for isLoggedIn true positive
+     *
+     * @throws Exception Generic exception
+     */
+    @Test
+    public void isLoggedInTrueTest() throws Exception {
+        //create a local user object instance
+        final User testUser = TestingHelper.createTestUser();
+
+        //create the test user in firebase in order to authenticate
+        AccountManager.createUser(testUser);
+        sleep(1000);
+
+        AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
+        sleep(1000);
+
+        //test if isLoggedIn returns true (user logged in)
+        AccountManager.isLoggedIn(testUser, TestingHelper.assertTrueBooleanResult());
+        sleep(1000);
+
+        //sign the user out
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
+        sleep(1000);
+
+        // clean up firebase by deleting test user
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+    }
+
+    /**
+     * Test for isLoggedIn true negative
+     *
+     * Test will pass if isLoggedIn returns false
+     *
+     * @throws Exception Generic exception
+     */
+    @Test
+    public void isLoggedInFalseTest() throws Exception {
+        //create a local user object instance
+        final User testUser = TestingHelper.createTestUser();
+
+        //test if isLoggedIn returns false (user not logged in)
+        AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
     }
 }
