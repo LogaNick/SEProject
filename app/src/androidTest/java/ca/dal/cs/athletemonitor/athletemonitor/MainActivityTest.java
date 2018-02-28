@@ -52,6 +52,12 @@ public class MainActivityTest {
         intended(hasComponent(ExerciseActivity.class.getName()));
     }
 
+    @Test
+    public void testGoToUserInfoButton() {
+        onView(withId(R.id.goToUserInfo)).perform(click());
+        intended(hasComponent(UserInformationActivity.class.getName()));
+    }
+
     /**
      * Test that the sign out button works.
      * @throws Exception
@@ -84,4 +90,5 @@ public class MainActivityTest {
         onView(withId(R.id.createNewTeamButton)).perform(click());
         intended(hasComponent(CreateTeamActivity.class.getName()));
     }
+	
 }

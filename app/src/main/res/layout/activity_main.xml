@@ -22,18 +22,18 @@
             android:text="Exercises" />
 
         <Button
-            android:id="@+id/button7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button" />
-
-        <Button
             android:id="@+id/createNewTeamButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="New Team" />
+
+		<Button
+            android:id="@+id/goToUserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/activity_main_user_information" />
     </LinearLayout>
 
     <LinearLayout
