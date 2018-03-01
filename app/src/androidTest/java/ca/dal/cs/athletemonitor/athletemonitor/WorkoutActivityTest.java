@@ -58,32 +58,4 @@ public class WorkoutActivityTest {
         onView(withId(R.id.submitDataButton));
         onView(withId(R.id.spinner));
     }
-
-    /**
-     * Test that the submit new exercise button is disabled if the fields are invalid
-     */
-    /*
-    @Test
-    public void testSubmitButtonDisabled(){
-        onView(withId(R.id.submitDataButton)).check(matches(not(isEnabled())));
-    }
-    */
-
-    /**
-     * Test that the submit new exercise button is enabled if the fields are valid
-     */
-    /*
-    @Test
-    public void testSubmitButtonEnabled() throws Exception {
-        onView(withId(R.id.newExerciseName)).perform(typeText("Run"));
-        onView(withId(R.id.newExerciseDescription)).perform(typeText("Run outside"));
-        onView(withId(R.id.newExerciseTime)).perform(typeText("5"), closeSoftKeyboard());
-
-        onView(withId(R.id.newExerciseSubmitButton)).check(matches(isEnabled()));
-
-        //Try to click the button.
-        onView(withId(R.id.newExerciseSubmitButton)).perform(click());
-        intended(hasComponent(ExerciseActivity.class.getName()));
-    }
-    */
 }

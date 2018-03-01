@@ -3,7 +3,8 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Brent on 2018-02-27.
+ * The Workout Exercise is an extension of exercise, to store the achieved
+ * results of the exercise.
  */
 
 public class WorkoutExercise extends Exercise{

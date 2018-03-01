@@ -4,7 +4,7 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import java.util.ArrayList;
 
 /**
- * Created by Brent on 2018-02-16.
+ * Workout class manages the data for a workout, which is a collection of exercises.
  */
 
 public class Workout {
@@ -58,13 +58,3 @@ public class Workout {
     public void setId(int id) { this.id = id; }
 
 }
-
-
-
-
-
-
-
-
-
-

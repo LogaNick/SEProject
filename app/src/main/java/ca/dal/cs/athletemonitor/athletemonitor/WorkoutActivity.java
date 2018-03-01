@@ -18,6 +18,9 @@ import java.util.List;
 public class WorkoutActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
 
+    // TODO Refactor these private variables to make code safer, i.e. either make variables
+    // local to methods or check for null where necessary
+
     // Needed private variables
     private Spinner spinner;
     private Button submitButton;
@@ -165,8 +168,4 @@ public class WorkoutActivity extends AppCompatActivity implements
     {
 
     }
-
 }
-
-
-
