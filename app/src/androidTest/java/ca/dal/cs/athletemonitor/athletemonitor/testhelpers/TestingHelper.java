@@ -75,4 +75,13 @@ public class TestingHelper {
         DatabaseReference teamsReference = database.getReference("teams");
         teamsReference.child("testteam").setValue(null);
     }
+
+    /**
+     * Test helper to reset the testuser's workout list
+     */
+    public static void resetTestUserWorkouts(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/testuser");
+        usersReference.child("userWorkouts").setValue(null);
+    }
 }

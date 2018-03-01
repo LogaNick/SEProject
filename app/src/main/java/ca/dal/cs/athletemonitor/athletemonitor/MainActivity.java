@@ -1,7 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent createTeamActivityIntent = new Intent(MainActivity.this, CreateTeamActivity.class);
                 createTeamActivityIntent.putExtra("username", extras.getString("username"));
                 startActivity(createTeamActivityIntent);
+            }
+        });
+
+        // Add the workout button click listener
+        findViewById(R.id.goToWorkoutActivityButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
+                workoutActivityIntent.putExtra("username", extras.getString("username"));
+                startActivity(workoutActivityIntent);
             }
         });
     }
