@@ -11,8 +11,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-            	<action android:name="android.intent.action.MAIN" />
-            	<category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -20,25 +21,23 @@
             android:label="Exercises" />
         <activity
             android:name=".CreateExerciseActivity"
-			android:label="New Exercise" />
+            android:label="New Exercise" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".CreateTeamActivity"
             android:label="New Team" />
-		<activity
+        <activity
             android:name=".UserInformationActivity"
             android:label="@string/title_activity_user_information"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-		<activity
-			android:name=".UserInformationEditActivity"
-			android:label="@string/title_activity_user_information_edit"
-			android:theme="@style/AppTheme.NoActionBar">
-		</activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".UserInformationEditActivity"
+            android:label="@string/title_activity_user_information_edit"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".WorkoutActivity"
-            android:label="Workouts">
-        </activity>
+            android:label="Workouts"></activity>
+        <activity android:name=".TeamActivity"></activity>
     </application>
 
 </manifest>
