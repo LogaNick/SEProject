@@ -66,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(workoutActivityIntent);
             }
         });
+
+        // Add the goals button click listener
+        findViewById(R.id.goToGoalsActivityButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
+                workoutActivityIntent.putExtra("username", extras.getString("username"));
+                startActivity(workoutActivityIntent);
+            }
+        });
     }
 
     public void logOutButtonHandler(View view){
