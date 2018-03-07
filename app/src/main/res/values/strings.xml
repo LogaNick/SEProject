@@ -49,5 +49,8 @@
     <string name="user_information_test_weight_kg">98 kg</string>
     <string name="user_information_test_athlete_type">Hockey Player</string>
     <string name="user_information_test_statement">I want to win the Stanley Cup</string>
-    <string name="title_activity_maps">Map</string>
+
+    <!--These strings are for the record activity-->
+    <string name="activity_record_navigation_record_button">Record</string>
+    <string name="activity_record_navigation_pause_button">Pause</string>
 </resources>

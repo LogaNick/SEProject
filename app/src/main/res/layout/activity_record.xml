@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ca.dal.cs.athletemonitor.athletemonitor.RecordActivity">
+
+    <fragment
+        android:id="@+id/record_map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.1" />
+
+    <LinearLayout
+        android:id="@+id/layout_record_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="0.9"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Chronometer
+            android:id="@+id/record_chrono"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/record_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/activity_record_navigation_record_button" />
+
+        <Button
+            android:id="@+id/pause_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/activity_record_navigation_pause_button" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
