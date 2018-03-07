@@ -2,9 +2,9 @@
 
     <string name="app_name">Athlete Monitor</string>
     <string-array name="ExerciseTimeUnits">
-      <item>Seconds</item>
-      <item>Minutes</item>
-      <item>Hours</item>
+        <item>Seconds</item>
+        <item>Minutes</item>
+        <item>Hours</item>
     </string-array>
     <string name="ButtonText_SignIn">Sign In</string>
     <string name="ButtonText_RegisterAccount">Register one here...</string>
@@ -49,4 +49,5 @@
     <string name="user_information_test_weight_kg">98 kg</string>
     <string name="user_information_test_athlete_type">Hockey Player</string>
     <string name="user_information_test_statement">I want to win the Stanley Cup</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
