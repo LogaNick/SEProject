@@ -20,7 +20,8 @@ public class TeamActivityTest {
     public void testHasCreateButton() throws Exception {
         //Try to get the button.
         onView(withId(R.id.createTeamButton));
-        onView(withId(R.id.teamList));
+        onView(withId(R.id.teamLayoutScrollView));
+        onView(withId(R.id.teamLinearLayout));
     }
 
 }
