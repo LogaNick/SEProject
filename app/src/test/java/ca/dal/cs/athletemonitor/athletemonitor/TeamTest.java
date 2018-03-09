@@ -19,6 +19,7 @@ public class TeamTest {
     public void testValidTeam(){
         String name = "Warriors";
         String motto = "We have swords!";
+        String owner = "team_owner";
 
         // Assert all fields are valid
         assertTrue(Team.validateAll(name, motto));
@@ -30,13 +31,17 @@ public class TeamTest {
     public void testInvalidTeam(){
         String name = "We love really long team names that don't make sense";
         String motto = "";
+        String owner = "";
 
         assertFalse(Team.validateName(name));
         assertFalse(Team.validateMotto(motto));
+        assertFalse(Team.validateOwner(owner));
         assertFalse(Team.validateAll(name, motto));
 
         // Expect an exception when creating the new Team
         exception.expect(IllegalArgumentException.class);
         new Team(name, motto);
     }
+
+
 }
