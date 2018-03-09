@@ -14,6 +14,7 @@ public class User {
     // Initialize exercises list
     private List<Exercise> userExercises = new ArrayList<Exercise>();
     private List<Workout> userWorkouts = new ArrayList<Workout>();
+    private List<Team> userTeams = new ArrayList<Team>();
 
     /**
      * No args constructor used primarily for database based initialization of user objects
@@ -30,6 +31,20 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
+    /**
+     * Retrieves the list of teams associated with this user
+     *
+     * @return List of teams
+     */
+    public List<Team> getUserTeams() { return this.userTeams;}
+
+    /**
+     * Adds the specified team to this users list of teams
+     *
+     * @param team Team to add to user
+     */
+    public void addUserTeam(Team team) { this.userTeams.add(team);
 
     public List<Exercise> getUserExercises() {
         return userExercises;
