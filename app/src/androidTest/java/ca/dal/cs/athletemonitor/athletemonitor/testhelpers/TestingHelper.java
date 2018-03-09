@@ -57,8 +57,11 @@ public class TestingHelper {
     /**
      * Test helper to authenticate the testuser
      */
-    public static void authTestUser(){
-        AccountManager.authenticate(new User("testuser", "abc"), null);
+    public static User authTestUser(){
+        User testUser = createTestUser();
+
+        AccountManager.authenticate(createTestUser(), null);
+        return testUser;
     }
 
     /**
