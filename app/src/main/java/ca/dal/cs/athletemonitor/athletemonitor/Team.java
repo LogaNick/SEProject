@@ -5,8 +5,20 @@ package ca.dal.cs.athletemonitor.athletemonitor;
  */
 
 public class Team {
+    /**
+     * Team name
+     */
     private String name;
+
+    /**
+     * Team motto
+     */
     private String motto;
+
+    /**
+     * Owner of team
+     */
+    private String owner;
 
     /**
      * No args constructor used primarily for database based initialization of exercise objects
@@ -80,12 +92,36 @@ public class Team {
     }
 
     /**
+     * Validate a team owner
+     * @param owner Owner of team
+     * @return Whether owner is valid
+     */
+    public static boolean validateOwner(String owner){
+        return owner.length() > 0 && owner.length() <= 50;
+    }
+
+    /**
      * Validate all team parameters
+     *
      * @param name Name of team
      * @param motto Motto of team
+     *
      * @return Whether all are valid
      */
     public static boolean validateAll(String name, String motto){
         return validateName(name) && validateMotto(motto);
     }
+
+    /**
+     * Validate all team parameters
+     *
+     * @param name Name of team
+     * @param motto Motto of team
+     *
+     * @return Whether all are valid
+     */
+    public static boolean validateAll(String name, String motto, String owner){
+        return validateName(name) && validateMotto(motto) && validateOwner(owner);
+    }
+
 }
