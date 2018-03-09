@@ -14,22 +14,41 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class RecordActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     /** Minimum time between location refresh, in ms */
-    private static final long REFRESH_TIME = 5000;
+    private static final long REFRESH_TIME = 500;
     /** Minimum dist between location refresh, in metres */
     private static final float MIN_DISTANCE = 3;
     private static final int ACCESS_FINE_LOCATION = 0;
+
+    private boolean isRecording = false;
+    private boolean isPaused = false;
+    private List<Location> locationList = new LinkedList<>();
+    private Polyline currentRoute = null;
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(15f));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(16f));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
+
+            if (isRecording && !isPaused) {
+                locationList.add(location);
+
+                if (currentRoute == null) {
+                    currentRoute = mMap.addPolyline(new PolylineOptions().clickable(false));
+                }
+                currentRoute.setPoints(convertListToLatLng());
+            }
         }
 
         @Override
@@ -59,6 +78,28 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         setupLocationFields();
         if (checkForLocPermission()) {
             requestLocationUpdates();
+        }
+    }
+
+    private List<LatLng> convertListToLatLng() {
+
+        List<LatLng> latLngs = new LinkedList<>();
+
+        for (Location loc : locationList)
+            latLngs.add(new LatLng(loc.getLatitude(), loc.getLongitude()));
+
+        return latLngs;
+    }
+
+    private void togglePauseStatus() {
+        isPaused = !isPaused;
+    }
+
+    private void toggleRecordStatus() {
+        isRecording = !isRecording;
+
+        if (!isRecording) {
+            //SAVE to Firebase
         }
     }
 

@@ -20,5 +20,5 @@ public class RecordingUnitTests {
     public void checkLocationIsCaptured() {
         assertTrue(/* !isEmpty() */false);
     }
-    
+
 }
