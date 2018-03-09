@@ -32,13 +32,14 @@ public class Team {
      * @param name Name of team
      * @param motto Team motto
      */
-    public Team(String name, String motto){
+    public Team(String name, String motto, String owner){
         if (!(Team.validateAll(name, motto))) {
             throw new IllegalArgumentException("Invalid Exercise parameters");
         }
 
         this.name = name;
         this.motto = motto;
+        this.owner = owner;
     }
 
     /**

@@ -28,12 +28,16 @@ public class CreateTeamActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = ((TextView) findViewById(R.id.newTeamName)).getText().toString();
                 String motto = ((TextView) findViewById(R.id.newTeamMotto)).getText().toString();
+                String owner = getIntent().getExtras().getString("username");
 
                 if(Team.validateAll(name, motto)){
+                    Team team = new Team();
+
+
                     // Submit new team to database
-                    if(TeamManager.newTeam(new Team(name, motto))){
+                    if(TeamManager.newTeam(new Team(name, motto, owner))){
                         // Switch back to MainActivity when successfully created team
-                        Intent mainActivityIntent = new Intent(CreateTeamActivity.this, MainActivity.class);
+                        Intent mainActivityIntent = new Intent(CreateTeamActivity.this, TeamActivity.class);
                         mainActivityIntent.putExtras(getIntent().getExtras());
                         startActivity(mainActivityIntent);
                     }
