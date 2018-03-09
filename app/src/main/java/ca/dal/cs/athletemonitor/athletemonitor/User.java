@@ -44,7 +44,7 @@ public class User {
      *
      * @param team Team to add to user
      */
-    public void addUserTeam(Team team) { this.userTeams.add(team);
+    public void addUserTeam(Team team) { this.userTeams.add(team); }
 
     public List<Exercise> getUserExercises() {
         return userExercises;
