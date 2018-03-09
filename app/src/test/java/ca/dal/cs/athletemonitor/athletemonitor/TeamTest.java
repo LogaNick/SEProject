@@ -10,11 +10,13 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Unit tests for the Team class
  */
-
 public class TeamTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    /**
+     * Tests that valid team information accepted
+     */
     @Test
     public void testValidTeam(){
         String name = "Warriors";
@@ -27,6 +29,9 @@ public class TeamTest {
         new Team(name, motto);
     }
 
+    /**
+     * Tests that invalid team information is detected
+     */
     @Test
     public void testInvalidTeam(){
         String name = "We love really long team names that don't make sense";
@@ -36,12 +41,10 @@ public class TeamTest {
         assertFalse(Team.validateName(name));
         assertFalse(Team.validateMotto(motto));
         assertFalse(Team.validateOwner(owner));
-        assertFalse(Team.validateAll(name, motto));
+        assertFalse(Team.validateAll(name, motto, owner));
 
         // Expect an exception when creating the new Team
         exception.expect(IllegalArgumentException.class);
         new Team(name, motto);
     }
-
-
 }
