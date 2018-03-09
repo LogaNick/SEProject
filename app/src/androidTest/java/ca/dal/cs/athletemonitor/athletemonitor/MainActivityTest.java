@@ -90,5 +90,15 @@ public class MainActivityTest {
         onView(withId(R.id.createNewTeamButton)).perform(click());
         intended(hasComponent(CreateTeamActivity.class.getName()));
     }
-	
+
+    /**
+     * Test that the button Goals activity functions properly
+     * @throws Exception
+     */
+    @Test
+    public void testGoalsButton() throws Exception {
+        // Try to click the button.
+        onView(withId(R.id.goToGoalsActivityButton)).perform(click());
+        intended(hasComponent(UserGoalsActivity.class.getName()));
+    }
 }

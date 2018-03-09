@@ -84,4 +84,13 @@ public class TestingHelper {
         DatabaseReference usersReference = database.getReference("users/testuser");
         usersReference.child("userWorkouts").setValue(null);
     }
+
+    /**
+     * Test helper to reset the testuser's goals list
+     */
+    public static void resetTestUserGoals(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/testuser");
+        usersReference.child("userGoals").setValue(null);
+    }
 }
