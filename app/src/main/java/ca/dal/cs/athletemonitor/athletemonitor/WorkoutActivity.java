@@ -77,6 +77,7 @@ public class WorkoutActivity extends AppCompatActivity implements
         boolean isCompleted = currentWorkout.isCompleted();
         final ArrayList<WorkoutExercise> exerciseList = currentWorkout.getExercises();
 
+        layout.removeAllViews();
         // For each exercise in the workout, add the required elements to the layout
         for (int i = 0; i< exerciseList.size(); i++) {
             currentExercise = exerciseList.get(i);
