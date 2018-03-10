@@ -10,7 +10,10 @@ import org.junit.Test;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.CoreMatchers.not;
 
 /**
  * Created by nicholasbarreyre on 2018-03-10.
@@ -41,5 +44,14 @@ public class GoalsActivityTest {
         //Try to get the fields and button.
         onView(withId(R.id.newGoalName));
         onView(withId(R.id.submitGoalButton));
+    }
+
+    /**
+     * Test that the submit button is disabled if the goal name hasn't been
+     * provided
+     */
+    @Test
+    public void testSubmitButtonDisabled(){
+        onView(withId(R.id.submitTeamButton)).check(matches(not(isEnabled())));
     }
 }
