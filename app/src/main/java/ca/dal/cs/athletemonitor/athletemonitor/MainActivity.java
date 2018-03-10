@@ -3,7 +3,6 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -71,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.goToGoalsActivityButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
-                workoutActivityIntent.putExtra("username", extras.getString("username"));
-                startActivity(workoutActivityIntent);
+                Intent goalsActivityIntent = new Intent(MainActivity.this, GoalsActivity.class);
+                goalsActivityIntent.putExtra("username", extras.getString("username"));
+                startActivity(goalsActivityIntent);
             }
         });
     }

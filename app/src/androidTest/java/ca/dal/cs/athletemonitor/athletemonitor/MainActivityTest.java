@@ -99,6 +99,6 @@ public class MainActivityTest {
     public void testGoalsButton() throws Exception {
         // Try to click the button.
         onView(withId(R.id.goToGoalsActivityButton)).perform(click());
-        intended(hasComponent(UserGoalsActivity.class.getName()));
+        intended(hasComponent(GoalsActivity.class.getName()));
     }
 }
