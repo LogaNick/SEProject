@@ -71,9 +71,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                         while(it.hasNext()){
                             int i = it.nextIndex();
                             Exercise cur = it.next();
-                            Log.d("Check exercise", "Checking exercise with name " + cur.getName());
                             if(((CheckBox)layout.findViewWithTag("exercise" + i)).isChecked()){
-                                Log.d("Add exercise", "Adding workout exercise index " + i);
                                 newWorkout.addWorkoutExercise(new WorkoutExercise(cur));
                             }
                         }
