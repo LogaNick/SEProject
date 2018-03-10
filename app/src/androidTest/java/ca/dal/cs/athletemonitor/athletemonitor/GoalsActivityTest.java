@@ -39,7 +39,7 @@ public class GoalsActivityTest {
     @Test
     public void testProperFieldsExist() throws Exception {
         //Try to get the fields and button.
-        onView(withId(R.id.newGoal));
+        onView(withId(R.id.newGoalName));
         onView(withId(R.id.submitGoalButton));
     }
 }
