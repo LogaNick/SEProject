@@ -3,7 +3,11 @@ package ca.dal.cs.athletemonitor.athletemonitor.testhelpers;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
+import ca.dal.cs.athletemonitor.athletemonitor.Exercise;
 import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
@@ -83,5 +87,19 @@ public class TestingHelper {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersReference = database.getReference("users/testuser");
         usersReference.child("userWorkouts").setValue(null);
+    }
+
+    /**
+     * Test helper to add test exercises to testuser
+     */
+    public static void addTestUserExercises(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/testuser");
+
+        ArrayList<Exercise> testExercises = new ArrayList<>();
+        testExercises.add(new Exercise("exercise 1", "description", 5, TimeUnit.MINUTES));
+        testExercises.add(new Exercise("exercise 2", "description", 5, TimeUnit.SECONDS));
+        testExercises.add(new Exercise("exercise 3", "description", 5, TimeUnit.HOURS));
+        usersReference.child("userExercises").setValue(testExercises);
     }
 }
