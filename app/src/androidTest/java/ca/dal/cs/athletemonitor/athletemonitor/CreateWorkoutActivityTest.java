@@ -43,7 +43,7 @@ import static org.hamcrest.Matchers.is;
 public class CreateWorkoutActivityTest {
     @Rule
     public IntentsTestRule<CreateWorkoutActivity> mActivityRule =
-            new IntentsTestRule(CreateWorkoutActivity.class, false, false);
+            new IntentsTestRule<>(CreateWorkoutActivity.class, false, false);
 
     @BeforeClass
     public static void setupEnvironment(){
@@ -53,29 +53,25 @@ public class CreateWorkoutActivityTest {
     @Before
     public void setupUser(){
         TestingHelper.addTestUserExercises();
-        Intent i = new Intent();
-        i.putExtra("username", "testuser");
-        mActivityRule.launchActivity(i);
+        mActivityRule.launchActivity(new Intent().putExtra("username", "testuser"));
     }
 
     @After
     public void cleanupTestUser() throws Exception {
-        // Need to sleep before cleanup due to database callbacks
+        // Sleep to wait for any firebase callbacks
         sleep(3000);
         TestingHelper.resetTestUserWorkouts();
         TestingHelper.resetTestUserExercises();
+        sleep(1000);
     }
 
     @Test
     public void testExerciseCheckboxes() throws Exception {
-        // Sleep to wait for firebase callback loading exercise checklist
         sleep(2000);
-        // Test that there are 3 exercises in the list
         onView(withTagValue(is((Object) "exercise0"))).check(matches(withText(containsString("exercise 1"))));
         onView(withTagValue(is((Object) "exercise1"))).check(matches(withText(containsString("exercise 2"))));
         onView(withTagValue(is((Object) "exercise2"))).check(matches(withText(containsString("exercise 3"))));
         onView(withId(R.id.createWorkoutLinearLayout)).check(matches(hasChildCount(3)));
-
         onView(withId(R.id.submitNewWorkoutButton));
     }
 
@@ -84,40 +80,25 @@ public class CreateWorkoutActivityTest {
      */
     @Test
     public void testCreateNewWorkout() throws Exception {
-        // Enter information for new workout
         onView(withId(R.id.newWorkoutName)).perform(clearText(), typeText("Test Workout"), closeSoftKeyboard());
         onView(withTagValue(is((Object) "exercise0"))).perform(click());
         onView(withTagValue(is((Object) "exercise2"))).perform(click());
-
-        // Click submit button
         onView(withId(R.id.submitNewWorkoutButton)).perform(click());
-
         sleep(3000);
 
         AccountManager.getUser("testuser", new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
-                // Check workout data
                 assertEquals(1, user.getUserWorkouts().size());
-                Workout newWorkout = user.getUserWorkouts().get(0);
-                assertEquals(newWorkout.getName(), "Test Workout");
-                assertFalse(newWorkout.isCompleted());
+                assertEquals(user.getUserWorkouts().get(0).getName(), "Test Workout");
+                assertFalse(user.getUserWorkouts().get(0).isCompleted());
+                assertEquals(user.getUserWorkouts().get(0).getExercises().size(), 2);
 
-                // Check exercise data
-                List<WorkoutExercise> exercises = newWorkout.getExercises();
-                assertEquals(exercises.size(), 2);
+                assertTrue(user.getUserWorkouts().get(0).getExercises().get(0).equals(TestingHelper.testExercise1));
+                assertEquals(user.getUserWorkouts().get(0).getExercises().get(0).getData(), 0);
 
-                assertEquals(exercises.get(0).getName(), TestingHelper.testExercise1.getName());
-                assertEquals(exercises.get(0).getDescription(), TestingHelper.testExercise1.getDescription());
-                assertEquals(exercises.get(0).getTime(), TestingHelper.testExercise1.getTime());
-                assertEquals(exercises.get(0).getTimeUnit(), TestingHelper.testExercise1.getTimeUnit());
-                assertEquals(exercises.get(0).getData(), 0);
-
-                assertEquals(exercises.get(1).getName(), TestingHelper.testExercise3.getName());
-                assertEquals(exercises.get(1).getDescription(), TestingHelper.testExercise3.getDescription());
-                assertEquals(exercises.get(1).getTime(), TestingHelper.testExercise3.getTime());
-                assertEquals(exercises.get(1).getTimeUnit(), TestingHelper.testExercise3.getTimeUnit());
-                assertEquals(exercises.get(1).getData(), 0);
+                assertTrue(user.getUserWorkouts().get(0).getExercises().get(1).equals(TestingHelper.testExercise3));
+                assertEquals(user.getUserWorkouts().get(0).getExercises().get(1).getData(), 0);
             }
         });
     }

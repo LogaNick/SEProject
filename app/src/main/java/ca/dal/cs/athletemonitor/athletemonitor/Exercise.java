@@ -146,4 +146,9 @@ public class Exercise {
     public static boolean validateTime(int time){
         return time > 0;
     }
+
+    public boolean equals(Exercise e){
+        return name.equals(e.getName()) && description.equals(e.getDescription())
+                && time == e.getTime() && timeUnit.equals(e.getTimeUnit());
+    }
 }
