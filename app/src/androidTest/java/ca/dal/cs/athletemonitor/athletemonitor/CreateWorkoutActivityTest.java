@@ -6,6 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -25,9 +27,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -36,8 +42,13 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class CreateWorkoutActivityTest {
     @Rule
-    public IntentsTestRule<WorkoutActivity> mActivityRule =
-            new IntentsTestRule(WorkoutActivity.class, false, false);
+    public IntentsTestRule<CreateWorkoutActivity> mActivityRule =
+            new IntentsTestRule(CreateWorkoutActivity.class, false, false);
+
+    @BeforeClass
+    public static void setupEnvironment(){
+        authTestUser();
+    }
 
     @Before
     public void setupUser(){
@@ -48,17 +59,21 @@ public class CreateWorkoutActivityTest {
     }
 
     @After
-    public void cleanupTestUser(){
+    public void cleanupTestUser() throws Exception {
+        // Need to sleep before cleanup due to database callbacks
+        sleep(3000);
         TestingHelper.resetTestUserWorkouts();
         TestingHelper.resetTestUserExercises();
     }
 
     @Test
-    public void testExerciseCheckboxes(){
+    public void testExerciseCheckboxes() throws Exception {
+        // Sleep to wait for firebase callback loading exercise checklist
+        sleep(2000);
         // Test that there are 3 exercises in the list
-        onView(withTagValue(is((Object) "exercise0"))).check(matches(withText("exercise 1")));
-        onView(withTagValue(is((Object) "exercise1"))).check(matches(withText("exercise 2")));
-        onView(withTagValue(is((Object) "exercise2"))).check(matches(withText("exercise 3")));
+        onView(withTagValue(is((Object) "exercise0"))).check(matches(withText(containsString("exercise 1"))));
+        onView(withTagValue(is((Object) "exercise1"))).check(matches(withText(containsString("exercise 2"))));
+        onView(withTagValue(is((Object) "exercise2"))).check(matches(withText(containsString("exercise 3"))));
         onView(withId(R.id.createWorkoutLinearLayout)).check(matches(hasChildCount(3)));
 
         onView(withId(R.id.submitNewWorkoutButton));
@@ -68,20 +83,22 @@ public class CreateWorkoutActivityTest {
      * Test creating a new workout by selecting some exercises, and submitting the workout.
      */
     @Test
-    public void testCreateNewWorkout(){
+    public void testCreateNewWorkout() throws Exception {
         // Enter information for new workout
-        onView(withId(R.id.newWorkoutName)).perform(clearText(), typeText("Test Workout"));
+        onView(withId(R.id.newWorkoutName)).perform(clearText(), typeText("Test Workout"), closeSoftKeyboard());
         onView(withTagValue(is((Object) "exercise0"))).perform(click());
         onView(withTagValue(is((Object) "exercise2"))).perform(click());
 
         // Click submit button
         onView(withId(R.id.submitNewWorkoutButton)).perform(click());
 
+        sleep(3000);
+
         AccountManager.getUser("testuser", new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
                 // Check workout data
-                assertEquals(user.getUserWorkouts().size(), 1);
+                assertEquals(1, user.getUserWorkouts().size());
                 Workout newWorkout = user.getUserWorkouts().get(0);
                 assertEquals(newWorkout.getName(), "Test Workout");
                 assertFalse(newWorkout.isCompleted());

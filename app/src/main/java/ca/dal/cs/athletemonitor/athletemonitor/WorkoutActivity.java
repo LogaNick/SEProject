@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,15 @@ public class WorkoutActivity extends AppCompatActivity implements
 
                 submitButton = findViewById(R.id.submitDataButton);
                 submitButton.setClickable(false);
+            }
+        });
+
+        findViewById(R.id.createWorkoutButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createWorkoutActivityIntent = new Intent(WorkoutActivity.this, CreateWorkoutActivity.class);
+                createWorkoutActivityIntent.putExtras(getIntent().getExtras());
+                startActivity(createWorkoutActivityIntent);
             }
         });
     }
