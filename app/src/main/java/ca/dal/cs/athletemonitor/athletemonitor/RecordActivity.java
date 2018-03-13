@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,9 +17,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 
 public class RecordActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -28,6 +33,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private static final float MIN_DISTANCE = 3;
     private static final int ACCESS_FINE_LOCATION = 0;
 
+    private String userId;
     private boolean isRecording = false;
     private boolean isPaused = false;
     private List<Location> locationList = new LinkedList<>();
@@ -79,6 +85,10 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         if (checkForLocPermission()) {
             requestLocationUpdates();
         }
+
+        Intent intent = getIntent();
+        String userId = intent.getStringExtra(USER_ID);
+        this.userId = userId;
     }
 
     private List<LatLng> convertListToLatLng() {
@@ -99,8 +109,16 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         isRecording = !isRecording;
 
         if (!isRecording) {
-            //SAVE to Firebase
+            saveToFirebase();
         }
+    }
+
+    private void saveToFirebase() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef
+                = db.getReference(getString(R.string.activity_record_firebase, userId));
+
+
     }
 
     /**
