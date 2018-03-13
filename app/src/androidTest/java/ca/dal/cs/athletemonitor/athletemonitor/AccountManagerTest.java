@@ -338,4 +338,47 @@ public class AccountManagerTest {
         //test if isLoggedIn returns false (user not logged in)
         AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
     }
+
+    @Test
+    public void offlineUserTest() throws Exception {
+        final User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(testUser);
+        sleep(1000);
+        AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
+        sleep(1000);
+
+        AccountManager.setOnline(false);
+
+        testUser.addUserExercise(TestingHelper.testExercise1);
+
+        AccountManager.updateUser(testUser);
+
+        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                assertEquals(1, user.getUserExercises().size());
+            }
+        });
+
+        //retrieve a reference to the users node
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/" + testUser.getUsername());
+
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    assertTrue(dataSnapshot.getValue(User.class).getUserExercises().isEmpty());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+    }
 }
