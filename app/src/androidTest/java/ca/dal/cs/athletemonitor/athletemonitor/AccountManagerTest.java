@@ -1,6 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -11,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
@@ -26,6 +28,7 @@ import static org.junit.Assert.assertTrue;
  * UI Test for Login Activity
  */
 //TODO: ACCOUNT MANAGER CLASS NEEDS TO BE MOCKED
+@RunWith(AndroidJUnit4.class)
 public class AccountManagerTest {
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
@@ -385,6 +388,7 @@ public class AccountManagerTest {
         usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                assertTrue(dataSnapshot.exists());
                 if (dataSnapshot.exists()) {
                     assertTrue(dataSnapshot.getValue(User.class).getUserExercises().isEmpty());
                 }
@@ -395,6 +399,47 @@ public class AccountManagerTest {
             }
         });
 
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+    }
+
+    @Test
+    public void toggleOnlineUserTest() throws Exception {
+        final User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(testUser);
+        sleep(1000);
+        AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
+        sleep(1000);
+
+        AccountManager.setOnline(false);
+
+        testUser.addUserExercise(TestingHelper.testExercise1);
+
+        AccountManager.updateUser(testUser);
+
+        AccountManager.setOnline(true);
+
+        sleep(1000);
+        //retrieve a reference to the users node
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/" + testUser.getUsername());
+
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                assertTrue(dataSnapshot.exists());
+                if (dataSnapshot.exists()) {
+                    assertEquals(1, dataSnapshot.getValue(User.class).getUserExercises().size());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        sleep(1000);
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 }
