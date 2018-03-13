@@ -20,6 +20,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
@@ -97,6 +98,7 @@ public class MainActivityTest {
      */
     @Test
     public void testOnlineToggleSwitch() throws Exception {
+        sleep(1000);
         assertTrue(AccountManager.isOnline());
         onView(withId(R.id.onlineToggleSwitch)).perform(click());
         assertFalse(AccountManager.isOnline());

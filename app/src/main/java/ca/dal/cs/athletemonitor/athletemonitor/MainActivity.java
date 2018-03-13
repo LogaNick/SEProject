@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 
@@ -64,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
                 Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
                 workoutActivityIntent.putExtra("username", extras.getString("username"));
                 startActivity(workoutActivityIntent);
+            }
+        });
+
+        ((Switch)findViewById(R.id.onlineToggleSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AccountManager.setOnline(isChecked);
             }
         });
     }

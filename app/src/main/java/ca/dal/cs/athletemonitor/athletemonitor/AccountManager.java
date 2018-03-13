@@ -25,6 +25,11 @@ public class AccountManager {
     private static String lastAuth = "";
 
     /**
+     * online holds the online status of the logged in user, if there is one.
+     */
+    private static boolean online = false;
+
+    /**
      * Listener interface for checking if a user exists.
      *
      * Callers of userExists must implement this listener interface.
@@ -104,6 +109,7 @@ public class AccountManager {
                     if (userLoggingIn.getPassword().equals(user.getPassword())) {
                         AccountManager.setUserLoginState(user.getUsername(), true);
                         lastAuth = user.getUsername();
+                        online = true;
                         authResult = true;
                     }
                 }
@@ -294,5 +300,21 @@ public class AccountManager {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    /**
+     * Get the online status of the user
+     * @return online
+     */
+    public static boolean isOnline(){
+        return online;
+    }
+
+    /**
+     * Set the online status of the user
+     * @param online
+     */
+    public static void setOnline(boolean online){
+        AccountManager.online = online;
     }
 }
