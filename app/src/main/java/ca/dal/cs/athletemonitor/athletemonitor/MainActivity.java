@@ -1,9 +1,10 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -77,12 +78,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Take user to the log in page and update Firebase's online_users node
+     * @param view
+     */
     public void logOutButtonHandler(View view){
-        //Take user to the log in page and update Firebase's online_users node
+        if(!AccountManager.isOnline()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
+            builder.setMessage(R.string.logout_while_offline_warning)
+                    .setTitle("Warning")
+                    .setPositiveButton(R.string.logout_while_offline_warning_save, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AccountManager.setOnline(true);
+                            logout();
+                        }
+                    })
+                    .setNegativeButton(R.string.logout_while_offline_warning_quit, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            logout();
+                        }
+                    })
+                    .create()
+                    .show();
+        } else {
+            logout();
+        }
+    }
+
+    private void logout(){
         //Start by taking the user offline in Firebase
-        final Bundle extras = getIntent().getExtras();
-        AccountManager.setUserLoginState(extras.getString("username"), false);
+        AccountManager.setUserLoginState(getIntent().getExtras().getString("username"), false);
 
         //Start the sign in activity
         Intent signInActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
