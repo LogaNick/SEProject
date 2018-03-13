@@ -21,6 +21,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Espresso Test for the Main Activity.
@@ -90,5 +91,14 @@ public class MainActivityTest {
         onView(withId(R.id.createNewTeamButton)).perform(click());
         intended(hasComponent(CreateTeamActivity.class.getName()));
     }
-	
+
+    /**
+     * Test that the online/offline toggle switch toggles offline status
+     */
+    @Test
+    public void testOnlineToggleSwitch() throws Exception {
+        assertTrue(AccountManager.isOnline());
+        onView(withId(R.id.onlineToggleSwitch)).perform(click());
+        assertFalse(AccountManager.isOnline());
+    }
 }
