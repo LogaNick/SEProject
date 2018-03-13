@@ -399,6 +399,7 @@ public class AccountManagerTest {
             }
         });
 
+        sleep(1000);
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 

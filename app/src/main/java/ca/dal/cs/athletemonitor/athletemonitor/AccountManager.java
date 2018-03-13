@@ -195,16 +195,15 @@ public class AccountManager {
      * @param updatedUser User details
      */
     public static void updateUser(final User updatedUser){
-        if(!online){
-            AccountManager.user = updatedUser;
-            return;
-        }
+        AccountManager.user = updatedUser;
 
-        // Ensure that the user is the currently authenticated user
-        if(lastAuth.equals(updatedUser.getUsername())){
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
-            usersReference.setValue(updatedUser, null);
+        if(online) {
+            // Ensure that the user is the currently authenticated user
+            if (lastAuth.equals(updatedUser.getUsername())) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
+                usersReference.setValue(updatedUser, null);
+            }
         }
     }
 
@@ -337,5 +336,6 @@ public class AccountManager {
      */
     public static void setOnline(boolean online){
         AccountManager.online = online;
+        AccountManager.updateUser(user);
     }
 }
