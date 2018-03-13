@@ -57,5 +57,6 @@ public class WorkoutActivityTest {
         //Try to get the fields and button.
         onView(withId(R.id.submitDataButton));
         onView(withId(R.id.spinner));
+        onView(withId(R.id.createWorkoutButton));
     }
 }

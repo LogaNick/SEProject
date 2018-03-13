@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,15 @@ public class WorkoutActivity extends AppCompatActivity implements
                 submitButton.setClickable(false);
             }
         });
+
+        findViewById(R.id.createWorkoutButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createWorkoutActivityIntent = new Intent(WorkoutActivity.this, CreateWorkoutActivity.class);
+                createWorkoutActivityIntent.putExtras(getIntent().getExtras());
+                startActivity(createWorkoutActivityIntent);
+            }
+        });
     }
 
     // When a workout has been selected from the spinner
@@ -67,6 +77,7 @@ public class WorkoutActivity extends AppCompatActivity implements
         boolean isCompleted = currentWorkout.isCompleted();
         final ArrayList<WorkoutExercise> exerciseList = currentWorkout.getExercises();
 
+        layout.removeAllViews();
         // For each exercise in the workout, add the required elements to the layout
         for (int i = 0; i< exerciseList.size(); i++) {
             currentExercise = exerciseList.get(i);
