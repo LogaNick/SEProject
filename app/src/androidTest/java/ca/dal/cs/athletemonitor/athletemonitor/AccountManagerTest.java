@@ -45,15 +45,31 @@ public class AccountManagerTest {
         final User testUser = TestingHelper.createTestUser();
         AccountManager.createUser(testUser);
 
-        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null", user);
-                assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
-                        user.getUsername(), testUser.getUsername());
+        //retrieve a reference to the users node
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/" + testUser.getUsername());
 
-                //delete test user from database
-                AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+        //attach a listener for data changes of the users reference.  this will occur when
+        //the reference is populated
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if the reference exists, convert it to a user instance and pass to listener
+                //otherwise return null
+                assertTrue(dataSnapshot.exists());
+                if (dataSnapshot.exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                    assertNotNull("Expecting username " + testUser.getUsername() + ", but seen null", user);
+                    assertEquals("Expecting username " + testUser.getUsername() + ", but seen " + user.getUsername(),
+                            user.getUsername(), testUser.getUsername());
+
+                    //delete test user from database
+                    AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }

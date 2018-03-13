@@ -30,6 +30,11 @@ public class AccountManager {
     private static boolean online = false;
 
     /**
+     * User object for an offline user
+     */
+    private static User user;
+
+    /**
      * Listener interface for checking if a user exists.
      *
      * Callers of userExists must implement this listener interface.
@@ -56,6 +61,16 @@ public class AccountManager {
      */
     public static void getUser(String username, @NonNull final UserObjectListener listener) {
         Objects.requireNonNull(listener, "Null value for UserObjectListener is not valid.");
+        Objects.requireNonNull(user, "Get user called in offline mode before logging in");
+
+        if(!online) {
+            if(username.equals(user.getUsername())){
+                listener.onUserPopulated(user);
+            }else{
+                listener.onUserPopulated(null);
+            }
+            return;
+        }
 
         //retrieve a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -110,6 +125,7 @@ public class AccountManager {
                         AccountManager.setUserLoginState(user.getUsername(), true);
                         lastAuth = user.getUsername();
                         online = true;
+                        AccountManager.user = userLoggingIn;
                         authResult = true;
                     }
                 }
@@ -179,6 +195,11 @@ public class AccountManager {
      * @param updatedUser User details
      */
     public static void updateUser(final User updatedUser){
+        if(!online){
+            AccountManager.user = updatedUser;
+            return;
+        }
+
         // Ensure that the user is the currently authenticated user
         if(lastAuth.equals(updatedUser.getUsername())){
             FirebaseDatabase database = FirebaseDatabase.getInstance();
