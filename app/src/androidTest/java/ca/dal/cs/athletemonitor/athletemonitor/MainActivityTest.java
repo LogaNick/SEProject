@@ -17,9 +17,12 @@ import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -77,6 +80,21 @@ public class MainActivityTest {
 
         //check that Firebase has been updated
         AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
+
+        //check that Login Activity has been started
+        intended(hasComponent(LoginActivity.class.getName()));
+    }
+
+    @Test
+    public void testSignOutButtonOffline() throws Exception {
+        AccountManager.setOnline(false);
+
+        onView(withId(R.id.btnSignOut)).perform(click());
+
+        onView(withText(R.string.logout_while_offline_warning)).check(matches(isDisplayed()));
+        onView(withText(R.string.logout_while_offline_warning_save)).perform(click());
+
+        assertTrue(AccountManager.isOnline());
 
         //check that Login Activity has been started
         intended(hasComponent(LoginActivity.class.getName()));
