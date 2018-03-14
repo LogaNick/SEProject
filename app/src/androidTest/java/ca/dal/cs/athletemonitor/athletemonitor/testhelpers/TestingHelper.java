@@ -51,6 +51,9 @@ public class TestingHelper {
     public static User createTestUser() {
         int randomNum = (int) (Math.random() * 1000);
 
+
+
+
         return new User("test_user" + randomNum, "test_password");
     }
 
@@ -59,8 +62,8 @@ public class TestingHelper {
      */
     public static User authTestUser(){
         User testUser = createTestUser();
-
-        AccountManager.authenticate(createTestUser(), null);
+        AccountManager.createUser(testUser);
+        AccountManager.authenticate(testUser, null);
         return testUser;
     }
 
