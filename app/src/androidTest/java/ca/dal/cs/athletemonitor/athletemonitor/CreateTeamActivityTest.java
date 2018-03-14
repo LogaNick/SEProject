@@ -24,9 +24,13 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 
 /**
@@ -135,7 +139,19 @@ public class CreateTeamActivityTest {
             }
         });
         intended(hasComponent(TeamActivity.class.getName()));
+    }
 
+    /**
+     * Tests team overview is visible with the correct owner and buttons
+     * @throws Exception
+     */
+    @Test
+    public void teamListOnClickTest() throws Exception {
+        testOnCreateTeamButtonClick();
+
+        // Check that the dialog box works
+        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
+        onView(allOf(withText("Owner: " + testUser.getUsername()), withText("More"), withText("Close")));
 
     }
 }
