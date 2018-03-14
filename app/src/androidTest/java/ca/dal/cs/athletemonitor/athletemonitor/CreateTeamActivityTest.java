@@ -3,7 +3,7 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.AfterClass;
@@ -24,24 +24,22 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 
 /**
  * Espresso Test for the CreateTeam Activity.
  */
 @RunWith(AndroidJUnit4.class)
+@LargeTest
 public class CreateTeamActivityTest {
     /**
      * Test user for this test set
      */
     private static User testUser;
+    private static Intent intent = new Intent();
 
     @Rule
     public IntentsTestRule<CreateTeamActivity> mActivityRule =
@@ -54,10 +52,8 @@ public class CreateTeamActivityTest {
      */
     @BeforeClass
     public static void setupTestEnvironment() throws Exception {
-        // create a test user in the database and authenticate
         testUser = TestingHelper.createTestUser();
-        AccountManager.createUser(testUser);
-        AccountManager.authenticate(testUser, null);
+        TestingHelper.setupTestEnvironment(intent, testUser);
     }
 
     /**
@@ -74,11 +70,9 @@ public class CreateTeamActivityTest {
      * Initializes and starts the activity before each test is run
      */
     @Before
-    public void launchActivity(){
-        // load the test user username as an extra before runing tests
-        Intent i = new Intent();
-        i.putExtra("username", testUser.getUsername());
-        mActivityRule.launchActivity(i);
+    public void launchActivity() throws Exception {
+        sleep(250);
+        mActivityRule.launchActivity(intent);
     }
 
     /**
@@ -138,20 +132,7 @@ public class CreateTeamActivityTest {
                         new Team("testteam", "testmotto", user.getUsername())));
             }
         });
+
         intended(hasComponent(TeamActivity.class.getName()));
-    }
-
-    /**
-     * Tests team overview is visible with the correct owner and buttons
-     * @throws Exception
-     */
-    @Test
-    public void teamListOnClickTest() throws Exception {
-        testOnCreateTeamButtonClick();
-
-        // Check that the dialog box works
-        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
-        onView(allOf(withText("Owner: " + testUser.getUsername()), withText("More"), withText("Close")));
-
     }
 }

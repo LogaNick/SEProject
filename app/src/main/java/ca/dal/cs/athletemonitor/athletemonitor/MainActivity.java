@@ -13,22 +13,22 @@ import android.widget.Switch;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 
 public class MainActivity extends AppCompatActivity {
+    private User activeUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //retrieve the extras passed by the intent, if there is a username then the user is logged
+        // retrieve the extras passed by the intent, if there is a username then the user is logged
         // in.  If username doesn't exist, go to sign in.
-        //TODO: implement User as Parcelable
-        //TODO: initialize a User object with user data to pass around to other activities
         final Bundle extras = getIntent().getExtras();
-        if (extras == null || !extras.containsKey("username")) {
+        if (extras == null || !extras.containsKey("user")) {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         } else {
-            ((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + extras.getString("username"));
+            activeUser = (User) extras.getSerializable("user");
+            ((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + activeUser.getUsername());
         }
 
         // Add the exercise button click listener
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent exerciseActivityIntent = new Intent(MainActivity.this, ExerciseActivity.class);
-                exerciseActivityIntent.putExtra("username", extras.getString("username"));
+                exerciseActivityIntent.putExtra("user", activeUser);
                 startActivity(exerciseActivityIntent);
             }
         });
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                @Override
                public void onClick(View v) {
                    Intent userInfoIntent = new Intent(MainActivity.this, UserInformationActivity.class);
-                   userInfoIntent.putExtra(USER_ID, extras.getString("username"));
+                   userInfoIntent.putExtra("user", activeUser);
                    startActivity(userInfoIntent);
                }
 		});
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent teamActivityIntent = new Intent(MainActivity.this, TeamActivity.class);
-                teamActivityIntent.putExtra("username", extras.getString("username"));
+                teamActivityIntent.putExtra("user", activeUser);
                 startActivity(teamActivityIntent);
             }
         });
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
-                workoutActivityIntent.putExtra("username", extras.getString("username"));
+                workoutActivityIntent.putExtra("user", activeUser);
                 startActivityForResult(workoutActivityIntent, 1);
             }
         });
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void logout() {
         //Start by taking the user offline in Firebase
-        AccountManager.setUserLoginState(getIntent().getExtras().getString("username"), false);
+        AccountManager.setUserLoginState(activeUser.getUsername(), false);
 
         // Return to login activity
         finish();

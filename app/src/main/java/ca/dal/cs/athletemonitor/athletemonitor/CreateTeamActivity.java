@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
 public class CreateTeamActivity extends AppCompatActivity {
-
+    private User user;
     /**
      * Initializes the activity when created
      *
@@ -27,37 +27,28 @@ public class CreateTeamActivity extends AppCompatActivity {
 
         ((Button)findViewById(R.id.submitTeamButton)).setEnabled(false);
 
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
+
         findViewById(R.id.submitTeamButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the logged in user instance
-                AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-                    @Override
-                    public void onUserPopulated(User user) {
-                        if (user == null) {
-                            throw new IllegalStateException("Not logged in...");
-                        }
+                // Get the Team data from the fields
+                String name = ((TextView) findViewById(R.id.newTeamName)).getText().toString();
+                String motto = ((TextView) findViewById(R.id.newTeamMotto)).getText().toString();
+                String owner = user.getUsername();
 
-                        // Get the Team data from the fields
-                        String name = ((TextView) findViewById(R.id.newTeamName)).getText().toString();
-                        String motto = ((TextView) findViewById(R.id.newTeamMotto)).getText().toString();
-                        String owner = getIntent().getExtras().getString("username");
+                // Validate fields and submit data
+                if (Team.validateAll(name, motto, owner)) {
+                    // Add Team to user
+                    user.addUserTeam(new Team(name, motto, owner));
+                    AccountManager.updateUser(user);
 
-                        // Validate fields and submit data
-                        if (Team.validateAll(name, motto, owner)) {
-                            // Add Team to user
-                            user.addUserTeam(new Team(name, motto, owner));
-                            AccountManager.updateUser(user);
-                            // Switch back to exercise activity
-                            Intent mainActivityIntent = new Intent(
-                                    CreateTeamActivity.this, TeamActivity.class);
-
-                            mainActivityIntent.putExtras(getIntent().getExtras());
-                            mainActivityIntent.getExtras().getString("username");
-                            startActivity(mainActivityIntent);
-                        }
-                    }
-                });
+                    // Switch back to exercise activity
+                    Intent intent = new Intent(CreateTeamActivity.this, TeamActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
+                }
             }
         });
 

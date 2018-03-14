@@ -1,10 +1,12 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import java.io.Serializable;
+
 /**
  * The Team class contains data for a team
  */
 
-public class Team {
+public class Team implements Serializable {
     /**
      * Team name
      */

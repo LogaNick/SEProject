@@ -3,16 +3,17 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
+import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -32,18 +33,44 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
-    @Rule
-    public IntentsTestRule<MainActivity> mActivityRule =
+    /**
+     * Test user for this test set
+     */
+    private static User testUser;
+    private static Intent intent = new Intent();
+
+    @ClassRule
+    public static IntentsTestRule<MainActivity> mActivityRule =
             new IntentsTestRule(MainActivity.class, false, false);
 
+    /**
+     * Set up test environment for this test set
+     *
+     * @throws Exception General exceptions
+     */
+    @BeforeClass
+    public static void setupTestEnvironment() throws Exception {
+        testUser = TestingHelper.createTestUser();
+        TestingHelper.setupTestEnvironment(intent, testUser);
+    }
+
+    /**
+     * Clean up test environment after this test set has run
+     * @throws Exception
+     */
+    @AfterClass
+    public static void cleanupEnvironment() throws Exception {
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
+        AccountManager.deleteUser(testUser, null);
+    }
+
+    /**
+     * Initializes and starts the activity before each test is run
+     */
     @Before
-    public void loginToTestUser() {
-        // Authenticate user and set login state to false so Firebase does not keep testuser online
-        AccountManager.authenticate(new User("testuser", "abc"), null);
-        AccountManager.setUserLoginState("testuser", false);
-        Intent i = new Intent();
-        i.putExtra("username", "testuser");
-        mActivityRule.launchActivity(i);
+    public void launchActivity() throws Exception {
+        sleep(250);
+        mActivityRule.launchActivity(intent);
     }
 
     /**
@@ -105,10 +132,10 @@ public class MainActivityTest {
      * @throws Exception
      */
     @Test
-    public void testCreateNewTeamButton() throws Exception {
+    public void testTeamButton() throws Exception {
         // Try to click the button.
-        onView(withId(R.id.createTeamButton)).perform(click());
-        intended(hasComponent(CreateTeamActivity.class.getName()));
+        onView(withId(R.id.teamButton)).perform(click());
+        intended(hasComponent(TeamActivity.class.getName()));
     }
 
     /**

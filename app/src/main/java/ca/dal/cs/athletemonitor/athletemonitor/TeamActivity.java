@@ -13,6 +13,8 @@ import android.widget.TextView;
 import java.util.List;
 
 public class TeamActivity extends AppCompatActivity {
+    private User user;
+
     /**
      * Sets up activity when created
      *
@@ -31,50 +33,48 @@ public class TeamActivity extends AppCompatActivity {
 
                 createTeamActivityIntent.putExtras(getIntent().getExtras());
                 startActivity(createTeamActivityIntent);
+                finish();
             }
         });
 
-        // retrieves the user from Firebase based on username passed in extras
-        AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                // Get the layout to add exercises to
-                LinearLayout layout = findViewById(R.id.teamLinearLayout);
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
 
-                boolean alternateColor = false;
+        // Get the layout to add exercises to
+        LinearLayout layout = findViewById(R.id.teamLinearLayout);
 
-                // Get the user's list of exercises
-                List<Team> teams = user.getUserTeams();
+        boolean alternateColor = false;
 
-                // Iterate and add exercises to screen
-                for (Team team : teams) {
-                    // Build a new TextView for this team
-                    TextView teamText = new TextView(TeamActivity.this);
+        // Get the user's list of exercises
+        List<Team> teams = user.getUserTeams();
 
-                    teamText.setText(team.getName());
-                    teamText.setTextSize(28);
-                    teamText.setPadding(0, 30, 0, 30);
+        // Iterate and add exercises to screen
+        for (Team team : teams) {
+            // Build a new TextView for this team
+            TextView teamText = new TextView(TeamActivity.this);
 
-                    if (alternateColor) teamText.setBackgroundColor(Color.LTGRAY);
+            teamText.setText(team.getName());
+            teamText.setTextSize(28);
+            teamText.setPadding(0, 30, 0, 30);
 
-                    teamText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            if (alternateColor) teamText.setBackgroundColor(Color.LTGRAY);
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 4, 0, 0);
+            teamText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-                    teamText.setLayoutParams(params);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 4, 0, 0);
 
-                    // Add a click listener to show more information
-                    teamText.setOnClickListener(new TeamActivity.DialogOnClickListener(team));
-                    // Add the text view to the screen
-                    layout.addView(teamText);
+            teamText.setLayoutParams(params);
 
-                    alternateColor = !alternateColor;
-                }
-            }
-        });
+            // Add a click listener to show more information
+            teamText.setOnClickListener(new TeamActivity.DialogOnClickListener(team));
+            // Add the text view to the screen
+            layout.addView(teamText);
+
+            alternateColor = !alternateColor;
+        }
     }
 
     /**

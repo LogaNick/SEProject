@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * This class represents the account information of a user, including all data associated with
  * functionality of the app.
  */
-public class User {
+public class User implements Serializable {
     private String username; //login username and unique identifier
     private String password; //login password
 

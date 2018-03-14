@@ -19,6 +19,7 @@ import java.util.List;
 
 public class WorkoutActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
+    private User user;
 
     // TODO Refactor these private variables to make code safer, i.e. either make variables
     // local to methods or check for null where necessary
@@ -37,22 +38,20 @@ public class WorkoutActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                // Get the layout to add exercises to
-                layout = findViewById(R.id.workoutLinearLayout);
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
 
-                // Spinner for workout selection, and its adapter
-                spinner = (Spinner) findViewById (R.id.spinner);
-                spinner.setOnItemSelectedListener(WorkoutActivity.this);
+        // Get the layout to add exercises to
+        layout = findViewById(R.id.workoutLinearLayout);
 
-                updateSpinnerWorkouts(user);
+        // Spinner for workout selection, and its adapter
+        spinner = (Spinner) findViewById (R.id.spinner);
+        spinner.setOnItemSelectedListener(WorkoutActivity.this);
 
-                submitButton = findViewById(R.id.submitDataButton);
-                submitButton.setClickable(false);
-            }
-        });
+        updateSpinnerWorkouts(user);
+
+        submitButton = findViewById(R.id.submitDataButton);
+        submitButton.setClickable(false);
 
         findViewById(R.id.createWorkoutButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,41 +129,35 @@ public class WorkoutActivity extends AppCompatActivity implements
             submitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Get the logged in user instance
-                    AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-                        @Override
-                        public void onUserPopulated(User user) {
-                            if (user == null) {
-                                throw new IllegalStateException("Not logged in");
-                            }
+                    if (user == null) {
+                        throw new IllegalStateException("Not logged in");
+                    }
 
-                            for (int i=0; i<exerciseList.size(); i++) {
-                                // Get the exercise data from the fields
-                                currentExercise = exerciseList.get(i);
-                                TextView exerciseView = (TextView) layout.findViewWithTag("workoutExercise" + i);
-                                String data = exerciseView.getText().toString();
-                                int dataValue = 0;
-                                try {
-                                    dataValue = Integer.parseInt(data);
-                                    if (dataValue >= currentExercise.getTime())
-                                    {
-                                        exerciseView.setBackgroundColor(Color.GREEN);
-                                    }
-                                    else
-                                    {
-                                        exerciseView.setBackgroundColor(Color.RED);
-                                    }
-                                    exerciseView.setEnabled(false);
-                                    currentExercise.setData(dataValue);
-                                }
-                                catch(Exception e) {
-
-                                }
+                    for (int i=0; i<exerciseList.size(); i++) {
+                        // Get the exercise data from the fields
+                        currentExercise = exerciseList.get(i);
+                        TextView exerciseView = (TextView) layout.findViewWithTag("workoutExercise" + i);
+                        String data = exerciseView.getText().toString();
+                        int dataValue = 0;
+                        try {
+                            dataValue = Integer.parseInt(data);
+                            if (dataValue >= currentExercise.getTime())
+                            {
+                                exerciseView.setBackgroundColor(Color.GREEN);
                             }
-                            currentWorkout.setCompleted(true);
-                            AccountManager.updateUser(user);
+                            else
+                            {
+                                exerciseView.setBackgroundColor(Color.RED);
+                            }
+                            exerciseView.setEnabled(false);
+                            currentExercise.setData(dataValue);
                         }
-                    });
+                        catch(Exception e) {
+
+                        }
+                    }
+                    currentWorkout.setCompleted(true);
+                    AccountManager.updateUser(user);
                 }
             });
         }

@@ -36,9 +36,16 @@ public class LoginActivity extends AppCompatActivity {
 
                     ((TextView) thisActivity.findViewById(R.id.lblMessage)).setText(R.string.loginSuccess);
 
-                    Intent mainActivityIntent = new Intent(thisActivity, MainActivity.class);
-                    mainActivityIntent.putExtra("username", username);
-                    startActivityForResult(mainActivityIntent, 1);
+                    AccountManager.getUser(username, new AccountManager.UserObjectListener() {
+                        @Override
+                        public void onUserPopulated(User user) {
+                            Intent mainActivityIntent = new Intent(thisActivity, MainActivity.class);
+                            mainActivityIntent.putExtra("user", user);
+                            startActivityForResult(mainActivityIntent, 1);
+
+                        }
+                    });
+
                 } else {
                     ((TextView)thisActivity.findViewById(R.id.lblMessage)).setText(R.string.loginFailure);
                 }

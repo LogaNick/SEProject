@@ -11,6 +11,7 @@ import static junit.framework.Assert.assertTrue;
  * Unit tests for the Team class
  */
 public class TeamTest {
+
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 

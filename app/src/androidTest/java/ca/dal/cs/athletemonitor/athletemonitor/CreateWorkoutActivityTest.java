@@ -5,6 +5,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -41,28 +42,44 @@ import static org.hamcrest.Matchers.is;
  */
 @RunWith(AndroidJUnit4.class)
 public class CreateWorkoutActivityTest {
+    /**
+     * Test user for this test set
+     */
+    private static User testUser;
+    private static Intent intent = new Intent();
+
     @Rule
     public IntentsTestRule<CreateWorkoutActivity> mActivityRule =
             new IntentsTestRule<>(CreateWorkoutActivity.class, false, false);
 
+    /**
+     * Set up test environment for this test set
+     *
+     * @throws Exception General exceptions
+     */
     @BeforeClass
-    public static void setupEnvironment(){
-        authTestUser();
+    public static void setupTestEnvironment() throws Exception {
+        testUser = TestingHelper.createTestUser();
+        TestingHelper.setupTestEnvironment(intent, testUser);
     }
 
+    /**
+     * Clean up test environment after this test set has run
+     * @throws Exception
+     */
+    @AfterClass
+    public static void cleanupEnvironment() throws Exception {
+        AccountManager.setUserLoginState(testUser.getUsername(), false);
+        AccountManager.deleteUser(testUser, null);
+    }
+
+    /**
+     * Initializes and starts the activity before each test is run
+     */
     @Before
-    public void setupUser(){
-        TestingHelper.addTestUserExercises();
-        mActivityRule.launchActivity(new Intent().putExtra("username", "testuser"));
-    }
-
-    @After
-    public void cleanupTestUser() throws Exception {
-        // Sleep to wait for any firebase callbacks
-        sleep(3000);
-        TestingHelper.resetTestUserWorkouts();
-        TestingHelper.resetTestUserExercises();
-        sleep(1000);
+    public void launchActivity() throws Exception {
+        sleep(250);
+        mActivityRule.launchActivity(intent);
     }
 
     @Test
@@ -86,7 +103,7 @@ public class CreateWorkoutActivityTest {
         onView(withId(R.id.submitNewWorkoutButton)).perform(click());
         sleep(3000);
 
-        AccountManager.getUser("testuser", new AccountManager.UserObjectListener() {
+        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
             public void onUserPopulated(User user) {
                 assertEquals(1, user.getUserWorkouts().size());
