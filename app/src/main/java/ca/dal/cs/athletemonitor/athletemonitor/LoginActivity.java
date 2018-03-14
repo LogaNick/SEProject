@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent mainActivityIntent = new Intent(thisActivity, MainActivity.class);
                     mainActivityIntent.putExtra("username", username);
-                    startActivity(mainActivityIntent);
+                    startActivityForResult(mainActivityIntent, 1);
                 } else {
                     ((TextView)thisActivity.findViewById(R.id.lblMessage)).setText(R.string.loginFailure);
                 }
@@ -65,5 +65,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+
     }
 }

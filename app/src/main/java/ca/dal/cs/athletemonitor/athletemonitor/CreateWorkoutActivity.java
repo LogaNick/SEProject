@@ -71,8 +71,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                         if (newWorkout.getExercises().size() > 0) {
                             user.addUserWorkout(newWorkout);
                             AccountManager.updateUser(user);
-                            startActivity(new Intent(CreateWorkoutActivity.this, WorkoutActivity.class)
-                                    .putExtras(getIntent().getExtras()));
+                            finish();
                         }
                     }
                 });

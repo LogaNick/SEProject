@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,17 +43,11 @@ public class WorkoutActivity extends AppCompatActivity implements
                 // Get the layout to add exercises to
                 layout = findViewById(R.id.workoutLinearLayout);
 
-                // Get the user's list of exercises
-                workouts = user.getUserWorkouts();
-
                 // Spinner for workout selection, and its adapter
                 spinner = (Spinner) findViewById (R.id.spinner);
                 spinner.setOnItemSelectedListener(WorkoutActivity.this);
-                ArrayAdapter<Workout> adapter = new ArrayAdapter<Workout>(getApplicationContext(),
-                        android.R.layout.simple_spinner_item, workouts);
-                adapter.setDropDownViewResource
-                        (android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
+
+                updateSpinnerWorkouts(user);
 
                 submitButton = findViewById(R.id.submitDataButton);
                 submitButton.setClickable(false);
@@ -64,7 +59,7 @@ public class WorkoutActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 Intent createWorkoutActivityIntent = new Intent(WorkoutActivity.this, CreateWorkoutActivity.class);
                 createWorkoutActivityIntent.putExtras(getIntent().getExtras());
-                startActivity(createWorkoutActivityIntent);
+                startActivityForResult(createWorkoutActivityIntent, 1);
             }
         });
     }
@@ -178,5 +173,28 @@ public class WorkoutActivity extends AppCompatActivity implements
     public void onNothingSelected (AdapterView<?> parent)
     {
 
+    }
+
+    public void updateSpinnerWorkouts(User user){
+        // Get the user's list of exercises
+        workouts = user.getUserWorkouts();
+        ArrayAdapter<Workout> adapter = new ArrayAdapter<Workout>(getApplicationContext(),
+                android.R.layout.simple_spinner_item, workouts);
+        adapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1) {
+            /* Returning from create workout activity */
+            AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
+                @Override
+                public void onUserPopulated(User user) {
+                    updateSpinnerWorkouts(user);
+                }
+            });
+        }
     }
 }
