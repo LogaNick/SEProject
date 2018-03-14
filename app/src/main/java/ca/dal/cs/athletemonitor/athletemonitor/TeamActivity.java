@@ -92,11 +92,17 @@ public class TeamActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
 
             builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }}).setTitle(team.getName())
-                    .setMessage("\n" + team.getMotto())
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }})
+                    .setPositiveButton("More", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                    }})
+                    .setTitle(team.getName())
+                    .setMessage("\nMotto: " + team.getMotto() + "\nOwner: " + team.getOwner())
                     .show();
         }
     }
