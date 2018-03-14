@@ -26,7 +26,7 @@ public class TeamTest {
         // Assert all fields are valid
         assertTrue(Team.validateAll(name, motto));
         // Create new team and expect no exception
-        new Team(name, motto);
+        new Team(name, motto, owner);
     }
 
     /**
@@ -45,6 +45,6 @@ public class TeamTest {
 
         // Expect an exception when creating the new Team
         exception.expect(IllegalArgumentException.class);
-        new Team(name, motto);
+        new Team(name, motto, owner);
     }
 }
