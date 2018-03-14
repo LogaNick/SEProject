@@ -9,16 +9,20 @@ import java.util.ArrayList;
 
 public class Workout {
 
-    private int id;
     private String name;
     private ArrayList<WorkoutExercise> exercises;
     private boolean completed;
 
-    public Workout(int id)
+    /**
+     * No args constructor used primarily for database based initialization of workout objects
+     */
+    public Workout() { /* intentionally left blank */ }
+
+    public Workout(String name)
     {
-        this.id = id;
-        this.name = "Workout "+id;
+        this.name = name;
         this.exercises = new ArrayList<>();
+        this.completed = false;
     }
 
     public boolean isCompleted ()
@@ -52,9 +56,4 @@ public class Workout {
     }
 
     public void setName (String n) { this.name = n; }
-
-    public int getId () { return this.id; }
-
-    public void setId(int id) { this.id = id; }
-
 }

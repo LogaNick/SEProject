@@ -41,15 +41,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Workouts" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:gravity="bottom"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <Switch
+            android:id="@+id/onlineToggleSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:gravity="right"
+            android:text="Online " />
 
         <Button
             android:id="@+id/btnSignOut"
@@ -63,9 +72,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.965" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

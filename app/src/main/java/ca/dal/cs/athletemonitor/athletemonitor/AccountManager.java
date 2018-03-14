@@ -25,6 +25,16 @@ public class AccountManager {
     private static String lastAuth = "";
 
     /**
+     * online holds the online status of the logged in user, if there is one.
+     */
+    private static boolean online = false;
+
+    /**
+     * User object for an offline user
+     */
+    private static User user;
+
+    /**
      * Listener interface for checking if a user exists.
      *
      * Callers of userExists must implement this listener interface.
@@ -51,6 +61,16 @@ public class AccountManager {
      */
     public static void getUser(String username, @NonNull final UserObjectListener listener) {
         Objects.requireNonNull(listener, "Null value for UserObjectListener is not valid.");
+        Objects.requireNonNull(user, "Get user called in offline mode before logging in");
+
+        if(!online) {
+            if(username.equals(user.getUsername())){
+                listener.onUserPopulated(user);
+            }else{
+                listener.onUserPopulated(null);
+            }
+            return;
+        }
 
         //retrieve a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -104,6 +124,8 @@ public class AccountManager {
                     if (userLoggingIn.getPassword().equals(user.getPassword())) {
                         AccountManager.setUserLoginState(user.getUsername(), true);
                         lastAuth = user.getUsername();
+                        online = true;
+                        AccountManager.user = userLoggingIn;
                         authResult = true;
                     }
                 }
@@ -173,11 +195,15 @@ public class AccountManager {
      * @param updatedUser User details
      */
     public static void updateUser(final User updatedUser){
-        // Ensure that the user is the currently authenticated user
-        if(lastAuth.equals(updatedUser.getUsername())){
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
-            usersReference.setValue(updatedUser, null);
+        AccountManager.user = updatedUser;
+
+        if(online) {
+            // Ensure that the user is the currently authenticated user
+            if (lastAuth.equals(updatedUser.getUsername())) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
+                usersReference.setValue(updatedUser, null);
+            }
         }
     }
 
@@ -294,5 +320,22 @@ public class AccountManager {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    /**
+     * Get the online status of the user
+     * @return online
+     */
+    public static boolean isOnline(){
+        return online;
+    }
+
+    /**
+     * Set the online status of the user
+     * @param online
+     */
+    public static void setOnline(boolean online){
+        AccountManager.online = online;
+        AccountManager.updateUser(user);
     }
 }
