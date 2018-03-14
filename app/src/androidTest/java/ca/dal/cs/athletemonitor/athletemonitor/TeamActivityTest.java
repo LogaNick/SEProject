@@ -81,7 +81,7 @@ public class TeamActivityTest {
      * @throws Exception General exception
      */
     @Test
-    public void testGoToExerciseButton() throws Exception {
+    public void testGoCreateTeamButton() throws Exception {
         //Try to click the button.
         onView(withId(R.id.createTeamButton)).perform(click());
         intended(hasComponent(CreateTeamActivity.class.getName()));

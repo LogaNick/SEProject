@@ -75,6 +75,6 @@ public class CreateTeamActivityTest {
 
         //Try to click the button.
         onView(withId(R.id.submitTeamButton)).perform(click());
-        intended(hasComponent(MainActivity.class.getName()));
+        intended(hasComponent(TeamActivity.class.getName()));
     }
 }

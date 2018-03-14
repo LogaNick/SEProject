@@ -39,7 +39,7 @@ public class TeamActivity extends AppCompatActivity {
             @Override
             public void onUserPopulated(User user) {
                 // Get the layout to add exercises to
-                LinearLayout layout = findViewById(R.id.exerciseLinearLayout);
+                LinearLayout layout = findViewById(R.id.teamLinearLayout);
 
                 boolean alternateColor = false;
 
