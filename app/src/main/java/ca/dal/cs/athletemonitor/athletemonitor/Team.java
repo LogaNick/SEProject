@@ -75,6 +75,20 @@ public class Team {
     }
 
     /**
+     * Sets the team owner
+     *
+     * @param owner Owner of the team
+     */
+    public void setOwner(String owner) { this.owner = owner; }
+
+    /**
+     * Retrieves the team owner
+     *
+     * @return Username of the team that owns the team
+     */
+    public String getOwner() { return this.owner; }
+
+    /**
      * Validate a team name
      * @param name Name of team
      * @return Whether name is valid
@@ -125,4 +139,27 @@ public class Team {
         return validateName(name) && validateMotto(motto) && validateOwner(owner);
     }
 
+    /**
+     * Determines equality of this team versus the team specified
+     *
+     * Equality is decided first by object reference value and second by team name and owner
+     *
+     * @param object Team to compare this team to
+     *
+     * @return True if the teams are the same object instance or have the same name and owner,
+     * otherwise false
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (object == null ) return false;
+        if (!(object instanceof Team)) return false;
+        if (object == this) return true;
+
+        Team teamObject = (Team) object;
+
+        if (this.name.equals(teamObject.getName()) &&
+                this.owner.equals(teamObject.getOwner())) { return true; }
+
+
+    }
 }
