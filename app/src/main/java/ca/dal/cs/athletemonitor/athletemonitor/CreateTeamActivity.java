@@ -30,7 +30,7 @@ public class CreateTeamActivity extends AppCompatActivity {
                     @Override
                     public void onUserPopulated(User user) {
                         if (user == null) {
-                            throw new IllegalStateException("Not logged in");
+                            throw new IllegalStateException("Not logged in...");
                         }
 
                         // Get the Team data from the fields
@@ -44,8 +44,11 @@ public class CreateTeamActivity extends AppCompatActivity {
                             user.addUserTeam(new Team(name, motto, owner));
                             AccountManager.updateUser(user);
                             // Switch back to exercise activity
-                            Intent mainActivityIntent = new Intent(CreateTeamActivity.this, TeamActivity.class);
+                            Intent mainActivityIntent = new Intent(
+                                    CreateTeamActivity.this, TeamActivity.class);
+
                             mainActivityIntent.putExtras(getIntent().getExtras());
+                            mainActivityIntent.getExtras().getString("username");
                             startActivity(mainActivityIntent);
                         }
                     }

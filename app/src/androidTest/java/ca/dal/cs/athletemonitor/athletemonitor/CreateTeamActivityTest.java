@@ -115,13 +115,15 @@ public class CreateTeamActivityTest {
      */
     @Test
     public void testOnCreateTeamButtonClick() throws Exception {
+        // add a team to the user and update the user informatoin in firebase
+        testUser.addUserTeam(new Team("testteam", "testmotto", testUser.getUsername()));
+        //AccountManager.updateUser(testUser);
+
         onView(withId(R.id.newTeamName)).perform(typeText("testteam"));
         onView(withId(R.id.newTeamMotto)).perform(typeText("testmotto"), closeSoftKeyboard());
 
         //Try to click the button.
         onView(withId(R.id.submitTeamButton)).perform(click());
-        intended(hasComponent(TeamActivity.class.getName()));
-
         //test that the team was created in the database
         AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
             @Override
@@ -132,5 +134,8 @@ public class CreateTeamActivityTest {
                         new Team("testteam", "testmotto", user.getUsername())));
             }
         });
+        intended(hasComponent(TeamActivity.class.getName()));
+
+
     }
 }
