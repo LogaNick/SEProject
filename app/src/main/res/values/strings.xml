@@ -54,4 +54,7 @@
     <string name="activity_record_navigation_record_button">Record</string>
     <string name="activity_record_navigation_pause_button">Pause</string>
     <string name="activity_record_firebase">recorded_workouts/%s</string>
+    <string name="activity_record_save_dialog">Do you want to save this workout?</string>
+    <string name="activity_record_yes">Yes</string>
+    <string name="activity_record_no">No</string>
 </resources>
