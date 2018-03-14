@@ -15,6 +15,11 @@ import java.util.concurrent.TimeUnit;
 
 public class CreateTeamActivity extends AppCompatActivity {
 
+    /**
+     * Initializes the activity when created
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
