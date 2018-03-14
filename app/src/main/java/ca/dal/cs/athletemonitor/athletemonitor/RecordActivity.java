@@ -2,13 +2,16 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +20,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -51,7 +57,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                 locationList.add(location);
 
                 if (currentRoute == null) {
-                    currentRoute = mMap.addPolyline(new PolylineOptions().clickable(false));
+                    currentRoute = mMap.addPolyline(new PolylineOptions().color(Color.BLUE).clickable(false));
+                    currentRoute.setStartCap(new RoundCap());
+                    currentRoute.setEndCap(new RoundCap());
                 }
                 currentRoute.setPoints(convertListToLatLng());
             }
@@ -86,9 +94,12 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             requestLocationUpdates();
         }
 
-        Intent intent = getIntent();
-        String userId = intent.getStringExtra(USER_ID);
-        this.userId = userId;
+        //TODO uncomment
+//        Intent intent = getIntent();
+//        String userId = intent.getStringExtra(USER_ID);
+//        this.userId = userId;
+        this.userId = "zachary";
+
     }
 
     private List<LatLng> convertListToLatLng() {
@@ -101,11 +112,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         return latLngs;
     }
 
-    private void togglePauseStatus() {
+    //TODO change text while paused
+    public void togglePauseStatus(View v) {
         isPaused = !isPaused;
     }
 
-    private void toggleRecordStatus() {
+    //TODO make the button change text when recording
+    public void toggleRecordStatus(View v) {
         isRecording = !isRecording;
 
         if (!isRecording) {
@@ -118,7 +131,21 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         DatabaseReference myRef
                 = db.getReference(getString(R.string.activity_record_firebase, userId));
 
-
+        //TODO Add time
+        RecordedWorkout workout = new RecordedWorkout(locationList, 0);
+        String key = myRef.push().getKey();
+        Task task = myRef.child(key).setValue(workout);
+        task.addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    //TODO GOOD
+                }
+                else {
+                    //TODO BAD
+                }
+            }
+        });
     }
 
     /**
