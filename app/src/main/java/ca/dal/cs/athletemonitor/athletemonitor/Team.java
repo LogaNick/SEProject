@@ -160,6 +160,7 @@ public class Team {
         if (this.name.equals(teamObject.getName()) &&
                 this.owner.equals(teamObject.getOwner())) { return true; }
 
-
+        // if we are here, the object is not equal to this one
+        return false;
     }
 }
