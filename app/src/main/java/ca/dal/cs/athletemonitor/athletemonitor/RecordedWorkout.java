@@ -11,10 +11,10 @@ import java.util.List;
 public class RecordedWorkout implements Parcelable {
 
     private List<Location> gpsCoordinates;
-    /** Time in seconds */
-    private int time;
+    /** Time in milliseconds */
+    private long time;
 
-    public RecordedWorkout(List<Location> gpsCoordinates, int time) {
+    public RecordedWorkout(List<Location> gpsCoordinates, long time) {
         this.gpsCoordinates = gpsCoordinates;
         this.time = time;
     }
@@ -22,7 +22,7 @@ public class RecordedWorkout implements Parcelable {
     public RecordedWorkout(Parcel in) {
         Location[] locs = (Location[]) in.readParcelableArray(Location.class.getClassLoader());
         gpsCoordinates = new ArrayList<Location>(Arrays.asList(locs));
-        time = in.readInt();
+        time = in.readLong();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RecordedWorkout implements Parcelable {
 
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelableArray(gpsCoordinates.toArray(new Parcelable[gpsCoordinates.size()]), 0);
-        out.writeInt(time);
+        out.writeLong(time);
     }
 
     public static final Parcelable.Creator<RecordedWorkout> CREATOR =
@@ -50,7 +50,7 @@ public class RecordedWorkout implements Parcelable {
         return gpsCoordinates;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 

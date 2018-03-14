@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Chronometer;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +44,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private String userId;
     private boolean isRecording = false;
     private boolean isPaused = false;
+    private Chronometer timer;
     private List<Location> locationList = new LinkedList<>();
     private Polyline currentRoute = null;
     private GoogleMap mMap;
@@ -89,6 +92,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         ((MapFragment) getFragmentManager().findFragmentById(R.id.record_map))
                 .getMapAsync(this);
 
+        timer = (Chronometer) findViewById(R.id.record_chrono);
+
         setupLocationFields();
         if (checkForLocPermission()) {
             requestLocationUpdates();
@@ -114,7 +119,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
     //TODO change text while paused
     public void togglePauseStatus(View v) {
-        isPaused = !isPaused;
+        if (isRecording) {
+            isPaused = !isPaused;
+            if (isPaused)
+                timer.stop();
+            else
+                timer.start();
+        }
     }
 
     //TODO make the button change text when recording
@@ -122,7 +133,14 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         isRecording = !isRecording;
 
         if (!isRecording) {
+            timer.stop();
+            timer.setBase(SystemClock.elapsedRealtime());
+            isPaused = false;
             saveToFirebase();
+        }
+        else {
+            timer.setBase(SystemClock.elapsedRealtime());
+            timer.start();
         }
     }
 
@@ -131,11 +149,11 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         DatabaseReference myRef
                 = db.getReference(getString(R.string.activity_record_firebase, userId));
 
-        //TODO Add time
-        RecordedWorkout workout = new RecordedWorkout(locationList, 0);
+        long time = SystemClock.elapsedRealtime() - timer.getBase();
+        RecordedWorkout workout = new RecordedWorkout(locationList, time);
         String key = myRef.push().getKey();
-        Task task = myRef.child(key).setValue(workout);
-        task.addOnCompleteListener(new OnCompleteListener() {
+        Task<Void> task = myRef.child(key).setValue(workout);
+        task.addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
