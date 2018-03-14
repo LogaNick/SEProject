@@ -87,7 +87,7 @@ public class MainActivityTest {
     @Test
     public void testCreateNewTeamButton() throws Exception {
         // Try to click the button.
-        onView(withId(R.id.createNewTeamButton)).perform(click());
+        onView(withId(R.id.createTeamButton)).perform(click());
         intended(hasComponent(CreateTeamActivity.class.getName()));
     }
 	
