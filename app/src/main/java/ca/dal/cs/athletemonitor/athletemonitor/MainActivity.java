@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
                 workoutActivityIntent.putExtra("username", extras.getString("username"));
-                startActivity(workoutActivityIntent);
+                startActivityForResult(workoutActivityIntent, 1);
             }
         });
 
@@ -108,12 +108,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void logout(){
+    private void logout() {
         //Start by taking the user offline in Firebase
         AccountManager.setUserLoginState(getIntent().getExtras().getString("username"), false);
 
-        //Start the sign in activity
-        Intent signInActivityIntent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(signInActivityIntent);
+        // Return to login activity
+        finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1){
+            /* Returning from workout activity */
+        }
     }
 }
