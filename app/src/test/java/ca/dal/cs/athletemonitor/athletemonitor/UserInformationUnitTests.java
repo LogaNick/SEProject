@@ -3,6 +3,9 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import android.os.Parcel;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
 import ca.dal.cs.athletemonitor.athletemonitor.UserInformation.UserInformationBuilder;
 
 import static org.junit.Assert.*;
@@ -13,6 +16,7 @@ import static org.junit.Assert.*;
  * {@link UserInformationBuilder}
  * builder class.
  */
+@RunWith(JUnit4.class)
 public class UserInformationUnitTests {
 
 	private static final String TEST_FIRST_NAME = "Auston";

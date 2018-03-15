@@ -29,15 +29,16 @@
         <activity
             android:name=".UserInformationActivity"
             android:label="@string/title_activity_user_information"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".UserInformationEditActivity"
             android:label="@string/title_activity_user_information_edit"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".WorkoutActivity"
-            android:label="Workouts"></activity>
-        <activity android:name=".CreateWorkoutActivity"></activity>
+            android:label="Workouts"/>
+        <activity android:name=".TeamActivity"/>
+        <activity android:name=".CreateWorkoutActivity"/>
     </application>
 
 </manifest>

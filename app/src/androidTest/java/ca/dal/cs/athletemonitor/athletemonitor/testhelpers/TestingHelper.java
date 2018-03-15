@@ -1,7 +1,11 @@
 package ca.dal.cs.athletemonitor.athletemonitor.testhelpers;
 
+import android.content.Intent;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -68,8 +72,11 @@ public class TestingHelper {
     /**
      * Test helper to authenticate the testuser
      */
-    public static void authTestUser(){
-        AccountManager.authenticate(new User("testuser", "abc"), null);
+    public static User authTestUser(){
+        User testUser = createTestUser();
+        AccountManager.createUser(testUser);
+        AccountManager.authenticate(testUser, null);
+        return testUser;
     }
 
     /**
@@ -108,5 +115,28 @@ public class TestingHelper {
         testExercises.add(testExercise2);
         testExercises.add(testExercise3);
         usersReference.child("userExercises").setValue(testExercises);
+    }
+
+    public static void setupTestEnvironment(final Intent intent, final User testUser) {
+
+        // create a test user in the database and authenticate
+        //testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(testUser);
+        AccountManager.authenticate(testUser, new BooleanResultListener() {
+            @Override
+            public void onResult(boolean result) {
+                if (result) {
+                    AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
+                        @Override
+                        public void onUserPopulated(User user) {
+                            intent.putExtra("user", user);
+                        }
+                    });
+                } else {
+                    Assert.assertTrue("Could not log test user in", result);
+                }
+            }
+        });
+
     }
 }

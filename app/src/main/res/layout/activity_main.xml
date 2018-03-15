@@ -22,11 +22,11 @@
             android:text="Exercises" />
 
         <Button
-            android:id="@+id/createNewTeamButton"
+            android:id="@+id/teamButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="New Team" />
+            android:text="My Teams" />
 
 		<Button
             android:id="@+id/goToUserInfo"

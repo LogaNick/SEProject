@@ -3,7 +3,6 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.LinearLayout;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.junit.runner.RunWith;
 
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -22,22 +20,22 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
+import android.util.Log;
+
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
+
 import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 
 /**
- * Espresso Test for the exercise Activity.
+ * Test class for Team Activity
  */
 @RunWith(AndroidJUnit4.class)
-public class ExerciseActivityTest {
+public class TeamActivityTest {
     /**
      * Test user for this test set
      */
@@ -45,8 +43,8 @@ public class ExerciseActivityTest {
     private static Intent intent = new Intent();
 
     @Rule
-    public IntentsTestRule<ExerciseActivity> mActivityRule =
-            new IntentsTestRule(ExerciseActivity.class, false, false);
+    public IntentsTestRule<TeamActivity> mActivityRule =
+            new IntentsTestRule(TeamActivity.class, false, false);
 
     /**
      * Set up test environment for this test set
@@ -79,47 +77,69 @@ public class ExerciseActivityTest {
     }
 
     /**
-     * Test that the button to create an exercise exist.
-     * @throws Exception
+     * Tests that all required components exist on the activity
+     *
+     * @throws Exception General exception
      */
     @Test
-    public void testHasCreateButton() throws Exception {
+    public void testCorrectComponentsTest() throws Exception {
         //Try to get the button.
-        onView(withId(R.id.createExerciseButton));
+        onView(withId(R.id.createTeamButton));
+        onView(withId(R.id.teamLayoutScrollView));
+        onView(withId(R.id.teamLinearLayout));
     }
 
     /**
-     * Test that the button to transfer to the create exercise activity works.
+     * Tests that create team button transitions to create team activity
+     *
+     * @throws Exception General exception
+     */
+    @Test
+    public void testGoCreateTeamButton() throws Exception {
+        //Try to click the button.
+        onView(withId(R.id.createTeamButton)).perform(click());
+        intended(hasComponent(CreateTeamActivity.class.getName()));
+    }
+
+    /**
+     * Tests whether creating a team results in team activity being updated with newly created
+     * team information
+     *
+     * @throws Exception General exception
+     */
+    @Test
+    public void testCreateAndViewTeam() throws Exception{
+        // Click the button
+        onView(withId(R.id.createTeamButton)).perform(click());
+
+        // Enter team information
+        onView(withId(R.id.newTeamName)).perform(typeText("TestTeam_name"), closeSoftKeyboard());
+        onView(withId(R.id.newTeamMotto)).perform(typeText("TestTeam_motto"), closeSoftKeyboard());
+        onView(withId(R.id.submitTeamButton)).perform(click());
+
+        // Check that the new exercise is there
+        onView(withParent(withId(R.id.teamLinearLayout))).check(matches(withText("TestTeam_name")));
+
+        // Check that the dialog box works
+        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
+        onView(withText("TestTeam_name"));
+    }
+
+    /**
+     * Tests team overview is visible with the correct owner and buttons
      * @throws Exception
      */
     @Test
-    public void testGoToExerciseButton() throws Exception {
-        //Try to click the button.
-        onView(withId(R.id.createExerciseButton)).perform(click());
-        intended(hasComponent(CreateExerciseActivity.class.getName()));
-    }
+    public void teamListOnClickTest() throws Exception {
+        // first create a test team to click on
+        onView(withId(R.id.createTeamButton)).perform(click());
+        onView(withId(R.id.newTeamName)).perform(typeText("TestTeam_name"), closeSoftKeyboard());
+        onView(withId(R.id.newTeamMotto)).perform(typeText("TestTeam_motto"), closeSoftKeyboard());
+        onView(withId(R.id.submitTeamButton)).perform(click());
 
-    @Test
-    public void testCreateAndViewExercise(){
-        // Click the create exercise button
-        onView(withId(R.id.createExerciseButton)).perform(click());
+        // try to click on team
+        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
+        onView(allOf(withText("More"), withText("Close")));
 
-        // Enter exercise details
-        onView(withId(R.id.newExerciseName)).perform(typeText("Run"));
-        onView(withId(R.id.newExerciseDescription)).perform(typeText("Run outside"));
-        onView(withId(R.id.newExerciseTime)).perform(typeText("5"), closeSoftKeyboard());
-        onView(withId(R.id.newExerciseTimeUnits)).perform(click());
-        onData(allOf(is(instanceOf(String.class)),is("Minutes")))
-                .perform(click());
-
-        // Click submit button
-        onView(withId(R.id.newExerciseSubmitButton)).perform(click());
-
-        // Check that the new exercise is there
-        onView(withParent(withId(R.id.exerciseLinearLayout))).check(matches(withText("Run")));
-
-        // Check that the dialog box works
-        onView(withParent(withId(R.id.exerciseLinearLayout))).perform(click());
-        onView(allOf(withText("Run outside"),withText("5 minutes")));
     }
 }
