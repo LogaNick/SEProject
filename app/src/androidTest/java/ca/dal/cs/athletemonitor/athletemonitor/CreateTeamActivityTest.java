@@ -113,10 +113,6 @@ public class CreateTeamActivityTest {
      */
     @Test
     public void testOnCreateTeamButtonClick() throws Exception {
-        // add a team to the user and update the user informatoin in firebase
-        testUser.addUserTeam(new Team("testteam", "testmotto", testUser.getUsername()));
-        //AccountManager.updateUser(testUser);
-
         onView(withId(R.id.newTeamName)).perform(typeText("testteam"));
         onView(withId(R.id.newTeamMotto)).perform(typeText("testmotto"), closeSoftKeyboard());
 

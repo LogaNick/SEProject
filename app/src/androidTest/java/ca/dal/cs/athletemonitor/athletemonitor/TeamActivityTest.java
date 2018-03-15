@@ -129,14 +129,17 @@ public class TeamActivityTest {
      * Tests team overview is visible with the correct owner and buttons
      * @throws Exception
      */
-//    @Test
-//    public void teamListOnClickTest() throws Exception {
-//        //testOnCreateTeamButtonClick();
-//        if (AccountManager.isOnline()) Log.d("ONLINE_STATUS", "Yes");
-//
-//        // Check that the dialog box works
-//        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
-//        onView(allOf(withText("More"), withText("Close")));
-//
-//    }
+    @Test
+    public void teamListOnClickTest() throws Exception {
+        // first create a test team to click on
+        onView(withId(R.id.createTeamButton)).perform(click());
+        onView(withId(R.id.newTeamName)).perform(typeText("TestTeam_name"), closeSoftKeyboard());
+        onView(withId(R.id.newTeamMotto)).perform(typeText("TestTeam_motto"), closeSoftKeyboard());
+        onView(withId(R.id.submitTeamButton)).perform(click());
+
+        // try to click on team
+        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
+        onView(allOf(withText("More"), withText("Close")));
+
+    }
 }
