@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class TeamActivity extends AppCompatActivity {
     private User user;
+    private Team activeTeam;
 
     /**
      * Sets up activity when created
@@ -99,7 +101,10 @@ public class TeamActivity extends AppCompatActivity {
                     .setPositiveButton("More", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
+                            Intent TeamDetailActivityIntent = new Intent(TeamActivity.this, TeamDetailActivity.class);
+                            TeamDetailActivityIntent.putExtra("team", team);
+                            TeamDetailActivityIntent.putExtras(getIntent().getExtras());
+                            startActivity(TeamDetailActivityIntent);
                     }})
                     .setTitle(team.getName())
                     .setMessage("\nMotto: " + team.getMotto() + "\nOwner: " + team.getOwner())
