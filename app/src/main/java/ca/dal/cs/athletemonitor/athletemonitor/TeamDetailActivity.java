@@ -6,11 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamDetailActivity extends AppCompatActivity {
     private EditText teamName, teamMotto;
     private Button editTeamButton, updateTeamButton;
-    private Team team;
+    private Team team, newTeam;
+    private List<Team> userTeams;
     private User user;
 
     @Override
@@ -19,7 +24,7 @@ public class TeamDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_team_detail);
 
         team = (Team) getIntent().getExtras().getSerializable("team");
-        
+
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
 
@@ -47,13 +52,17 @@ public class TeamDetailActivity extends AppCompatActivity {
         updateTeamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                teamName.setEnabled(true);
-                teamMotto.setEnabled(true);
+                teamName.setEnabled(false);
+                teamMotto.setEnabled(false);
                 editTeamButton.setEnabled(true);
                 updateTeamButton.setVisibility(View.GONE);
 
-                //Update the info onto the team menbers.
 
+                String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
+                String motto = ((TextView) findViewById(R.id.teamMotto)).getText().toString();
+                String owner = user.getUsername();
+                newTeam = new Team(name,motto,owner);
+                //Update the info onto the team menbers.
             }
         });
 

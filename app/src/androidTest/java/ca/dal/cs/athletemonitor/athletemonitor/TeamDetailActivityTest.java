@@ -79,22 +79,22 @@ public class TeamDetailActivityTest {
     }
     @Test
     public void testNotEditable() throws Exception{
-        onView(withId(R.id.teamName)).check(not(isEnabled()));
-        onView(withId(R.id.teamMotto)).check(not(isEnabled()));
+        onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
+        onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
 
     }
     @Test
     public void testisEditable() throws Exception{
         onView(withId(R.id.editTeamButton)).perform(click());
-        onView(withId(R.id.teamName)).check(isEnabled());
-        onView(withId(R.id.teamMotto)).check(isEnabled());
+        onView(withId(R.id.teamName)).check(matches(isEnabled()));
+        onView(withId(R.id.teamMotto)).check(matches(isEnabled()));
     }
     @Test
     public void testUpdatedInfo() throws Exception{
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.teamName)).perform(typeText("UpdatedTeamName"));
         onView(withId(R.id.teamMotto)).perform(typeText("UpdatedTeamMotto"));
-        onView(withId(R.id.submitChangeButton)).perform(click());
+        onView(withId(R.id.updateTeamButton)).perform(click());
         onView(withId(R.id.teamName)).check(matches(withText("UpdatedTeamName")));
         onView(withId(R.id.teamMotto)).check(matches(withText("UpdatedTeamMotto")));
     }
