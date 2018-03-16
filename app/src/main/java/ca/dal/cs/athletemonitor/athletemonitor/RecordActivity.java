@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
 
+import com.google.android.gms.location.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -28,12 +29,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 
@@ -59,15 +63,20 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private ArrayList<Location> locationList = new ArrayList<>();
     private Polyline currentRoute = null;
     private GoogleMap mMap;
-    private LocationManager locationManager;
-    private LocationListener locationListener = new LocationListener() {
+    private FusedLocationProviderClient locationProviderClient;
+    private LocationRequest locationRequest;
+    private SettingsClient settingsClient;
+    private LocationSettingsRequest locationSettingsRequest;
+    private LocationCallback locationCallback = new LocationCallback() {
         @Override
-        public void onLocationChanged(Location location) {
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+
+            Location location = locationResult.getLastLocation();
             LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(16f));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
 
             if (isRecording && !isPaused) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
                 locationList.add(location);
 
                 if (currentRoute == null) {
@@ -77,21 +86,6 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
                 currentRoute.setPoints(convertListToLatLng());
             }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
         }
     };
 
@@ -135,13 +129,16 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         ((MapFragment) getFragmentManager().findFragmentById(R.id.record_map))
                 .getMapAsync(this);
 
-        timer = (Chronometer) findViewById(R.id.record_chrono);
-        recordButton = (ImageButton) findViewById(R.id.record_button);
-        pauseButton = (ImageButton) findViewById(R.id.pause_button);
+        timer = findViewById(R.id.record_chrono);
+        recordButton = findViewById(R.id.record_button);
+        pauseButton = findViewById(R.id.pause_button);
 
-        setupLocationFields();
         if (checkForLocPermission()) {
+            createLocationParameters();
             requestLocationUpdates();
+        }
+        else {
+            requestLocPermissions();
         }
 
         //TODO uncomment
@@ -150,6 +147,52 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 //        this.userId = userId;
         this.userId = "zachary";
 
+    }
+
+    private void requestLocPermissions() {
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                ACCESS_FINE_LOCATION);
+    }
+
+    private void createLocationParameters() {
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(TimeUnit.SECONDS.toMillis(10));
+        locationRequest.setFastestInterval(TimeUnit.SECONDS.toMillis(1));
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        settingsClient = LocationServices.getSettingsClient(this);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
+        locationSettingsRequest = builder.build();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (locationProviderClient != null && !isRecording)
+            locationProviderClient.removeLocationUpdates(locationCallback);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!isRecording) {
+            if (checkForLocPermission()) {
+                if (locationProviderClient == null) {
+                    createLocationParameters();
+                }
+                requestLocationUpdates();
+            } else {
+                requestLocPermissions();
+            }
+        }
     }
 
     private List<LatLng> convertListToLatLng() {
@@ -183,6 +226,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
+    //TODO need to save initial location
     public void toggleRecordStatus(View v) {
         isRecording = !this.isRecording;
         recordButton.setImageResource(
@@ -229,24 +273,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private boolean checkForLocPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    ACCESS_FINE_LOCATION);
             return false;
         }
         else
             return true;
     }
 
-    private void setupLocationFields() {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-    }
-
     private void requestLocationUpdates() {
         try {
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, REFRESH_TIME, MIN_DISTANCE, locationListener);
+            locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -258,7 +293,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         switch (requestCode) {
             case ACCESS_FINE_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    requestLocationUpdates();
+                    try {
+                        createLocationParameters();
+                        requestLocationUpdates();
+                        moveToInitialLocation();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -267,11 +308,27 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        try {
-            mMap.setMyLocationEnabled(true);
-        } catch (SecurityException e) {
-            e.printStackTrace();
+        if (checkForLocPermission()) {
+            try {
+                moveToInitialLocation();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private void moveToInitialLocation() throws SecurityException {
+        Task<Location> locationTask = locationProviderClient.getLastLocation();
+        mMap.setMyLocationEnabled(true);
+        locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(16f));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(
+                        new LatLng(location.getLatitude(), location.getLongitude())
+                ));
+            }
+        });
     }
 
 }
