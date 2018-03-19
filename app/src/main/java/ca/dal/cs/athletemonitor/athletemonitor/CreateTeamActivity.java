@@ -14,7 +14,12 @@ import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
 public class CreateTeamActivity extends AppCompatActivity {
-
+    private User user;
+    /**
+     * Initializes the activity when created
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,21 +27,27 @@ public class CreateTeamActivity extends AppCompatActivity {
 
         ((Button)findViewById(R.id.submitTeamButton)).setEnabled(false);
 
-        // Create on click listener for submit button
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
+
         findViewById(R.id.submitTeamButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get the Team data from the fields
                 String name = ((TextView) findViewById(R.id.newTeamName)).getText().toString();
                 String motto = ((TextView) findViewById(R.id.newTeamMotto)).getText().toString();
+                String owner = user.getUsername();
 
-                if(Team.validateAll(name, motto)){
-                    // Submit new team to database
-                    if(TeamManager.newTeam(new Team(name, motto))){
-                        // Switch back to MainActivity when successfully created team
-                        Intent mainActivityIntent = new Intent(CreateTeamActivity.this, MainActivity.class);
-                        mainActivityIntent.putExtras(getIntent().getExtras());
-                        startActivity(mainActivityIntent);
-                    }
+                // Validate fields and submit data
+                if (Team.validateAll(name, motto, owner)) {
+                    // Add Team to user
+                    user.addUserTeam(new Team(name, motto, owner));
+                    AccountManager.updateUser(user);
+
+                    // Switch back to exercise activity
+                    Intent intent = new Intent(CreateTeamActivity.this, TeamActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
                 }
             }
         });

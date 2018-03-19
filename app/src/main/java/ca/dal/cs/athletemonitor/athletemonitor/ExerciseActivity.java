@@ -18,6 +18,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 public class ExerciseActivity extends AppCompatActivity {
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,49 +30,47 @@ public class ExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent createExerciseActivityIntent = new Intent(ExerciseActivity.this, CreateExerciseActivity.class);
-                createExerciseActivityIntent.putExtras(getIntent().getExtras());
+                createExerciseActivityIntent.putExtra("user", user);
                 startActivity(createExerciseActivityIntent);
             }
         });
 
-        AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                // Get the layout to add exercises to
-                LinearLayout layout = findViewById(R.id.exerciseLinearLayout);
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
 
-                boolean alternateColor = false;
+        // Get the layout to add exercises to
+        LinearLayout layout = findViewById(R.id.exerciseLinearLayout);
 
-                // Get the user's list of exercises
-                List<Exercise> exercises = user.getUserExercises();
-                // Iterate and add exercises to screen
-                for (Exercise exercise : exercises) {
-                    // Build a new TextView for this exercise
-                    TextView exerciseText = new TextView(ExerciseActivity.this);
-                    exerciseText.setText(exercise.getName());
-                    exerciseText.setTextSize(28);
-                    exerciseText.setPadding(0, 30, 0, 30);
+        boolean alternateColor = false;
 
-                    if (alternateColor) exerciseText.setBackgroundColor(Color.LTGRAY);
+        // Get the user's list of exercises
+        List<Exercise> exercises = user.getUserExercises();
+        // Iterate and add exercises to screen
+        for (Exercise exercise : exercises) {
+            // Build a new TextView for this exercise
+            TextView exerciseText = new TextView(ExerciseActivity.this);
+            exerciseText.setText(exercise.getName());
+            exerciseText.setTextSize(28);
+            exerciseText.setPadding(0, 30, 0, 30);
 
-                    exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            if (alternateColor) exerciseText.setBackgroundColor(Color.LTGRAY);
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 4, 0, 0);
+            exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-                    exerciseText.setLayoutParams(params);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 4, 0, 0);
 
-                    // Add a click listener to show more information
-                    exerciseText.setOnClickListener(new DialogOnClickListener(exercise));
-                    // Add the text view to the screen
-                    layout.addView(exerciseText);
+            exerciseText.setLayoutParams(params);
 
-                    alternateColor = !alternateColor;
-                }
-            }
-        });
+            // Add a click listener to show more information
+            exerciseText.setOnClickListener(new DialogOnClickListener(exercise));
+            // Add the text view to the screen
+            layout.addView(exerciseText);
+
+            alternateColor = !alternateColor;
+        }
     }
 
     // Custom click listener implementation, so that we can access the exercise data.

@@ -16,12 +16,17 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CreateExerciseActivity extends AppCompatActivity {
+    private User user;
+
     private static final Map<String, TimeUnit> timeUnitNames = new HashMap<String, TimeUnit>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_exercise);
+
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
 
         // Initialize timeUnitNames map
         timeUnitNames.put("Seconds", TimeUnit.SECONDS);
@@ -34,38 +39,32 @@ public class CreateExerciseActivity extends AppCompatActivity {
         findViewById(R.id.newExerciseSubmitButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the logged in user instance
-                AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-                    @Override
-                    public void onUserPopulated(User user) {
-                        if (user == null) {
-                            throw new IllegalStateException("Not logged in");
-                        }
+                if (user == null) {
+                    throw new IllegalStateException("Not logged in");
+                }
 
-                        // Get the exercise data from the fields
-                        String name = ((TextView) findViewById(R.id.newExerciseName)).getText().toString();
-                        String description = ((TextView) findViewById(R.id.newExerciseDescription)).getText().toString();
-                        String timeString = ((TextView) findViewById(R.id.newExerciseTime)).getText().toString();
-                        int time = 0;
+                // Get the exercise data from the fields
+                String name = ((TextView) findViewById(R.id.newExerciseName)).getText().toString();
+                String description = ((TextView) findViewById(R.id.newExerciseDescription)).getText().toString();
+                String timeString = ((TextView) findViewById(R.id.newExerciseTime)).getText().toString();
+                int time = 0;
 
-                        if (!timeString.equals("")) {
-                            time = Integer.parseInt(timeString);
-                        }
+                if (!timeString.equals("")) {
+                    time = Integer.parseInt(timeString);
+                }
 
-                        TimeUnit unit = timeUnitNames.get(((Spinner) findViewById(R.id.newExerciseTimeUnits)).getSelectedItem().toString());
+                TimeUnit unit = timeUnitNames.get(((Spinner) findViewById(R.id.newExerciseTimeUnits)).getSelectedItem().toString());
 
-                        // Validate fields and submit data
-                        if (Exercise.validateAll(name, description, time)) {
-                            // Add exercise to user
-                            user.addUserExercise(new Exercise(name, description, time, unit));
-                            AccountManager.updateUser(user);
-                            // Switch back to exercise activity
-                            Intent exerciseActivityIntent = new Intent(CreateExerciseActivity.this, ExerciseActivity.class);
-                            exerciseActivityIntent.putExtras(getIntent().getExtras());
-                            startActivity(exerciseActivityIntent);
-                        }
-                    }
-                });
+                // Validate fields and submit data
+                if (Exercise.validateAll(name, description, time)) {
+                    // Add exercise to user
+                    user.addUserExercise(new Exercise(name, description, time, unit));
+                    AccountManager.updateUser(user);
+                    // Switch back to exercise activity
+                    Intent exerciseActivityIntent = new Intent(CreateExerciseActivity.this, ExerciseActivity.class);
+                    exerciseActivityIntent.putExtra("user", user);
+                    startActivity(exerciseActivityIntent);
+                }
             }
         });
 

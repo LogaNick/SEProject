@@ -58,4 +58,8 @@
     <string name="activity_record_save_dialog">Do you want to save this workout?</string>
     <string name="activity_record_yes">Yes</string>
     <string name="activity_record_no">No</string>
+
+    <string name="logout_while_offline_warning">You have locally saved data.</string>
+    <string name="logout_while_offline_warning_save">Save and quit</string>
+    <string name="logout_while_offline_warning_quit">Quit</string>
 </resources>
