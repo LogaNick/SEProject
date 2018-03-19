@@ -1,13 +1,13 @@
 
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Workout class manages the data for a workout, which is a collection of exercises.
  */
-
-public class Workout {
+public class Workout implements Serializable {
 
     private String name;
     private ArrayList<WorkoutExercise> exercises;
