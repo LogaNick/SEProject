@@ -10,9 +10,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class TeamActivity extends AppCompatActivity {
+    /**
+     * Current user using the application
+     */
     private User user;
 
     /**
@@ -40,8 +44,64 @@ public class TeamActivity extends AppCompatActivity {
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
 
+        this.populateTeamList();
+    }
+
+    /**
+     * Listener for the individual team in the list of teams.
+     */
+    class DialogOnClickListener implements View.OnClickListener{
+        Team team;
+
+        public DialogOnClickListener(Team team){
+            this.team = team;
+        }
+
+        @Override
+        public void onClick(View v){
+            AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
+
+            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }})
+                    .setPositiveButton("More", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent TeamDetailActivityIntent = new Intent(TeamActivity.this, TeamDetailActivity.class);
+                            TeamDetailActivityIntent.putExtra("team", team);
+                            TeamDetailActivityIntent.putExtras(getIntent().getExtras());
+                            startActivityForResult(TeamDetailActivityIntent, 1);
+                    }})
+                    .setTitle(team.getName())
+                    .setMessage("\nMotto: " + team.getMotto() + "\nOwner: " + team.getOwner())
+                    .show();
+        }
+    }
+
+    /**
+     * Handles updating the activity when activated as a result of starting a child activity
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1){
+            this.user = (User) data.getSerializableExtra("user");
+            populateTeamList();
+        }
+    }
+
+    /**
+     * Populates the list of teams associated with the user
+     */
+    private void populateTeamList() {
         // Get the layout to add exercises to
         LinearLayout layout = findViewById(R.id.teamLinearLayout);
+        layout.removeAllViewsInLayout();
 
         boolean alternateColor = false;
 
@@ -74,36 +134,6 @@ public class TeamActivity extends AppCompatActivity {
             layout.addView(teamText);
 
             alternateColor = !alternateColor;
-        }
-    }
-
-    /**
-     * Listener for the individual team in the list of teams.
-     */
-    class DialogOnClickListener implements View.OnClickListener{
-        Team team;
-
-        public DialogOnClickListener(Team team){
-            this.team = team;
-        }
-
-        @Override
-        public void onClick(View v){
-            AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
-
-            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }})
-                    .setPositiveButton("More", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                    }})
-                    .setTitle(team.getName())
-                    .setMessage("\nMotto: " + team.getMotto() + "\nOwner: " + team.getOwner())
-                    .show();
         }
     }
 }
