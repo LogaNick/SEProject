@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
 import ca.dal.cs.athletemonitor.athletemonitor.Exercise;
+import ca.dal.cs.athletemonitor.athletemonitor.Team;
 import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
@@ -29,6 +30,15 @@ public class TestingHelper {
     public static final Exercise testExercise1 = new Exercise("exercise 1", "description", 5, TimeUnit.MINUTES);
     public static final Exercise testExercise2 = new Exercise("exercise 2", "description", 5, TimeUnit.SECONDS);
     public static final Exercise testExercise3 = new Exercise("exercise 3", "description", 5, TimeUnit.HOURS);
+
+    /**
+     * Generates a random integer
+     *
+     * @return Some random integer
+     */
+    private static int getRandomNumber() {
+        return (int) (Math.random() * 100000);
+    }
 
     /**
      * Creates a BooleanResultListener with default behaviour of asserting a true result as true
@@ -64,9 +74,21 @@ public class TestingHelper {
      * @return Pre-determined user object with known information for testing purposes
      */
     public static User createTestUser() {
-        int randomNum = (int) (Math.random() * 1000);
+        User user =new User("test_user" + getRandomNumber(), "test_password");
+        user.addUserTeam(createTestTeam(user.getUsername()));
 
-        return new User("test_user" + randomNum, "test_password");
+        return user;
+    }
+
+    /**
+     * Test helper method to generate a random team for testing purposes
+     *
+     * @return Randomly generated team
+     */
+    public static Team createTestTeam(String owner) {
+        return new Team("Test Team" + getRandomNumber(),
+                "Cool motto #" + getRandomNumber(),
+                owner);
     }
 
     /**
@@ -117,6 +139,13 @@ public class TestingHelper {
         usersReference.child("userExercises").setValue(testExercises);
     }
 
+    /**
+     * Prepares test environment by creating a test account in the database and authenticating
+     * the user before an activity is launched
+     *
+     * @param intent Intent that will be executed for the test
+     * @param testUser User account to create for testing
+     */
     public static void setupTestEnvironment(final Intent intent, final User testUser) {
 
         // create a test user in the database and authenticate
