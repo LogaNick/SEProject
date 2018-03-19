@@ -79,6 +79,7 @@ public class TeamDetailActivityTest {
     }
     @Test
     public void testNotEditable() throws Exception{
+        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
         onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
         onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
 
@@ -86,6 +87,7 @@ public class TeamDetailActivityTest {
     @Test
     public void testisEditable() throws Exception{
         onView(withId(R.id.editTeamButton)).perform(click());
+        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.submitChanges)));
         onView(withId(R.id.teamName)).check(matches(isEnabled()));
         onView(withId(R.id.teamMotto)).check(matches(isEnabled()));
     }
@@ -94,7 +96,7 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.teamName)).perform(typeText("UpdatedTeamName"));
         onView(withId(R.id.teamMotto)).perform(typeText("UpdatedTeamMotto"));
-        onView(withId(R.id.updateTeamButton)).perform(click());
+        onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.teamName)).check(matches(withText("UpdatedTeamName")));
         onView(withId(R.id.teamMotto)).check(matches(withText("UpdatedTeamMotto")));
     }
