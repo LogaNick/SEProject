@@ -3,6 +3,7 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
@@ -29,6 +31,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
+import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.testExercise1;
+import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.testExercise2;
+import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.testExercise3;
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -60,6 +65,11 @@ public class CreateWorkoutActivityTest {
     @BeforeClass
     public static void setupTestEnvironment() throws Exception {
         testUser = TestingHelper.createTestUser();
+
+        testUser.addUserExercise(testExercise1);
+        testUser.addUserExercise(testExercise2);
+        testUser.addUserExercise(testExercise3);
+
         TestingHelper.setupTestEnvironment(intent, testUser);
     }
 
@@ -111,10 +121,10 @@ public class CreateWorkoutActivityTest {
                 assertFalse(user.getUserWorkouts().get(0).isCompleted());
                 assertEquals(user.getUserWorkouts().get(0).getExercises().size(), 2);
 
-                assertTrue(user.getUserWorkouts().get(0).getExercises().get(0).equals(TestingHelper.testExercise1));
+                assertTrue(user.getUserWorkouts().get(0).getExercises().get(0).equals(testExercise1));
                 assertEquals(user.getUserWorkouts().get(0).getExercises().get(0).getData(), 0);
 
-                assertTrue(user.getUserWorkouts().get(0).getExercises().get(1).equals(TestingHelper.testExercise3));
+                assertTrue(user.getUserWorkouts().get(0).getExercises().get(1).equals(testExercise3));
                 assertEquals(user.getUserWorkouts().get(0).getExercises().get(1).getData(), 0);
             }
         });
