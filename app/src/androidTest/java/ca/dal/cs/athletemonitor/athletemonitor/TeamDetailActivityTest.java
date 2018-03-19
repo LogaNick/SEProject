@@ -21,8 +21,10 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
 
 /**
@@ -37,8 +39,10 @@ public class TeamDetailActivityTest {
     private static Intent intent = new Intent();
 
     @Rule
-    public IntentsTestRule<TeamDetailActivity> mActivityRule =
-            new IntentsTestRule(TeamDetailActivity.class, false, false);
+//    public IntentsTestRule<TeamDetailActivity> mActivityRule =
+//            new IntentsTestRule(TeamDetailActivity.class, false, false);
+    public IntentsTestRule<TeamActivity> mActivityRule =
+            new IntentsTestRule(TeamActivity.class, false, false);
 
     /**
      * Set up test environment for this test set
@@ -68,6 +72,8 @@ public class TeamDetailActivityTest {
     public void launchActivity() throws Exception {
         sleep(250);
         mActivityRule.launchActivity(intent);
+        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
+        onView(allOf(withText("More"))).perform(click());
     }
 
     @Test
