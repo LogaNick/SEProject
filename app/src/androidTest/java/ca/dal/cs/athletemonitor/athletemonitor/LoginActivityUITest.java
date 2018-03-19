@@ -202,7 +202,8 @@ public class LoginActivityUITest {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnRegister)).perform(click());
-       
+        sleep(1000);
+
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountNotCreated)));
 
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
