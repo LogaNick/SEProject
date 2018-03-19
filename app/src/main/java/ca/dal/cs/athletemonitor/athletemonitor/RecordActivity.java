@@ -2,6 +2,7 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -38,6 +39,10 @@ import java.util.concurrent.TimeUnit;
 
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 
+/**
+ * This class contains functionality to allow a user to record their workout
+ * while it is in progress.
+ */
 public class RecordActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int ACCESS_FINE_LOCATION = 0;
@@ -82,8 +87,17 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     };
 
+    /**
+     * This class is used to allow a user to save their workout. It appears
+     * as a pop-up dialog when recording is complete.
+     */
     public static class RecordSaveFragment extends DialogFragment {
 
+        /**
+         * This method is called to create the dialog.
+         * @param savedInstanceState not used
+         * @return the dialog
+         */
         @Override
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -92,6 +106,11 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             builder.setPositiveButton(
                     R.string.activity_record_yes,
                     new DialogInterface.OnClickListener() {
+                        /**
+                         * This method saves the user's workout to Firebase.
+                         * @param dialog not used
+                         * @param which not used
+                         */
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Bundle bundle = getArguments();
@@ -105,16 +124,23 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             builder.setNegativeButton(
                     R.string.activity_record_no,
                     new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    // Do nothing
-                }
+                        /**
+                         * This method does not do anything, but must be here as per the interface.
+                         * @param dialog not used
+                         * @param which not used
+                         */
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
             });
             return builder.create();
         }
 
     }
 
+    /**
+     * This method sets up the fields and handles GPS permissions.
+     * @param savedInstanceState not used
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,11 +161,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             requestLocPermissions();
         }
 
-        //TODO uncomment
-//        Intent intent = getIntent();
-//        String userId = intent.getStringExtra(USER_ID);
-//        this.userId = userId;
-        this.userId = "zachary";
+        Intent intent = getIntent();
+        String userId = intent.getStringExtra(USER_ID);
+        this.userId = userId;
 
     }
 
@@ -165,6 +189,10 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         locationSettingsRequest = builder.build();
     }
 
+    /**
+     * This method is used when this RecordActivity is paused to possibly
+     * disable location updates.
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -173,6 +201,10 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             locationProviderClient.removeLocationUpdates(locationCallback);
     }
 
+    /**
+     * This method is used when this RecordActivity is resumed to possibly
+     * enable location updates.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -199,6 +231,10 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         return latLngs;
     }
 
+    /**
+     * This method causes the timer to be paused/resumed, but recording is still enabled.
+     * @param v not used
+     */
     public void togglePauseStatus(View v) {
         if (isRecording) {
 
@@ -220,6 +256,11 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
+    /**
+     * This method toggles between recording statuses, and triggers the save
+     * dialog on completion.
+     * @param v not used
+     */
     public void toggleRecordStatus(View v) {
         isRecording = !this.isRecording;
         recordButton.setImageResource(
@@ -259,10 +300,6 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         myRef.child(key).setValue(workout);
     }
 
-    /**
-     *
-     * @return true, iff permission has already been granted, else false
-     */
     private boolean checkForLocPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -280,6 +317,12 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
+    /**
+     * This method is a callback when location permissions are requested.
+     * @param requestCode the code of the permission requested
+     * @param permissions the permissions requested
+     * @param grantResults the result of the request
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -298,6 +341,10 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
+    /**
+     * This method is a callback when the Map object is instantiated.
+     * @param googleMap the map that has been created
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -324,14 +371,18 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
-    protected ArrayList<Location> getLocationList() {
-        return locationList;
-    }
-
+    /**
+     * This method gets the isRecording field
+     * @return the isRecording field
+     */
     protected boolean getIsRecording() {
         return isRecording;
     }
 
+    /**
+     * This method gets the isPaused field
+     * @return the isPaused field
+     */
     protected boolean getIsPaused() {
         return isPaused;
     }
