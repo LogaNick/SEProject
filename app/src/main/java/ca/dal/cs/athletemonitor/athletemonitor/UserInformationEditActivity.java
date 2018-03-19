@@ -36,11 +36,15 @@ public class UserInformationEditActivity extends AppCompatActivity {
     private void updateInfo() {
         EditText nameEditText = findViewById(R.id.nameEditText);
         String[] names = nameEditText.getText().toString().split("\\s");
-        StringJoiner sj = new StringJoiner(" ");
-        for (int i = 0; i < names.length - 1; i++)
-            sj.add(names[i]);
-        String firstName = sj.toString();
-        String lastName = names[names.length - 1];
+        String firstName = "";
+        String lastName = "";
+        if (names.length > 0) {
+            StringJoiner sj = new StringJoiner(" ");
+            for (int i = 0; i < names.length - 1; i++)
+                sj.add(names[i]);
+            firstName = sj.toString();
+            lastName = names[names.length - 1];
+        }
 
         EditText ageEditText = findViewById(R.id.ageEditText);
         Matcher ageMatcher = digitPattern.matcher(ageEditText.getText().toString());
