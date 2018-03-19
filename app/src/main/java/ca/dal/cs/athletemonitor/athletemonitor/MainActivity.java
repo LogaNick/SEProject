@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
-
 public class MainActivity extends AppCompatActivity {
     private User activeUser = null;
 
