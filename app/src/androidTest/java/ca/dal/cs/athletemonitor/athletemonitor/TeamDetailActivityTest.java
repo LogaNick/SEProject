@@ -30,7 +30,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
 
 /**
- * Created by vibar on 16/03/2018.
+ * Tests TeamDetailActivity functionality
  */
 
 public class TeamDetailActivityTest {
@@ -38,6 +38,10 @@ public class TeamDetailActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Intent used to launch the activity
+     */
     private static Intent intent = new Intent();
 
     @Rule
@@ -57,6 +61,7 @@ public class TeamDetailActivityTest {
 
     /**
      * Clean up test environment after this test set has run
+     *
      * @throws Exception
      */
     @AfterClass
@@ -78,6 +83,7 @@ public class TeamDetailActivityTest {
 
     /**
      * Tests that the correct views are on the activity
+     *
      * @throws Exception
      */
     @Test
@@ -94,7 +100,7 @@ public class TeamDetailActivityTest {
      * @throws Exception Generic exception
      */
     @Test
-    public void testNotEditable() throws Exception{
+    public void testNotEditable() throws Exception {
         onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
         onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
         onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
@@ -107,7 +113,7 @@ public class TeamDetailActivityTest {
      * @throws Exception Generic exception
      */
     @Test
-    public void testisEditable() throws Exception{
+    public void testisEditable() throws Exception {
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.submitChanges)));
         onView(withId(R.id.teamName)).check(matches(isEnabled()));
@@ -121,13 +127,11 @@ public class TeamDetailActivityTest {
      * @throws Exception Generic exception
      */
     @Test
-    public void testUpdatedInfo() throws Exception{
+    public void testUpdatedInfo() throws Exception {
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.teamName)).perform(clearText(), typeText("UpdatedTeamName"), closeSoftKeyboard());
         onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(allOf(withText("UpdatedTeamName")));
     }
-
-
 }

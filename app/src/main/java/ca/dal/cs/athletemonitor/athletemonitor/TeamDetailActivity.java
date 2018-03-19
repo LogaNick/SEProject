@@ -13,9 +13,8 @@ import java.util.List;
 
 public class TeamDetailActivity extends AppCompatActivity {
     private EditText teamName, teamMotto;
-    private Button editTeamButton, updateTeamButton;
-    private Team team, newTeam;
-    private List<Team> userTeams;
+    private Button editTeamButton;
+    private Team team;
     private User user;
 
     @Override
@@ -23,7 +22,6 @@ public class TeamDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_detail);
 
-        // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
         team = (Team) getIntent().getExtras().getSerializable("team");
 
@@ -38,6 +36,12 @@ public class TeamDetailActivity extends AppCompatActivity {
         teamMotto.setEnabled(false);
 
         editTeamButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Set the components on this activity to editable if not currently editing, otherwise
+             * update the database with the new information and return to the previous activity
+             *
+             * @param v View that received the click event
+             */
             @Override
             public void onClick(View v) {
                 if (editTeamButton.getText().toString().equals(getString(R.string.editTeam))) {
@@ -51,7 +55,6 @@ public class TeamDetailActivity extends AppCompatActivity {
 
                     String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
                     String motto = ((TextView) findViewById(R.id.teamMotto)).getText().toString();
-                    String owner = user.getUsername();
 
                     //find the team in the users team list
                     Team teamToUpdate = user.getUserTeams().get(user.getUserTeams().indexOf(team));
@@ -65,9 +68,6 @@ public class TeamDetailActivity extends AppCompatActivity {
 
                     finish();
                 }
-
-
-
             }
         });
     }

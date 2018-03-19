@@ -14,8 +14,10 @@ import java.io.Serializable;
 import java.util.List;
 
 public class TeamActivity extends AppCompatActivity {
+    /**
+     * Current user using the application
+     */
     private User user;
-    private Team activeTeam;
 
     /**
      * Sets up activity when created
@@ -41,8 +43,6 @@ public class TeamActivity extends AppCompatActivity {
 
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
-
-
 
         this.populateTeamList();
     }
@@ -80,6 +80,13 @@ public class TeamActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Handles updating the activity when activated as a result of starting a child activity
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == 1){
@@ -88,6 +95,9 @@ public class TeamActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Populates the list of teams associated with the user
+     */
     private void populateTeamList() {
         // Get the layout to add exercises to
         LinearLayout layout = findViewById(R.id.teamLinearLayout);

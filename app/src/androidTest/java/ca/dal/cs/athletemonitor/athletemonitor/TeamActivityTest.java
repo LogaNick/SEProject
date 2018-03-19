@@ -40,6 +40,10 @@ public class TeamActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Intent used to launch the activity
+     */
     private static Intent intent = new Intent();
 
     @Rule
