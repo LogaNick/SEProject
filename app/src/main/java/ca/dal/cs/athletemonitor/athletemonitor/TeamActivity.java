@@ -42,8 +42,56 @@ public class TeamActivity extends AppCompatActivity {
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
 
+
+
+        this.populateTeamList();
+    }
+
+    /**
+     * Listener for the individual team in the list of teams.
+     */
+    class DialogOnClickListener implements View.OnClickListener{
+        Team team;
+
+        public DialogOnClickListener(Team team){
+            this.team = team;
+        }
+
+        @Override
+        public void onClick(View v){
+            AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
+
+            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }})
+                    .setPositiveButton("More", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent TeamDetailActivityIntent = new Intent(TeamActivity.this, TeamDetailActivity.class);
+                            TeamDetailActivityIntent.putExtra("team", team);
+                            TeamDetailActivityIntent.putExtras(getIntent().getExtras());
+                            startActivityForResult(TeamDetailActivityIntent, 1);
+                    }})
+                    .setTitle(team.getName())
+                    .setMessage("\nMotto: " + team.getMotto() + "\nOwner: " + team.getOwner())
+                    .show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1){
+            this.user = (User) data.getSerializableExtra("user");
+            populateTeamList();
+        }
+    }
+
+    private void populateTeamList() {
         // Get the layout to add exercises to
         LinearLayout layout = findViewById(R.id.teamLinearLayout);
+        layout.removeAllViewsInLayout();
 
         boolean alternateColor = false;
 
@@ -76,39 +124,6 @@ public class TeamActivity extends AppCompatActivity {
             layout.addView(teamText);
 
             alternateColor = !alternateColor;
-        }
-    }
-
-    /**
-     * Listener for the individual team in the list of teams.
-     */
-    class DialogOnClickListener implements View.OnClickListener{
-        Team team;
-
-        public DialogOnClickListener(Team team){
-            this.team = team;
-        }
-
-        @Override
-        public void onClick(View v){
-            AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
-
-            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }})
-                    .setPositiveButton("More", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent TeamDetailActivityIntent = new Intent(TeamActivity.this, TeamDetailActivity.class);
-                            TeamDetailActivityIntent.putExtra("team", team);
-                            TeamDetailActivityIntent.putExtras(getIntent().getExtras());
-                            startActivity(TeamDetailActivityIntent);
-                    }})
-                    .setTitle(team.getName())
-                    .setMessage("\nMotto: " + team.getMotto() + "\nOwner: " + team.getOwner())
-                    .show();
         }
     }
 }

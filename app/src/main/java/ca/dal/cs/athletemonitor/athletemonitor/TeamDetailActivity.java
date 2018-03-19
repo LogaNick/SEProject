@@ -52,10 +52,18 @@ public class TeamDetailActivity extends AppCompatActivity {
                     String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
                     String motto = ((TextView) findViewById(R.id.teamMotto)).getText().toString();
                     String owner = user.getUsername();
-                    newTeam = new Team(name,motto,owner);
 
-                    //Update the info onto the team menbers.
+                    //find the team in the users team list
+                    Team teamToUpdate = user.getUserTeams().get(user.getUserTeams().indexOf(team));
+                    teamToUpdate.setName(name);
+                    teamToUpdate.setMotto(motto);
+                    AccountManager.updateUser(user);
 
+                    Intent result = new Intent();
+                    result.putExtra("user", user);
+                    setResult(1, result);
+
+                    finish();
                 }
 
 
