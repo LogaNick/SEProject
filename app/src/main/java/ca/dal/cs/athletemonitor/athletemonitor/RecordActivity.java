@@ -2,12 +2,9 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -16,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
@@ -44,10 +40,6 @@ import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.US
 
 public class RecordActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    /** Minimum time between location refresh, in ms */
-    private static final long REFRESH_TIME = 500;
-    /** Minimum dist between location refresh, in metres */
-    private static final float MIN_DISTANCE = 3;
     private static final int ACCESS_FINE_LOCATION = 0;
     private static final String DATABASE_REFERENCE = "DATABASE_REFERENCE";
     private static final String ELAPSED_TIME = "ELAPSED_TIME";

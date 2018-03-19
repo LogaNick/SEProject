@@ -16,6 +16,7 @@
     <string name="accountCreated">Account created.</string>
     <string name="accountNotCreated">Cannot create account.</string>
     <string name="activity_main_user_information">User Info</string>
+    <string name="activity_main_record">Record</string>
     <string name="title_activity_user_information">User Information</string>
     <string name="title_activity_user_information_edit">Edit User Information</string>
     <!--These strings are to be used for DB actions in UserInformationActivity-->

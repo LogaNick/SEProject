@@ -52,10 +52,22 @@ public class MainActivityTest {
         intended(hasComponent(ExerciseActivity.class.getName()));
     }
 
+    /**
+     * Assert that the User Info button takes you to User Info.
+     */
     @Test
     public void testGoToUserInfoButton() {
         onView(withId(R.id.goToUserInfo)).perform(click());
         intended(hasComponent(UserInformationActivity.class.getName()));
+    }
+
+    /**
+     * Assert that the Record button takes you to Record.
+     */
+    @Test
+    public void testGoToRecordButton() {
+        onView(withId(R.id.goToRecordButton)).perform(click());
+        intended(hasComponent(RecordActivity.class.getName()));
     }
 
     /**

@@ -66,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(workoutActivityIntent);
             }
         });
+
+        findViewById(R.id.goToRecordButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
+                recordIntent.putExtra(USER_ID, extras.getString("username"));
+                startActivity(recordIntent);
+            }
+        });
+
     }
 
     public void logOutButtonHandler(View view){
