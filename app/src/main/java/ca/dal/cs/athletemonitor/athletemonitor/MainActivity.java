@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
-                recordIntent.putExtra(USER_ID, extras.getString("username"));
+                recordIntent.putExtra("user", activeUser);
                 startActivity(recordIntent);
             }
         });

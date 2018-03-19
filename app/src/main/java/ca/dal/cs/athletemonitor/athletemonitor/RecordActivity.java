@@ -37,8 +37,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
-
 /**
  * This class contains functionality to allow a user to record their workout
  * while it is in progress.
@@ -55,7 +53,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private ImageButton pauseButton;
 
     private long timeWhenStopped = 0L;
-    private String userId;
+    private User user;
     private boolean isRecording = false;
     private boolean isPaused = false;
     private ArrayList<Location> locationList = new ArrayList<>();
@@ -162,9 +160,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
         Intent intent = getIntent();
-        String userId = intent.getStringExtra(USER_ID);
-        this.userId = userId;
-
+        user = (User) intent.getSerializableExtra("user");
     }
 
     private void requestLocPermissions() {
@@ -275,7 +271,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
             RecordSaveFragment fragment = new RecordSaveFragment();
             Bundle bundle = new Bundle();
-            bundle.putString(DATABASE_REFERENCE, getString(R.string.activity_record_firebase, userId));
+            bundle.putString(DATABASE_REFERENCE, getString(R.string.activity_record_firebase, user.getUsername()));
             bundle.putLong(ELAPSED_TIME, time);
             bundle.putParcelableArrayList(LOCATION_LIST, locationList);
             fragment.setArguments(bundle);

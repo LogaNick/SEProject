@@ -16,7 +16,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
 import static org.junit.Assert.*;
 
 /**
@@ -32,7 +31,8 @@ public class RecordActivityUnitTests {
     @Before
     public void init() {
         Intent intent = new Intent();
-        intent.putExtra(USER_ID, "testauston");
+        User user = new User("testauston", "leafs");
+        intent.putExtra("user", user);
         recordActivityTestRule.launchActivity(intent);
     }
 
