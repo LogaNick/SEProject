@@ -23,13 +23,11 @@ public class TeamDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_detail);
 
-        team = (Team) getIntent().getExtras().getSerializable("team");
-
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
+        team = (Team) getIntent().getExtras().getSerializable("team");
 
         editTeamButton = findViewById(R.id.editTeamButton);
-        updateTeamButton = findViewById(R.id.updateTeamButton);
         teamName = findViewById(R.id.teamName);
         teamMotto = findViewById(R.id.teamMotto);
 
@@ -38,34 +36,31 @@ public class TeamDetailActivity extends AppCompatActivity {
 
         teamName.setEnabled(false);
         teamMotto.setEnabled(false);
-        updateTeamButton.setVisibility(View.GONE);
 
         editTeamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                teamName.setEnabled(true);
-                teamMotto.setEnabled(true);
-                editTeamButton.setVisibility(View.GONE);
-                updateTeamButton.setVisibility(View.VISIBLE);
+                if (editTeamButton.getText().toString().equals(getString(R.string.editTeam))) {
+                    teamName.setEnabled(true);
+                    teamMotto.setEnabled(true);
+                    editTeamButton.setText(R.string.submitChanges);
+                } else {
+                    teamName.setEnabled(false);
+                    teamMotto.setEnabled(false);
+                    editTeamButton.setEnabled(true);
+
+                    String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
+                    String motto = ((TextView) findViewById(R.id.teamMotto)).getText().toString();
+                    String owner = user.getUsername();
+                    newTeam = new Team(name,motto,owner);
+
+                    //Update the info onto the team menbers.
+
+                }
+
+
+
             }
         });
-        updateTeamButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                teamName.setEnabled(false);
-                teamMotto.setEnabled(false);
-                editTeamButton.setEnabled(true);
-                updateTeamButton.setVisibility(View.GONE);
-
-
-                String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
-                String motto = ((TextView) findViewById(R.id.teamMotto)).getText().toString();
-                String owner = user.getUsername();
-                newTeam = new Team(name,motto,owner);
-                //Update the info onto the team menbers.
-            }
-        });
-
-
     }
 }

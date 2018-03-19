@@ -16,7 +16,9 @@ import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -100,8 +102,8 @@ public class TeamDetailActivityTest {
     @Test
     public void testUpdatedInfo() throws Exception{
         onView(withId(R.id.editTeamButton)).perform(click());
-        onView(withId(R.id.teamName)).perform(typeText("UpdatedTeamName"));
-        onView(withId(R.id.teamMotto)).perform(typeText("UpdatedTeamMotto"));
+        onView(withId(R.id.teamName)).perform(clearText(), typeText("UpdatedTeamName"), closeSoftKeyboard());
+        onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.teamName)).check(matches(withText("UpdatedTeamName")));
         onView(withId(R.id.teamMotto)).check(matches(withText("UpdatedTeamMotto")));

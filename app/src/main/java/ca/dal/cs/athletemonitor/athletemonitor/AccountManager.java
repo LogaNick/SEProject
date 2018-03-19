@@ -230,7 +230,6 @@ public class AccountManager {
     public static void createUser(final User newUser, final UserObjectListener userObjectListener) {
         Log.d("AC.createUser", "AccountManager.createUser entered...");
 
-
         AccountManager.userExists(newUser.getUsername(), new UserExistsListener() {
             @Override
             public void onUserExists(boolean result) {
