@@ -41,8 +41,6 @@ public class TeamDetailActivityTest {
     private static Intent intent = new Intent();
 
     @Rule
-//    public IntentsTestRule<TeamDetailActivity> mActivityRule =
-//            new IntentsTestRule(TeamDetailActivity.class, false, false);
     public IntentsTestRule<TeamActivity> mActivityRule =
             new IntentsTestRule(TeamActivity.class, false, false);
 
@@ -78,6 +76,10 @@ public class TeamDetailActivityTest {
         onView(allOf(withText("More"))).perform(click());
     }
 
+    /**
+     * Tests that the correct views are on the activity
+     * @throws Exception
+     */
     @Test
     public void testProperFieldsExist() throws Exception {
         //Try to get the fields and button.
@@ -85,6 +87,12 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.teamName));
         onView(withId(R.id.teamMotto));
     }
+
+    /**
+     * Tests that the team information cannot be changed if not in edit mode
+     *
+     * @throws Exception Generic exception
+     */
     @Test
     public void testNotEditable() throws Exception{
         onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
@@ -92,6 +100,12 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
 
     }
+
+    /**
+     * Tests that when the Edit button is clicked, the fields become enabled
+     *
+     * @throws Exception Generic exception
+     */
     @Test
     public void testisEditable() throws Exception{
         onView(withId(R.id.editTeamButton)).perform(click());
@@ -99,13 +113,21 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.teamName)).check(matches(isEnabled()));
         onView(withId(R.id.teamMotto)).check(matches(isEnabled()));
     }
+
+    /**
+     * Tests that when Submit Changes button is clicked, the team information is editable and
+     * that edits are reflected in the database
+     *
+     * @throws Exception Generic exception
+     */
     @Test
     public void testUpdatedInfo() throws Exception{
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.teamName)).perform(clearText(), typeText("UpdatedTeamName"), closeSoftKeyboard());
         onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
         onView(withId(R.id.editTeamButton)).perform(click());
-        onView(withId(R.id.teamName)).check(matches(withText("UpdatedTeamName")));
-        onView(withId(R.id.teamMotto)).check(matches(withText("UpdatedTeamMotto")));
+        onView(allOf(withText("UpdatedTeamName")));
     }
+
+
 }
