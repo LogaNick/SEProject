@@ -6,6 +6,28 @@
     android:layout_height="match_parent"
     tools:context="ca.dal.cs.athletemonitor.athletemonitor.TeamDetailActivity">
 
+    <ScrollView
+        android:id="@+id/teamMembersLayoutScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="48dp"
+        app:layout_constraintTop_toBottomOf="@+id/teamMotto">
+
+        <LinearLayout
+            android:id="@+id/teamMembersLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+    </ScrollView>
+
     <Button
         android:id="@+id/editTeamButton"
         android:layout_width="0dp"
@@ -13,7 +35,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Edit Team Button"
+        android:text="Edit Team"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
