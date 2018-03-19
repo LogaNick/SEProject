@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -56,7 +57,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private ImageButton recordButton;
     private ImageButton pauseButton;
 
-    long timeWhenStopped = 0L;
+    private long timeWhenStopped = 0L;
     private String userId;
     private boolean isRecording = false;
     private boolean isPaused = false;
@@ -92,6 +93,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     public static class RecordSaveFragment extends DialogFragment {
 
         @Override
+        @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(R.string.activity_record_save_dialog);
@@ -226,7 +228,6 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
-    //TODO need to save initial location
     public void toggleRecordStatus(View v) {
         isRecording = !this.isRecording;
         recordButton.setImageResource(
@@ -329,6 +330,18 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                 ));
             }
         });
+    }
+
+    protected ArrayList<Location> getLocationList() {
+        return locationList;
+    }
+
+    protected boolean getIsRecording() {
+        return isRecording;
+    }
+
+    protected boolean getIsPaused() {
+        return isPaused;
     }
 
 }
