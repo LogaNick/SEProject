@@ -337,4 +337,18 @@ public class AccountManager {
         AccountManager.online = online;
         AccountManager.updateUser(user);
     }
+
+    /**
+     * Transfers ownership of a team to a new user.
+     *
+     * If user exists and database operation succeeds then the method returns true to the callback.
+     * Otherwise, false is returned
+     *
+     * @param team Team to transfer ownership
+     * @param newOwner Username of the new team owner
+     * @param listener Callback for success/failure of transfer
+     */
+    public static void transferOwnership(Team team, String newOwner, BooleanResultListener listener) {
+        listener.onResult(false);
+    }
 }
