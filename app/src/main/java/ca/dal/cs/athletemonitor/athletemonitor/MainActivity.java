@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                @Override
                public void onClick(View v) {
                    Intent userInfoIntent = new Intent(MainActivity.this, UserInformationActivity.class);
-                   userInfoIntent.putExtra("user", activeUser);
+                   userInfoIntent.putExtra("USER", activeUser);
                    startActivity(userInfoIntent);
                }
 		});
@@ -74,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
                 AccountManager.setOnline(isChecked);
             }
         });
+
+        findViewById(R.id.goToRecordButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
+                recordIntent.putExtra("user", activeUser);
+                startActivity(recordIntent);
+            }
+        });
+
     }
 
     /**

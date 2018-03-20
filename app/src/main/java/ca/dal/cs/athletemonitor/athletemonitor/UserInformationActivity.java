@@ -125,7 +125,7 @@ public class UserInformationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("user");
+        user = (User) intent.getSerializableExtra("USER");
 
         retrieveInfo(user.getUsername());
 

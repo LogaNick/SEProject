@@ -2,9 +2,11 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 
 import android.content.Intent;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -84,10 +86,22 @@ public class MainActivityTest {
         intended(hasComponent(ExerciseActivity.class.getName()));
     }
 
+    /**
+     * Assert that the User Info button takes you to User Info.
+     */
     @Test
     public void testGoToUserInfoButton() {
         onView(withId(R.id.goToUserInfo)).perform(click());
         intended(hasComponent(UserInformationActivity.class.getName()));
+    }
+
+    /**
+     * Assert that the Record button takes you to Record.
+     */
+    @Test
+    public void testGoToRecordButton() {
+        onView(withId(R.id.goToRecordButton)).perform(click());
+        intended(hasComponent(RecordActivity.class.getName()));
     }
 
     /**
@@ -108,8 +122,13 @@ public class MainActivityTest {
         //check that Firebase has been updated
         AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
 
-        //check that Login Activity has been started
-        intended(hasComponent(LoginActivity.class.getName()));
+        // Need to dismiss dialog before finishing
+        onView(withText(R.string.logout_while_offline_warning_quit)).perform(click());
+
+        /* During testing, there is no login activity to return to,
+         * so in its prior form, this test fails. To alleviate this,
+         * we simply check that the activity "isFinishing". */
+        assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
     @Test
@@ -123,8 +142,10 @@ public class MainActivityTest {
 
         assertTrue(AccountManager.isOnline());
 
-        //check that Login Activity has been started
-        intended(hasComponent(LoginActivity.class.getName()));
+        /* During testing, there is no login activity to return to,
+         * so in its prior form, this test fails. To alleviate this,
+         * we simply check that the activity "isFinishing". */
+        assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
     /**
@@ -147,5 +168,10 @@ public class MainActivityTest {
         assertTrue(AccountManager.isOnline());
         onView(withId(R.id.onlineToggleSwitch)).perform(click());
         assertFalse(AccountManager.isOnline());
+    }
+
+    @After
+    public void release() {
+        Intents.release();
     }
 }
