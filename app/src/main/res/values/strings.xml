@@ -62,4 +62,6 @@
     <string name="logout_while_offline_warning">You have locally saved data.</string>
     <string name="logout_while_offline_warning_save">Save and quit</string>
     <string name="logout_while_offline_warning_quit">Quit</string>
+    <string name="submitChanges">Submit Changes</string>
+    <string name="editTeam">Edit Team</string>
 </resources>

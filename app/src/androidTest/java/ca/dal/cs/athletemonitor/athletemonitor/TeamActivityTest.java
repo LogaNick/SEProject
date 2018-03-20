@@ -40,6 +40,10 @@ public class TeamActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Intent used to launch the activity
+     */
     private static Intent intent = new Intent();
 
     @Rule
@@ -118,11 +122,11 @@ public class TeamActivityTest {
         onView(withId(R.id.submitTeamButton)).perform(click());
 
         // Check that the new exercise is there
-        onView(withParent(withId(R.id.teamLinearLayout))).check(matches(withText("TestTeam_name")));
+        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText("TestTeam_name"))).check(matches(withText("TestTeam_name")));
 
-        // Check that the dialog box works
-        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
-        onView(withText("TestTeam_name"));
+        // try to click on team
+        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText("TestTeam_name"))).perform(click());
+        onView(allOf(withText("TestTeam_name")));
     }
 
     /**
@@ -138,8 +142,8 @@ public class TeamActivityTest {
         onView(withId(R.id.submitTeamButton)).perform(click());
 
         // try to click on team
-        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
-        onView(allOf(withText("More"), withText("Close")));
+        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText("TestTeam_name") )).perform(click());
+        onView(allOf(withText("TestTeam_name")));
 
     }
 }

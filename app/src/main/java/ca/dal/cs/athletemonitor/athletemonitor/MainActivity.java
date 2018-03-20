@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_ID;
-
 public class MainActivity extends AppCompatActivity {
     private User activeUser = null;
 
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                @Override
                public void onClick(View v) {
                    Intent userInfoIntent = new Intent(MainActivity.this, UserInformationActivity.class);
-                   userInfoIntent.putExtra("user", activeUser);
+                   userInfoIntent.putExtra("USER", activeUser);
                    startActivity(userInfoIntent);
                }
 		});
