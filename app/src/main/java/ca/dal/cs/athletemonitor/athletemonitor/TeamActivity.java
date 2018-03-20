@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ListIterator;
 
 public class TeamActivity extends AppCompatActivity {
     /**
@@ -29,20 +30,21 @@ public class TeamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team);
 
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
+
         // Click listener for create new exercise button
         findViewById(R.id.createTeamButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent createTeamActivityIntent = new Intent(TeamActivity.this, CreateTeamActivity.class);
 
-                createTeamActivityIntent.putExtras(getIntent().getExtras());
+                createTeamActivityIntent.putExtra("user", user);
                 startActivity(createTeamActivityIntent);
                 finish();
             }
         });
 
-        // get the active user
-        user = (User) getIntent().getExtras().getSerializable("user");
 
         this.populateTeamList();
     }
@@ -66,6 +68,20 @@ public class TeamActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.dismiss();
                         }})
+                    .setNeutralButton("Quit Team", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ListIterator<Team> teams = user.getUserTeams().listIterator();
+                            while(teams.hasNext()){
+                                if(teams.next().getName().equals(team.getName())){
+                                    teams.remove();
+                                }
+                            }
+                            populateTeamList();
+                            AccountManager.updateUser(user);
+                            dialog.dismiss();
+                        }
+                    })
                     .setPositiveButton("More", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
