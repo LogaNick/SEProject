@@ -15,6 +15,7 @@ import ca.dal.cs.athletemonitor.athletemonitor.R;
 import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -25,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static android.support.v4.content.res.TypedArrayUtils.getString;
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -137,22 +139,21 @@ public class TeamDetailActivityTest {
     }
 
     /**
-     * Tests that transfer ownership succeeds when user exists
+     * Tests that transfer ownership UI works
      *
      * @throws Exception
      */
     @Test
     public void transferOwnerShipTestSuccess() throws Exception {
-        assertTrue(false);
+        User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(testUser);
+
+        onView(withId(R.id.transferOwnerButton)).perform(click());
+        onView(withId(R.id.teamOwner)).perform(clearText(), typeText(testUser.getUsername()));
+        onView(withId(R.id.transferOwnerButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText(R.string.ownershipTransferred)));
+
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 
-    /**
-     * Tests that transferring ownership fails when user does not exist
-     *
-     * @throws Exception
-     */
-    @Test
-    public void transferOwnershipTestFailure() throws Exception {
-        assertTrue(false);
-    }
 }
