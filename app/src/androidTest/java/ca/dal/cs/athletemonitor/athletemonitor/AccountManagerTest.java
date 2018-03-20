@@ -453,7 +453,20 @@ public class AccountManagerTest {
      */
     @Test
     public void transferOwnerShipTestSuccess() throws Exception {
-        Assert.assertTrue(false);
+        final User testUser = TestingHelper.createTestUser();
+        final User newTeamOwner = TestingHelper.createTestUser();
+
+        // create test accounts
+        AccountManager.createUser(testUser);
+        AccountManager.createUser(newTeamOwner);
+
+        //transfer ownership
+        AccountManager.transferOwnership(testUser.getUserTeams().get(0),
+                newTeamOwner.getUsername(), TestingHelper.assertTrueBooleanResult());
+
+        //clean up test accounts
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+        AccountManager.deleteUser(newTeamOwner, TestingHelper.assertTrueBooleanResult());
     }
 
     /**
@@ -463,6 +476,16 @@ public class AccountManagerTest {
      */
     @Test
     public void transferOwnershipTestFailure() throws Exception {
-        Assert.assertTrue(false);
+        final User testUser = TestingHelper.createTestUser();
+
+        // create test accounts
+        AccountManager.createUser(testUser);
+
+        //transfer ownership
+        AccountManager.transferOwnership(testUser.getUserTeams().get(0),
+                "non_existing_user", TestingHelper.assertFalseBooleanResult());
+
+        //clean up test accounts
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 }
