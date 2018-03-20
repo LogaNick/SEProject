@@ -54,4 +54,5 @@
     <string name="logout_while_offline_warning_quit">Quit</string>
     <string name="submitChanges">Submit Changes</string>
     <string name="editTeam">Edit Team</string>
+    <string name="transferOwnership">Transfer Ownership</string>
 </resources>
