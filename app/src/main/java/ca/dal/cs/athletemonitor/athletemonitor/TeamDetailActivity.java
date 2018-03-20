@@ -131,6 +131,7 @@ public class TeamDetailActivity extends AppCompatActivity {
         if (team.getOwner().equals(user.getUsername())) {
             setupTransferOwnershipButton();
             setupEditTeamButton();
+            //TODO Make a setup for the invite button.
         } else {
             findViewById(R.id.editTeamButton).setVisibility(View.INVISIBLE);
         }
