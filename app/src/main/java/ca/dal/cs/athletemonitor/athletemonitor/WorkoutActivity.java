@@ -19,7 +19,7 @@ import java.util.List;
 
 public class WorkoutActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
-    private User user;
+    public static User user;
 
     // TODO Refactor these private variables to make code safer, i.e. either make variables
     // local to methods or check for null where necessary
@@ -82,6 +82,8 @@ public class WorkoutActivity extends AppCompatActivity implements
             exerciseText.setPadding(0, 10, 0, 10);
 
             exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+            exerciseText.setTag("exerciseName" + i);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
