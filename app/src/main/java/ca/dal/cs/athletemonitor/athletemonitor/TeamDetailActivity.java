@@ -1,6 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
 public class TeamDetailActivity extends AppCompatActivity {
     private Team team;
@@ -30,12 +33,29 @@ public class TeamDetailActivity extends AppCompatActivity {
      * Configures the transfer ownership button
      */
     private void setupTransferOwnershipButton() {
-        Button transferOwnerButton = findViewById(R.id.transferOwnerButton);
+        final Button transferOwnershipButton = findViewById(R.id.transferOwnerButton);
 
-        transferOwnerButton.setOnClickListener(new View.OnClickListener() {
+        transferOwnershipButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Set the components on this activity to editable if not currently editing, otherwise
+             * update the database with the new information and return to the previous activity
+             *
+             * @param v View that received the click event
+             */
             @Override
             public void onClick(View v) {
-
+                AccountManager.transferOwnership(team, ((EditText) findViewById(R.id.teamOwner)).getText().toString(), new BooleanResultListener() {
+                    @Override
+                    public void onResult(boolean result) {
+                        if (result) {
+                            ((Button) findViewById(R.id.editTeamButton)).setVisibility(View.INVISIBLE);
+                            ((Button) findViewById(R.id.transferOwnerButton)).setVisibility(View.INVISIBLE);
+                            ((TextView) findViewById(R.id.lblMessage)).setText(R.string.ownershipTransferred);
+                        } else {
+                            ((TextView) findViewById(R.id.lblMessage)).setText(R.string.ownershipTransferredFailed);
+                        }
+                    }
+                });
             }
         });
     }
@@ -58,10 +78,16 @@ public class TeamDetailActivity extends AppCompatActivity {
                 if (editTeamButton.getText().toString().equals(getString(R.string.editTeam))) {
                     findViewById(R.id.teamName).setEnabled(true);
                     findViewById(R.id.teamMotto).setEnabled(true);
+                    findViewById(R.id.teamOwner).setEnabled(true);
+                    findViewById(R.id.transferOwnerButton).setVisibility(View.VISIBLE);
+                    findViewById(R.id.lblMessage).setVisibility(View.VISIBLE);
                     editTeamButton.setText(R.string.submitChanges);
                 } else {
                     findViewById(R.id.teamName).setEnabled(false);
                     findViewById(R.id.teamMotto).setEnabled(false);
+                    findViewById(R.id.teamOwner).setEnabled(false);
+                    findViewById(R.id.transferOwnerButton).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.lblMessage).setVisibility(View.INVISIBLE);
                     editTeamButton.setEnabled(true);
 
                     String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
@@ -89,11 +115,26 @@ public class TeamDetailActivity extends AppCompatActivity {
     private void configureViews() {
         ((EditText) findViewById(R.id.teamName)).setText(team.getName());
         ((EditText) findViewById(R.id.teamMotto)).setText(team.getMotto());
+        ((TextView) findViewById(R.id.teamOwner)).setText(team.getOwner());
 
         findViewById(R.id.teamName).setEnabled(false);
         findViewById(R.id.teamMotto).setEnabled(false);
+        findViewById(R.id.teamOwner).setEnabled(false);
 
-        setupTransferOwnershipButton();
-        setupEditTeamButton();
+        if (team.getOwner().equals(user.getUsername())) {
+            setupTransferOwnershipButton();
+            setupEditTeamButton();
+        } else {
+            findViewById(R.id.editTeamButton).setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent result = new Intent();
+        result.putExtra("user", user);
+        setResult(0, result);
+
+        finish();
     }
 }

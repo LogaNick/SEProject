@@ -56,4 +56,5 @@
     <string name="editTeam">Edit Team</string>
     <string name="transferOwnership">Transfer Ownership</string>
     <string name="ownershipTransferred">Ownership transferred.</string>
+    <string name="ownershipTransferredFailed">Owner Transfer Failed</string>
 </resources>
