@@ -1,9 +1,11 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -21,6 +23,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import android.util.Log;
@@ -29,6 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
+import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.allOf;
 
 /**
@@ -51,22 +55,11 @@ public class TeamActivityTest {
             new IntentsTestRule(TeamActivity.class, false, false);
 
     /**
-     * Set up test environment for this test set
-     *
-     * @throws Exception General exceptions
-     */
-    @BeforeClass
-    public static void setupTestEnvironment() throws Exception {
-        testUser = TestingHelper.createTestUser();
-        TestingHelper.setupTestEnvironment(intent, testUser);
-    }
-
-    /**
-     * Clean up test environment after this test set has run
+     * Clean up test environment after each test
      * @throws Exception
      */
-    @AfterClass
-    public static void cleanupEnvironment() throws Exception {
+    @After
+    public void cleanupEnvironment() throws Exception {
         AccountManager.setUserLoginState(testUser.getUsername(), false);
         AccountManager.deleteUser(testUser, null);
     }
@@ -76,7 +69,9 @@ public class TeamActivityTest {
      */
     @Before
     public void launchActivity() throws Exception {
-        sleep(250);
+        testUser = TestingHelper.createTestUser();
+        TestingHelper.setupTestEnvironment(intent, testUser);
+        sleep(1000);
         mActivityRule.launchActivity(intent);
     }
 
@@ -112,37 +107,27 @@ public class TeamActivityTest {
      * @throws Exception General exception
      */
     @Test
-    public void testCreateAndViewTeam() throws Exception{
-        // Click the button
-        onView(withId(R.id.createTeamButton)).perform(click());
-
-        // Enter team information
-        onView(withId(R.id.newTeamName)).perform(typeText("TestTeam_name"), closeSoftKeyboard());
-        onView(withId(R.id.newTeamMotto)).perform(typeText("TestTeam_motto"), closeSoftKeyboard());
-        onView(withId(R.id.submitTeamButton)).perform(click());
-
-        // Check that the new exercise is there
-        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText("TestTeam_name"))).check(matches(withText("TestTeam_name")));
-
-        // try to click on team
-        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText("TestTeam_name"))).perform(click());
-        onView(allOf(withText("TestTeam_name")));
+    public void testViewTeam() throws Exception{
+        Team testTeam = testUser.getUserTeams().get(0);
+        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText(testTeam.getName()))).perform(click());
+        onView(withText(testTeam.getName()));
     }
 
     /**
-     * Tests team overview is visible with the correct owner and buttons
+     * Tests the quit team button
      * @throws Exception
      */
     @Test
-    public void teamListOnClickTest() throws Exception {
-        // first create a test team to click on
-        onView(withId(R.id.createTeamButton)).perform(click());
-        onView(withId(R.id.newTeamName)).perform(typeText("TestTeam_name"), closeSoftKeyboard());
-        onView(withId(R.id.newTeamMotto)).perform(typeText("TestTeam_motto"), closeSoftKeyboard());
-        onView(withId(R.id.submitTeamButton)).perform(click());
+    public void quitTeamTest() throws Exception {
+        Team testTeam = testUser.getUserTeams().get(0);
+        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText(testTeam.getName()))).perform(click());
+        onView(withText("Quit Team")).perform(click());
 
-        // try to click on team
-        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText("TestTeam_name") )).perform(click());
-        onView(allOf(withText("TestTeam_name")));
+        try{
+            onView(withText(testTeam.getName())).check(matches(isDisplayed()));
+            fail();
+        }catch(NoMatchingViewException e){
+            // team not found, test is successful
+        }
     }
 }
