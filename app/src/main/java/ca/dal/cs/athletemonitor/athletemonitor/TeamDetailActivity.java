@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeamDetailActivity extends AppCompatActivity {
-    private EditText teamName, teamMotto;
-    private Button editTeamButton;
     private Team team;
     private User user;
 
@@ -25,15 +23,28 @@ public class TeamDetailActivity extends AppCompatActivity {
         user = (User) getIntent().getExtras().getSerializable("user");
         team = (Team) getIntent().getExtras().getSerializable("team");
 
-        editTeamButton = findViewById(R.id.editTeamButton);
-        teamName = findViewById(R.id.teamName);
-        teamMotto = findViewById(R.id.teamMotto);
+        configureViews();
+    }
 
-        teamName.setText(team.getName());
-        teamMotto.setText(team.getMotto());
+    /**
+     * Configures the transfer ownership button
+     */
+    private void setupTransferOwnershipButton() {
+        Button transferOwnerButton = findViewById(R.id.transferOwnerButton);
 
-        teamName.setEnabled(false);
-        teamMotto.setEnabled(false);
+        transferOwnerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    /**
+     * Configures the edit team button
+     */
+    private void setupEditTeamButton() {
+        final Button editTeamButton = findViewById(R.id.editTeamButton);
 
         editTeamButton.setOnClickListener(new View.OnClickListener() {
             /**
@@ -45,12 +56,12 @@ public class TeamDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (editTeamButton.getText().toString().equals(getString(R.string.editTeam))) {
-                    teamName.setEnabled(true);
-                    teamMotto.setEnabled(true);
+                    findViewById(R.id.teamName).setEnabled(true);
+                    findViewById(R.id.teamName).setEnabled(true);
                     editTeamButton.setText(R.string.submitChanges);
                 } else {
-                    teamName.setEnabled(false);
-                    teamMotto.setEnabled(false);
+                    findViewById(R.id.teamName).setEnabled(false);
+                    findViewById(R.id.teamName).setEnabled(false);
                     editTeamButton.setEnabled(true);
 
                     String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
@@ -70,5 +81,19 @@ public class TeamDetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Populates the views on this activity with relevant information
+     */
+    private void configureViews() {
+        ((EditText) findViewById(R.id.teamName)).setText(team.getName());
+        ((EditText) findViewById(R.id.teamName)).setText(team.getMotto());
+
+        findViewById(R.id.teamName).setEnabled(false);
+        findViewById(R.id.teamName).setEnabled(false);
+
+        setupTransferOwnershipButton();
+        setupEditTeamButton();
     }
 }
