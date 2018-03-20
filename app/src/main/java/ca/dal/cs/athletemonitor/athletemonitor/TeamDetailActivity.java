@@ -18,6 +18,7 @@ public class TeamDetailActivity extends AppCompatActivity {
     private Team team;
     private User user;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +45,19 @@ public class TeamDetailActivity extends AppCompatActivity {
              */
             @Override
             public void onClick(View v) {
+                final Team teamToUpdate = user.getUserTeams().get(user.getUserTeams().indexOf(team));
+
                 AccountManager.transferOwnership(team, ((EditText) findViewById(R.id.teamOwner)).getText().toString(), new BooleanResultListener() {
                     @Override
                     public void onResult(boolean result) {
                         if (result) {
+                            teamToUpdate.setOwner(((EditText) findViewById(R.id.teamOwner)).getText().toString());
+                            AccountManager.updateUser(user);
+
                             ((Button) findViewById(R.id.editTeamButton)).setVisibility(View.INVISIBLE);
                             ((Button) findViewById(R.id.transferOwnerButton)).setVisibility(View.INVISIBLE);
                             ((TextView) findViewById(R.id.lblMessage)).setText(R.string.ownershipTransferred);
+
                         } else {
                             ((TextView) findViewById(R.id.lblMessage)).setText(R.string.ownershipTransferredFailed);
                         }
