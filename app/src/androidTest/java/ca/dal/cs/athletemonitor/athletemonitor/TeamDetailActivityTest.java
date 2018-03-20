@@ -97,6 +97,7 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.teamMotto));
         onView(withId(R.id.transferOwnerButton));
         onView(withId(R.id.inviteUserButton));
+        onView(withId(R.id.inviteUserName));
     }
 
     /**
