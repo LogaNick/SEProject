@@ -57,11 +57,11 @@ public class TeamDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (editTeamButton.getText().toString().equals(getString(R.string.editTeam))) {
                     findViewById(R.id.teamName).setEnabled(true);
-                    findViewById(R.id.teamName).setEnabled(true);
+                    findViewById(R.id.teamMotto).setEnabled(true);
                     editTeamButton.setText(R.string.submitChanges);
                 } else {
                     findViewById(R.id.teamName).setEnabled(false);
-                    findViewById(R.id.teamName).setEnabled(false);
+                    findViewById(R.id.teamMotto).setEnabled(false);
                     editTeamButton.setEnabled(true);
 
                     String name = ((TextView) findViewById(R.id.teamName)).getText().toString();
@@ -88,10 +88,10 @@ public class TeamDetailActivity extends AppCompatActivity {
      */
     private void configureViews() {
         ((EditText) findViewById(R.id.teamName)).setText(team.getName());
-        ((EditText) findViewById(R.id.teamName)).setText(team.getMotto());
+        ((EditText) findViewById(R.id.teamMotto)).setText(team.getMotto());
 
         findViewById(R.id.teamName).setEnabled(false);
-        findViewById(R.id.teamName).setEnabled(false);
+        findViewById(R.id.teamMotto).setEnabled(false);
 
         setupTransferOwnershipButton();
         setupEditTeamButton();
