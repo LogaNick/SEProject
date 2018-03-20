@@ -103,6 +103,7 @@ public class LoginActivityUITest {
 
         //use the user information to populate the controls
         AccountManager.createUser(testUser, null);
+        sleep(1000);
 
         Log.d("signInSuccessTestDebug", "Test account created...populating controls");
 
@@ -114,12 +115,11 @@ public class LoginActivityUITest {
 
         Log.d("signInSuccessTestDebug", "Controls populated, performing click...");
         onView(withId(R.id.btnSignIn)).perform(click());
+        sleep(1000);
 
         //clean up test user
         AccountManager.setUserLoginState(testUser.getUsername(), false);
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-
-        sleep(3000);
 
         intended(hasComponent(MainActivity.class.getName()));
     }

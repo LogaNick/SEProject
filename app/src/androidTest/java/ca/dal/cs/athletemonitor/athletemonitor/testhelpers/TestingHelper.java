@@ -14,8 +14,11 @@ import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
 import ca.dal.cs.athletemonitor.athletemonitor.Exercise;
 import ca.dal.cs.athletemonitor.athletemonitor.Team;
 import ca.dal.cs.athletemonitor.athletemonitor.User;
+import ca.dal.cs.athletemonitor.athletemonitor.Workout;
+import ca.dal.cs.athletemonitor.athletemonitor.WorkoutExercise;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -76,7 +79,6 @@ public class TestingHelper {
     public static User createTestUser() {
         User user =new User("test_user" + getRandomNumber(), "test_password");
         user.addUserTeam(createTestTeam(user.getUsername()));
-
         return user;
     }
 
@@ -146,7 +148,7 @@ public class TestingHelper {
      * @param intent Intent that will be executed for the test
      * @param testUser User account to create for testing
      */
-    public static void setupTestEnvironment(final Intent intent, final User testUser) {
+    public static void setupTestEnvironment(final Intent intent, final User testUser) throws Exception {
 
         // create a test user in the database and authenticate
         //testUser = TestingHelper.createTestUser();
@@ -166,6 +168,6 @@ public class TestingHelper {
                 }
             }
         });
-
+        sleep(1000);
     }
 }

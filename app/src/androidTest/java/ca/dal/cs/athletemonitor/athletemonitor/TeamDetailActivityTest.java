@@ -15,6 +15,7 @@ import ca.dal.cs.athletemonitor.athletemonitor.R;
 import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -25,7 +26,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static android.support.v4.content.res.TypedArrayUtils.getString;
 import static java.lang.Thread.sleep;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
 
@@ -92,6 +95,7 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.editTeamButton));
         onView(withId(R.id.teamName));
         onView(withId(R.id.teamMotto));
+        onView(withId(R.id.transferOwnerButton));
     }
 
     /**
@@ -104,7 +108,6 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
         onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
         onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
-
     }
 
     /**
@@ -133,5 +136,24 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(allOf(withText("UpdatedTeamName")));
+    }
+
+    /**
+     * Tests that transfer ownership UI works
+     *
+     * @throws Exception
+     */
+    @Test
+    public void transferOwnerShipTestSuccess() throws Exception {
+        User testUser = TestingHelper.createTestUser();
+        AccountManager.createUser(testUser);
+
+        sleep(300);
+        onView(withId(R.id.editTeamButton)).perform(click());
+        onView(withId(R.id.teamOwner)).perform(clearText(), typeText(testUser.getUsername()));
+        onView(withId(R.id.transferOwnerButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText(R.string.ownershipTransferred)));
+
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 }
