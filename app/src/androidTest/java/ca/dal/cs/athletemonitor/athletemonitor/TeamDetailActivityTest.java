@@ -92,6 +92,7 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.editTeamButton));
         onView(withId(R.id.teamName));
         onView(withId(R.id.teamMotto));
+        onView(withId(R.id.transferOwnerButton));
     }
 
     /**
@@ -104,7 +105,6 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
         onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
         onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
-
     }
 
     /**
