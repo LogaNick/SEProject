@@ -121,7 +121,7 @@ public class TeamActivityTest {
     public void quitTeamTest() throws Exception {
         Team testTeam = testUser.getUserTeams().get(0);
         onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText(testTeam.getName()))).perform(click());
-        onView(withText("Quit")).perform(click());
+        onView(withText("Quit Team")).perform(click());
 
         try{
             onView(withText(testTeam.getName())).check(matches(isDisplayed()));
