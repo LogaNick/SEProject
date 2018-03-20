@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import junit.framework.Assert;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -442,5 +444,25 @@ public class AccountManagerTest {
 
         sleep(1000);
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+    }
+
+    /**
+     * Tests that transfer ownership succeeds when user exists
+     *
+     * @throws Exception
+     */
+    @Test
+    public void transferOwnerShipTestSuccess() throws Exception {
+        Assert.assertTrue(false);
+    }
+
+    /**
+     * Tests that transferring ownership fails when user does not exist
+     *
+     * @throws Exception
+     */
+    @Test
+    public void transferOwnershipTestFailure() throws Exception {
+        Assert.assertTrue(false);
     }
 }
