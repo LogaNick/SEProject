@@ -144,6 +144,5 @@ public class TeamActivityTest {
         // try to click on team
         onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText("TestTeam_name") )).perform(click());
         onView(allOf(withText("TestTeam_name")));
-
     }
 }
