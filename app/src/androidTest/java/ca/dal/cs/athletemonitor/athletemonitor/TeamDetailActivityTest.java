@@ -26,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
 
@@ -133,5 +134,25 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(allOf(withText("UpdatedTeamName")));
+    }
+
+    /**
+     * Tests that transfer ownership succeeds when user exists
+     *
+     * @throws Exception
+     */
+    @Test
+    public void transferOwnerShipTestSuccess() throws Exception {
+        assertTrue(false);
+    }
+
+    /**
+     * Tests that transferring ownership fails when user does not exist
+     *
+     * @throws Exception
+     */
+    @Test
+    public void transferOwnershipTestFailure() throws Exception {
+        assertTrue(false);
     }
 }
