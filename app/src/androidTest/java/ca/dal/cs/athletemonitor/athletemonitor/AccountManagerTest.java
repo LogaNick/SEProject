@@ -452,7 +452,7 @@ public class AccountManagerTest {
      * @throws Exception
      */
     @Test
-    public void transferOwnerShipTestSuccess() throws Exception {
+    public void transferOwnershipTestSuccess() throws Exception {
         final User testUser = TestingHelper.createTestUser();
         final User newTeamOwner = TestingHelper.createTestUser();
 
@@ -462,11 +462,13 @@ public class AccountManagerTest {
 
         // authenticate test user
         AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
-        sleep(300); // wait for authentication to finish before proceeding
+        AccountManager.authenticate(newTeamOwner, TestingHelper.assertTrueBooleanResult());
+        sleep(1000); // wait for authentication to finish before proceeding
 
         //transfer ownership
         AccountManager.transferOwnership(testUser.getUserTeams().get(0),
                 newTeamOwner.getUsername(), TestingHelper.assertTrueBooleanResult());
+        sleep(1000);
 
         //clean up test accounts
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
