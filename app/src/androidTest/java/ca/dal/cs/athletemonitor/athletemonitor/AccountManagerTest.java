@@ -460,11 +460,6 @@ public class AccountManagerTest {
         AccountManager.createUser(testUser);
         AccountManager.createUser(newTeamOwner);
 
-        // add the test user team to the new team owner
-        //newTeamOwner.addUserTeam(testUser.getUserTeams().get(0));
-        //AccountManager.updateUser(newTeamOwner);
-        sleep(300);
-
         // authenticate test user
         AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
         sleep(300); // wait for authentication to finish before proceeding
@@ -474,8 +469,8 @@ public class AccountManagerTest {
                 newTeamOwner.getUsername(), TestingHelper.assertTrueBooleanResult());
 
         //clean up test accounts
-        //AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-        //AccountManager.deleteUser(newTeamOwner, TestingHelper.assertTrueBooleanResult());
+        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+        AccountManager.deleteUser(newTeamOwner, TestingHelper.assertTrueBooleanResult());
     }
 
     /**
