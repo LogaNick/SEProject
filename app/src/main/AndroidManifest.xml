@@ -40,6 +40,9 @@
         <activity
             android:name=".GoalsActivity"
             android:label="Goals" />
+        <activity
+            android:name=".CreateGoalActivity"
+            android:label="CreateGoal"/>
     </application>
 
 </manifest>

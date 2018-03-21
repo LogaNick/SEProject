@@ -4,15 +4,21 @@ import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 
 /**
@@ -24,34 +30,60 @@ import static org.hamcrest.CoreMatchers.not;
 public class GoalsActivityTest {
     @Rule
     public IntentsTestRule<GoalsActivity> mActivityRule =
-            new IntentsTestRule<>(GoalsActivity.class, false, false);
+            new IntentsTestRule(GoalsActivity.class, false, false);
+
+    @BeforeClass
+    public static void setupEnvironment(){
+        authTestUser();
+    }
 
     @Before
-    public void launchActivity() {
-        // The CreateTeamActivity needs the extras because it returns to the MainActivity
+    public void setupActivity(){
         Intent i = new Intent();
         i.putExtra("username", "testuser");
         mActivityRule.launchActivity(i);
+        TestingHelper.resetTestUserExercises();
     }
 
     /**
-     * Test that the proper button and field exist.
+     * Test that the button to create an exercise exist.
+     * @throws Exception
+     */
+    @Test
+    public void testHasCreateButton() throws Exception {
+        //Try to get the button.
+        onView(withId(R.id.createGoalButton));
+    }
+
+    /**
+     * Test that layout scroll view exist.
+     * @throws Exception
+     */
+    @Test
+    public void testHasLayoutScroll() throws Exception {
+        //Try to get the button.
+        onView(withId(R.id.layoutScrollView));
+    }
+
+    /**
+     * Test that a linear layout exist.
+     * @throws Exception
+     */
+    @Test
+    public void testHasLinearLayout() throws Exception {
+        //Try to get the button.
+        onView(withId(R.id.goalLinearLayout));
+    }
+
+    /**
+     * Test that the button to transfer to the create goal activity works.
      *
      * @throws Exception
      */
     @Test
-    public void testProperFieldsExist() throws Exception {
-        //Try to get the fields and button.
-        onView(withId(R.id.newGoalName));
-        onView(withId(R.id.submitGoalButton));
-    }
-
-    /**
-     * Test that the submit button is disabled if the goal name hasn't been
-     * provided
-     */
-    @Test
-    public void testSubmitButtonDisabled(){
-        onView(withId(R.id.submitTeamButton)).check(matches(not(isEnabled())));
+    public void testGoToGoalsButton() throws Exception {
+        //Try to click the button.
+        onView(withId(R.id.createGoalButton)).perform(click());
+        intended(hasComponent(CreateGoalActivity.class.getName()));
     }
 }
