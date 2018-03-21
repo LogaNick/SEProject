@@ -27,4 +27,16 @@ public class TeamManager {
         // TODO check whether the team was successfully created (for example, does not already exist)
         return true;
     }
+    /**
+     This method invite a user to a team.
+
+     It create an invitation on the Teaminvitation branch on firebase.
+     */
+    public static void inviteUser(String username, final Team team){
+        //if (Username not in ) //The aim here is to test if the user is not already on the team.
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("*teams_invitations");
+        //attempt to write the data
+        usersReference.child(username).setValue(team);
+    }
 }
