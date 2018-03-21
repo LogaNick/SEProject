@@ -123,15 +123,19 @@ public class TeamDetailActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.teamName)).setText(team.getName());
         ((EditText) findViewById(R.id.teamMotto)).setText(team.getMotto());
         ((TextView) findViewById(R.id.teamOwner)).setText(team.getOwner());
+        ((TextView) findViewById(R.id.inviteUsername)).setText(team.getOwner());
 
         findViewById(R.id.teamName).setEnabled(false);
         findViewById(R.id.teamMotto).setEnabled(false);
         findViewById(R.id.teamOwner).setEnabled(false);
+        findViewById(R.id.inviteUsername).setEnabled(false);
+        findViewById(R.id.inviteUsername).setVisibility(View.GONE);
 
         if (team.getOwner().equals(user.getUsername())) {
             setupTransferOwnershipButton();
             setupEditTeamButton();
             //TODO Make a setup for the invite button.
+
         } else {
             findViewById(R.id.editTeamButton).setVisibility(View.INVISIBLE);
         }
