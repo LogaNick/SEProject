@@ -5,6 +5,7 @@ import android.opengl.Visibility;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -120,6 +121,8 @@ public class TeamDetailActivity extends AppCompatActivity {
      * Populates the views on this activity with relevant information
      */
     private void configureViews() {
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         ((EditText) findViewById(R.id.teamName)).setText(team.getName());
         ((EditText) findViewById(R.id.teamMotto)).setText(team.getMotto());
         ((TextView) findViewById(R.id.teamOwner)).setText(team.getOwner());
