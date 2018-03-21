@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -157,5 +158,45 @@ public class TeamDetailActivityTest {
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.ownershipTransferred)));
 
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+    }
+
+    /**
+     * Tests that team invitations are loaded when they exist and not loaded when they are not
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getTeamInvitesTest() throws Exception {
+        Assert.assertTrue(false);
+    }
+
+    /**
+     * Tests that a team owner can invite another user to a team
+     *
+     * @throws Exception
+     */
+    @Test
+    public void inviteTeamMemberTest() throws Exception {
+        assertTrue(false);
+    }
+
+    /**
+     * Tests that a member is added to a team when the user accepts an invitation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamInviteAcceptTest() throws Exception {
+        assertTrue(false);
+    }
+
+    /**
+     * Tests that a member is not added to a team when the user declines an invitation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamInviteDeclineTest() throws Exception {
+        assertTrue(false);
     }
 }
