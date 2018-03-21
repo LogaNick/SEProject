@@ -88,6 +88,7 @@ public class TeamDetailActivity extends AppCompatActivity {
                     findViewById(R.id.teamMotto).setEnabled(true);
                     findViewById(R.id.teamOwner).setEnabled(true);
                     findViewById(R.id.transferOwnerButton).setVisibility(View.VISIBLE);
+                    findViewById(R.id.inviteUserButton).setVisibility(View.VISIBLE);
                     findViewById(R.id.lblMessage).setVisibility(View.VISIBLE);
                     editTeamButton.setText(R.string.submitChanges);
                 } else {
@@ -95,6 +96,7 @@ public class TeamDetailActivity extends AppCompatActivity {
                     findViewById(R.id.teamMotto).setEnabled(false);
                     findViewById(R.id.teamOwner).setEnabled(false);
                     findViewById(R.id.transferOwnerButton).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.inviteUserButton).setVisibility(View.INVISIBLE);
                     findViewById(R.id.lblMessage).setVisibility(View.INVISIBLE);
                     editTeamButton.setEnabled(true);
 
@@ -118,7 +120,7 @@ public class TeamDetailActivity extends AppCompatActivity {
     }
     private void setupInviteUser(){
         final Button inviteUserButton = findViewById(R.id.inviteUserButton);
-        findViewById(R.id.inviteUserButton).setVisibility(View.VISIBLE);
+
         inviteUserButton.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
@@ -145,13 +147,13 @@ public class TeamDetailActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.teamName)).setText(team.getName());
         ((EditText) findViewById(R.id.teamMotto)).setText(team.getMotto());
         ((TextView) findViewById(R.id.teamOwner)).setText(team.getOwner());
-        ((TextView) findViewById(R.id.inviteUsername)).setText(team.getOwner());
+
 
         findViewById(R.id.teamName).setEnabled(false);
         findViewById(R.id.teamMotto).setEnabled(false);
         findViewById(R.id.teamOwner).setEnabled(false);
-        findViewById(R.id.inviteUsername).setEnabled(false);
         findViewById(R.id.inviteUsername).setVisibility(View.GONE);
+        findViewById(R.id.inviteUserButton).setVisibility(View.GONE);
 
         if (team.getOwner().equals(user.getUsername())) {
             setupTransferOwnershipButton();
