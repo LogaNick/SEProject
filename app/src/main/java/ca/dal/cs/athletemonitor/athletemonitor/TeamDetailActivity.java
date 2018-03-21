@@ -135,7 +135,7 @@ public class TeamDetailActivity extends AppCompatActivity {
                       String inviteUser = ((TextView) findViewById(R.id.inviteUsername)).getText().toString();
 
                       //Write some firebase stuff.
-                      AccountManager.inviteUser(inviteUser,team);
+                      TeamManager.inviteUser(inviteUser,team);
                   }
               }
         });
