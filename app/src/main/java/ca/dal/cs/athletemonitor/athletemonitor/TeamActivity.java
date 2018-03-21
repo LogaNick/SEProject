@@ -66,11 +66,21 @@ public class TeamActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }})
                         .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                team.addTeamMembers(user.getUsername());
+                                // This get user is here to update the owner user for the team member but doesn't work for now.
+                                AccountManager.getUser(team.getOwner(), new AccountManager.UserObjectListener() {
+                                @Override
+                                public void onUserPopulated(User owneruser) {
+                                    owneruser.removeUserTeam(team);
+                                    team.addTeamMembers(user.getUsername());
+                                    owneruser.addUserTeam(team);
+                                    AccountManager.updateUser(owneruser);
+                                }});
                                 user.addUserTeam(team);
                                 AccountManager.updateUser(user);
+
                                 populateTeamList();
                                 dialog.dismiss();
                             }})
