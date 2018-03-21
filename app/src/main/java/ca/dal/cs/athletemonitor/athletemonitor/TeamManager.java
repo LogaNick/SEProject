@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * The TeamManager class manages Team data in Firebase
@@ -46,12 +47,29 @@ public class TeamManager {
 
      It create an invitation on the Teaminvitation branch on firebase.
      */
-    public static void inviteUser(String username, final Team team){
+    public static void inviteUser(final String username, final Team team){
         //if (Username not in ) //The aim here is to test if the user is not already on the team.
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersReference = database.getReference("teams_invitations");
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference usersReference = database.getReference("teams_invitations");
         //attempt to write the data
-        usersReference.child(username).setValue(team);
+
+        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChild(username)) {
+                    usersReference.child(username).setValue(username);
+                }
+
+                DatabaseReference userReference = database.getReference("teams_invitations/" + username);
+                userReference.child(userReference.push().getKey()).setValue(team);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     /**
@@ -63,8 +81,10 @@ public class TeamManager {
      * @param listener Callback to receive list of invitations
      */
     public static void getTeamInvites(User user, final TeamInvitationListener listener) {
+        final ArrayList<Team> teamInvitations = new ArrayList<>();
+
         // retrieve database reference to the teams
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference teamsReference = database.getReference("teams_invitations/" + user.getUsername());
 
         teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -73,14 +93,13 @@ public class TeamManager {
                 // return an empty list if no records found
                 if (!dataSnapshot.exists()) {
                     listener.onInvitationsPopulated(new ArrayList<Team>());
+                    return;
                 }
 
-                // iterate through the snapsnot and add all of the team invitations
                 Iterable<DataSnapshot> invitations = dataSnapshot.getChildren();
-                ArrayList<Team> teamInvitations = new ArrayList<>();
+
                 for (DataSnapshot invitation : invitations) {
-                    Team team = new Team(invitation.child("name").toString(), "", invitation.child("owner").toString());
-                    teamInvitations.add(team);
+                    teamInvitations.add(invitation.getValue(Team.class));
                 }
 
                 listener.onInvitationsPopulated(teamInvitations);

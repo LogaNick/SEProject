@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -45,6 +46,12 @@ public class TeamActivity extends AppCompatActivity {
             }
         });
 
+        TeamManager.getTeamInvites(user, new TeamManager.TeamInvitationListener() {
+            @Override
+            public void onInvitationsPopulated(ArrayList<Team> invitations) {
+
+            }
+        });
 
         this.populateTeamList();
     }
