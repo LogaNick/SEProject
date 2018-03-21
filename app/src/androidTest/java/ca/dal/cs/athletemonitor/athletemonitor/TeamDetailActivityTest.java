@@ -2,7 +2,13 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,6 +24,7 @@ import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -161,23 +168,20 @@ public class TeamDetailActivityTest {
     }
 
     /**
-     * Tests that team invitations are loaded when they exist and not loaded when they are not
-     *
-     * @throws Exception
-     */
-    @Test
-    public void getTeamInvitesTest() throws Exception {
-        Assert.assertTrue(false);
-    }
-
-    /**
      * Tests that a team owner can invite another user to a team
      *
      * @throws Exception
      */
     @Test
     public void inviteTeamMemberTest() throws Exception {
-        assertTrue(false);
+
+
+        onView(withId(R.id.editTeamButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUsername)).perform(clearText(), typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText("Invitation sent!")));
+
     }
 
     /**
@@ -187,7 +191,16 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void teamInviteAcceptTest() throws Exception {
-        assertTrue(false);
+        onView(withId(R.id.editTeamButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUsername)).perform(clearText(), typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText("Invitation sent!")));
+        pressBack();
+
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Accept"))).perform(click());
+        onView(withId(R.id.teamLinearLayout)).check(matches(Matchers.withListSize(2)));
     }
 
     /**
@@ -197,6 +210,35 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void teamInviteDeclineTest() throws Exception {
-        assertTrue(false);
+        onView(withId(R.id.editTeamButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUsername)).perform(clearText(), typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText("Invitation sent!")));
+        pressBack();
+
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Decline"))).perform(click());
+        onView(withId(R.id.teamLinearLayout)).check(matches(Matchers.withListSize(1)));
+    }
+
+
+}
+
+/**
+ * Custom adapted from Cory Roy @ https://stackoverflow.com/a/30361345/3169479
+ *
+ */
+class Matchers {
+    public static Matcher<View> withListSize (final int size) {
+        return new TypeSafeMatcher<View>() {
+            @Override public boolean matchesSafely (final View view) {
+                return ((LinearLayout) view).getChildCount() == size;
+            }
+
+            @Override public void describeTo (final Description description) {
+                description.appendText ("Expected " + size + " items");
+            }
+        };
     }
 }

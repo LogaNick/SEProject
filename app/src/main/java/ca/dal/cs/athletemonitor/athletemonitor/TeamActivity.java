@@ -50,49 +50,43 @@ public class TeamActivity extends AppCompatActivity {
             }
         });
         this.populateTeamList();
+        this.handleTeamInvitations();
+    }
 
+    /**
+     * Manages team invitations
+     */
+    private void handleTeamInvitations() {
         TeamManager.getTeamInvites(user, new TeamManager.TeamInvitationListener() {
             @Override
             public void onInvitationsPopulated(ArrayList<Team> invitations) {
                 for (int i = 0; i < invitations.size(); i++) {
                     final Team team = invitations.get(i);
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
 
                     builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            //TODO: DELETE INVITATION FROM FIREBASE
+                            TeamManager.handleInvitation(user, team, false);
                             dialog.dismiss();
                         }})
-                        .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // This get user is here to update the owner user for the team member but doesn't work for now.
-                                /*AccountManager.getUser(team.getOwner(), new AccountManager.UserObjectListener() {//TODO Update the owner of the team
                                 @Override
-                                public void onUserPopulated(User owneruser) {
-                                    owneruser.removeUserTeam(team);
+                                public void onClick(DialogInterface dialog, int id) {
                                     team.addTeamMembers(user.getUsername());
-                                    owneruser.addUserTeam(team);
-                                    AccountManager.updateUser(owneruser);
-                                }});*/
-                                team.addTeamMembers(user.getUsername());
-                                user.addUserTeam(team);
-                                AccountManager.updateUser(user);
-
-                                populateTeamList();
-                                dialog.dismiss();
-                            }})
-                        .setTitle("You have an invitation!")
-                        .setMessage("\nTeam: " + team.getName() + "\nOwner: " + team.getOwner())
-                        .show();
+                                    user.addUserTeam(team);
+                                    AccountManager.updateUser(user);
+                                    TeamManager.handleInvitation(user, team, true);
+                                    populateTeamList();
+                                    dialog.dismiss();
+                                }})
+                            .setTitle("You have an invitation!")
+                            .setMessage("\nTeam: " + team.getName() + "\nOwner: " + team.getOwner())
+                            .show();
                 }
             }
         });
-
-
     }
 
     /**
@@ -154,6 +148,7 @@ public class TeamActivity extends AppCompatActivity {
         if(requestCode == 1){
             this.user = (User) data.getSerializableExtra("user");
             populateTeamList();
+            this.handleTeamInvitations();
         }
     }
 
