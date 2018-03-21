@@ -70,14 +70,15 @@ public class TeamActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 // This get user is here to update the owner user for the team member but doesn't work for now.
-                                AccountManager.getUser(team.getOwner(), new AccountManager.UserObjectListener() {
+                                /*AccountManager.getUser(team.getOwner(), new AccountManager.UserObjectListener() {//TODO Update the owner of the team
                                 @Override
                                 public void onUserPopulated(User owneruser) {
                                     owneruser.removeUserTeam(team);
                                     team.addTeamMembers(user.getUsername());
                                     owneruser.addUserTeam(team);
                                     AccountManager.updateUser(owneruser);
-                                }});
+                                }});*/
+                                team.addTeamMembers(user.getUsername());
                                 user.addUserTeam(team);
                                 AccountManager.updateUser(user);
 
