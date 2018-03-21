@@ -133,7 +133,7 @@ public class TeamDetailActivity extends AppCompatActivity {
                       findViewById(R.id.inviteUsername).setVisibility(View.GONE);
                       findViewById(R.id.inviteUsername).setEnabled(false);
                       String inviteUser = ((TextView) findViewById(R.id.inviteUsername)).getText().toString();
-
+                      inviteUserButton.setText(R.string.inviteUser);
                       //Write some firebase stuff.
                       TeamManager.inviteUser(inviteUser,team);
                   }

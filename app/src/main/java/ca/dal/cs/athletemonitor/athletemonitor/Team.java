@@ -27,7 +27,7 @@ public class Team implements Serializable {
     /**
      * User that belong to the team
      */
-    private List<String> teamMembers = new ArrayList<>();
+    private List<String> teamMembers = new ArrayList<String>();
     /**
      * No args constructor used primarily for database based initialization of exercise objects
      */
