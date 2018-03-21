@@ -1,7 +1,10 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.opengl.Visibility;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,11 +12,13 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
@@ -138,6 +143,7 @@ public class TeamDetailActivity extends AppCompatActivity {
                       inviteUserButton.setText(R.string.inviteUser);
                       //Write some firebase stuff.
                       TeamManager.inviteUser(inviteUser,team);
+                      ((TextView)findViewById(R.id.lblMessage)).setText("Invitation sent!");
                   }
               }
         });
@@ -174,6 +180,8 @@ public class TeamDetailActivity extends AppCompatActivity {
         } else {
             findViewById(R.id.editTeamButton).setVisibility(View.INVISIBLE);
         }
+
+        populateMemberList();
     }
 
     @Override
@@ -183,5 +191,86 @@ public class TeamDetailActivity extends AppCompatActivity {
         setResult(0, result);
 
         finish();
+    }
+
+    /**
+     * Populates the list of teams associated with the user
+     */
+    private void populateMemberList() {
+        // Get the layout to add exercises to
+        final LinearLayout layout = findViewById(R.id.membersLinearLayout);
+        layout.removeAllViewsInLayout();
+
+
+
+        final ArrayList<String> teamMembers = new ArrayList<>();
+
+        TeamManager.getTeamMembers(team, new TeamManager.TeamPopulatedListener() {
+            @Override
+            public void onTeamPopulated(Team team) {
+                List<String> members = team.getTeamMembers();
+                boolean alternateColor = false;
+
+                for (int i = 0; i < team.getTeamMembers().size(); i++) {
+                    teamMembers.add(team.getTeamMembers().get(i));
+                }
+                // Iterate and add exercises to screen
+                for (String user : teamMembers) {
+                    // Build a new TextView for this team
+                    TextView teamText = new TextView(TeamDetailActivity.this);
+
+                    teamText.setText(user);
+                    teamText.setTextSize(28);
+                    teamText.setPadding(0, 30, 0, 30);
+
+                    if (alternateColor) teamText.setBackgroundColor(Color.LTGRAY);
+
+                    teamText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 4, 0, 0);
+
+                    teamText.setLayoutParams(params);
+
+                    // Add a click listener to show more information
+                    teamText.setOnClickListener(new TeamDetailActivity.TeamMemberClickListener(user));
+                    // Add the text view to the screen
+                    layout.addView(teamText);
+
+                    alternateColor = !alternateColor;
+                }
+            }
+        });
+
+
+        // Get the user's list of exercises
+        //List<String> users = team.getTeamMembers();
+
+
+    }
+
+    class TeamMemberClickListener implements View.OnClickListener {
+        private String user;
+
+        public TeamMemberClickListener(String user) {
+            this.user = user;
+        }
+
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(TeamDetailActivity.this);
+
+            builder
+                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }})
+                .setTitle("Team Member Info")
+                .setMessage("\nUsername: " + user)
+                .show();
+        }
     }
 }

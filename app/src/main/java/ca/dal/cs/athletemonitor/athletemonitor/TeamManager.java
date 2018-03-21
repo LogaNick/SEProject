@@ -1,9 +1,12 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -21,6 +24,15 @@ public class TeamManager {
      */
     public interface TeamInvitationListener {
         void onInvitationsPopulated(ArrayList<Team> invitations);
+    }
+
+    /**
+     * Listener interface for receiving team information.
+     *
+     * Callers of userExists must implement this listener interface.
+     */
+    public interface TeamPopulatedListener {
+        void onTeamPopulated(Team team);
     }
 
     private TeamManager() {}
@@ -111,4 +123,87 @@ public class TeamManager {
             }
         });
     }
+
+    public static void getTeamMembers(final Team team, final TeamPopulatedListener listener) {
+        // retrieve database reference to the teams
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference teamsReference = database.getReference("users/" + team.getOwner());
+
+        teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // return an empty list if no records found
+                User teamOwner = dataSnapshot.getValue(User.class);
+
+                if (dataSnapshot.exists()) {
+                    listener.onTeamPopulated(teamOwner.getUserTeams().get(teamOwner.getUserTeams().indexOf(team)));
+                    return;
+                } else {
+                    listener.onTeamPopulated(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void handleInvitation(final User user, final Team team, boolean accepted) {
+        // retrieve database reference to the teams
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference teamOwnerReference = database.getReference("users/" + team.getOwner());
+
+        if (accepted) {
+            teamOwnerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // return an empty list if no records found
+                    User teamOwner = dataSnapshot.getValue(User.class);
+                    Team ownersTeam = teamOwner.getUserTeams().get(teamOwner.getUserTeams().indexOf(team));
+
+                    ownersTeam.addTeamMembers(user.getUsername());
+
+                    DatabaseReference teamReference = database.getReference("users/" + team.getOwner() + "/userTeams/");
+                    teamReference.child(String.valueOf(teamOwner.getUserTeams().indexOf(team))).setValue(team);
+
+                    ownersTeam.getTeamMembers();
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        // retrieve database reference to the teams
+        final DatabaseReference userInvitations = database.getReference("teams_invitations/" + user.getUsername());
+
+        userInvitations.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> invitations = dataSnapshot.getChildren();
+
+                for (DataSnapshot invitation : invitations) {
+                    if (invitation.getValue(Team.class).getName().equals(team.getName())) {
+                        userInvitations.child(invitation.getKey()).removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+
+
 }
