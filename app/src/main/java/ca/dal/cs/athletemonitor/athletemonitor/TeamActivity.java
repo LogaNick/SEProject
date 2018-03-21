@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,12 +63,12 @@ public class TeamActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             //TODO: DELETE INVITATION FROM FIREBASE
-
                             dialog.dismiss();
                         }})
                         .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                                team.addTeamMembers(user.getUsername());
                                 user.addUserTeam(team);
                                 AccountManager.updateUser(user);
                                 populateTeamList();

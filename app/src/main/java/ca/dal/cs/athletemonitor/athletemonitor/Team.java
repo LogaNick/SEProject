@@ -48,6 +48,7 @@ public class Team implements Serializable {
         this.name = name;
         this.motto = motto;
         this.owner = owner;
+        this.addTeamMembers(owner);
     }
     /**
      * Retrieve the teamMenbers
