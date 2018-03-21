@@ -1,6 +1,8 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Team class contains data for a team
@@ -23,6 +25,10 @@ public class Team implements Serializable {
     private String owner;
 
     /**
+     * User that belong to the team
+     */
+    private List<String> teamMembers = new ArrayList<>();
+    /**
      * No args constructor used primarily for database based initialization of exercise objects
      */
     public Team() { /* intentionally left blank */ }
@@ -43,6 +49,21 @@ public class Team implements Serializable {
         this.motto = motto;
         this.owner = owner;
     }
+    /**
+     * Retrieve the teamMenbers
+     * @return teamMembers
+     */
+    public List<String> getTeamMembers(){return teamMembers;}
+    /**
+     * Add a member.
+     * @return void
+     */
+    public void addTeamMembers(String username){this.teamMembers.add(username);}
+    /**
+     * Remove a team member.
+     * @return void
+     */
+    public void removeTeamMembers(String username){this.teamMembers.remove(username);}
 
     /**
      * Retrieve name of team
