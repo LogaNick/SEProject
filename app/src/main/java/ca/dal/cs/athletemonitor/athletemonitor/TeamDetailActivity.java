@@ -116,13 +116,32 @@ public class TeamDetailActivity extends AppCompatActivity {
             }
         });
     }
+    private void setupInviteUser(){
+        final Button inviteUserButton = findViewById(R.id.inviteUserButton);
+        findViewById(R.id.inviteUserButton).setVisibility(View.VISIBLE);
+        inviteUserButton.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  if (inviteUserButton.getText().toString().equals(getString(R.string.inviteUser))) {
+                      findViewById(R.id.inviteUsername).setVisibility(View.VISIBLE);
+                      findViewById(R.id.inviteUsername).setEnabled(true);
+                      inviteUserButton.setText(R.string.sendInvite);
+                  }
+                  else {
+                      findViewById(R.id.inviteUsername).setVisibility(View.GONE);
+                      findViewById(R.id.inviteUsername).setEnabled(false);
+                      String inviteUser = ((TextView) findViewById(R.id.inviteUsername)).getText().toString();
+
+                  }
+              }
+        });
+    }
 
     /**
      * Populates the views on this activity with relevant information
      */
     private void configureViews() {
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         ((EditText) findViewById(R.id.teamName)).setText(team.getName());
         ((EditText) findViewById(R.id.teamMotto)).setText(team.getMotto());
         ((TextView) findViewById(R.id.teamOwner)).setText(team.getOwner());
@@ -136,7 +155,9 @@ public class TeamDetailActivity extends AppCompatActivity {
 
         if (team.getOwner().equals(user.getUsername())) {
             setupTransferOwnershipButton();
+            setupInviteUser();
             setupEditTeamButton();
+
             //TODO Make a setup for the invite button.
 
         } else {
