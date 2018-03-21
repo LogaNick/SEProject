@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -45,15 +46,39 @@ public class TeamActivity extends AppCompatActivity {
                 finish();
             }
         });
+        this.populateTeamList();
 
         TeamManager.getTeamInvites(user, new TeamManager.TeamInvitationListener() {
             @Override
             public void onInvitationsPopulated(ArrayList<Team> invitations) {
+                for (int i = 0; i < invitations.size(); i++) {
+                    final Team team = invitations.get(i);
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
+
+                    builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            //TODO: DELETE INVITATION FROM FIREBASE
+
+                            dialog.dismiss();
+                        }})
+                        .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                user.addUserTeam(team);
+                                AccountManager.updateUser(user);
+                                populateTeamList();
+                                dialog.dismiss();
+                            }})
+                        .setTitle("You have an invitation!")
+                        .setMessage("\nTeam: " + team.getName() + "\nOwner: " + team.getOwner())
+                        .show();
+                }
             }
         });
 
-        this.populateTeamList();
+
     }
 
     /**
