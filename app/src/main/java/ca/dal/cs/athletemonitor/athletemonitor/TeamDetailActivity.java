@@ -134,6 +134,8 @@ public class TeamDetailActivity extends AppCompatActivity {
                       findViewById(R.id.inviteUsername).setEnabled(false);
                       String inviteUser = ((TextView) findViewById(R.id.inviteUsername)).getText().toString();
 
+                      //Write some firebase stuff.
+                      AccountManager.inviteUser(inviteUser,team);
                   }
               }
         });
@@ -143,7 +145,6 @@ public class TeamDetailActivity extends AppCompatActivity {
      * Populates the views on this activity with relevant information
      */
     private void configureViews() {
-
         ((EditText) findViewById(R.id.teamName)).setText(team.getName());
         ((EditText) findViewById(R.id.teamMotto)).setText(team.getMotto());
         ((TextView) findViewById(R.id.teamOwner)).setText(team.getOwner());
