@@ -375,10 +375,11 @@ public class AccountManager {
                     AccountManager.getUser(oldOwner, new UserObjectListener() {
                         @Override
                         public void onUserPopulated(User user) {
-                            team.setOwner(oldOwner);
+                            Team tempTeam = team;
+                            tempTeam.setOwner(oldOwner);
                             if (user.getUserTeams().indexOf(team) != -1) {
 
-                                user.getUserTeams().get(user.getUserTeams().indexOf(team)).setOwner(newOwner);
+                                user.getUserTeams().get(user.getUserTeams().indexOf(tempTeam)).setOwner(newOwner);
 
                                 //TODO: UPDATE TEAM OWNER FOR ALL OTHER MEMBERS OF THE TEAM WHEN USER INVITES IS IMPLEMENTED
                             } else { // only users on the team can get ownership

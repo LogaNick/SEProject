@@ -10,7 +10,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -44,9 +49,44 @@ public class TeamActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
         this.populateTeamList();
+        this.handleTeamInvitations();
+    }
+
+    /**
+     * Manages team invitations
+     */
+    private void handleTeamInvitations() {
+        TeamManager.getTeamInvites(user, new TeamManager.TeamInvitationListener() {
+            @Override
+            public void onInvitationsPopulated(ArrayList<Team> invitations) {
+                for (int i = 0; i < invitations.size(); i++) {
+                    final Team team = invitations.get(i);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
+
+                    builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            TeamManager.handleInvitation(user, team, false);
+                            dialog.dismiss();
+                        }})
+                            .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    team.addTeamMembers(user.getUsername());
+                                    user.addUserTeam(team);
+                                    AccountManager.updateUser(user);
+                                    TeamManager.handleInvitation(user, team, true);
+                                    populateTeamList();
+                                    dialog.dismiss();
+                                }})
+                            .setTitle("You have an invitation!")
+                            .setMessage("\nTeam: " + team.getName() + "\nOwner: " + team.getOwner())
+                            .show();
+                }
+            }
+        });
     }
 
     /**
@@ -108,6 +148,7 @@ public class TeamActivity extends AppCompatActivity {
         if(requestCode == 1){
             this.user = (User) data.getSerializableExtra("user");
             populateTeamList();
+            this.handleTeamInvitations();
         }
     }
 
