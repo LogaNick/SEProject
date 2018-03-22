@@ -20,6 +20,8 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
+import static java.lang.Thread.sleep;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by nicholasbarreyre on 2018-03-21.
@@ -32,16 +34,18 @@ public class CreateGoalsActivityTest {
     public IntentsTestRule<CreateGoalActivity> mActivityRule =
             new IntentsTestRule<>(CreateGoalActivity.class, false, false);
 
+    static User user;
+
     @BeforeClass
     public static void setupEnvironment(){
-        authTestUser();
+        user = authTestUser();
     }
 
     @Before
     public void setupUser(){
         TestingHelper.resetTestUserExercises();
         Intent i = new Intent();
-        i.putExtra("username", "testuser");
+        i.putExtra("user", user);
         mActivityRule.launchActivity(i);
     }
 
@@ -68,6 +72,6 @@ public class CreateGoalsActivityTest {
 
         //Try to click the button.
         onView(withId(R.id.newGoalSubmitButton)).perform(click());
-        intended(hasComponent(GoalsActivity.class.getName()));
+        assertTrue(mActivityRule.getActivity().isFinishing());
     }
 }

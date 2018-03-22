@@ -27,14 +27,19 @@ public class GoalsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent selectWorkoutActivityIntent = new Intent(GoalsActivity.this, CreateGoalActivity.class);
-                selectWorkoutActivityIntent.putExtras(getIntent().getExtras());
-                startActivity(selectWorkoutActivityIntent);
+                selectWorkoutActivityIntent.putExtra("user", user);
+                startActivityForResult(selectWorkoutActivityIntent, 1);
             }
         });
 
         user = (User) getIntent().getExtras().getSerializable("user");
 
+        populateGoals();
+    }
+
+    private void populateGoals() {
         LinearLayout layout = findViewById(R.id.goalLinearLayout);
+        layout.removeAllViews();
 
         boolean alternateColor = false;
 
@@ -61,13 +66,22 @@ public class GoalsActivity extends AppCompatActivity {
             goalText.setLayoutParams(params);
 
             // Add a click listener to show more information
-            goalText.setOnClickListener(new GoalsActivity.DialogOnClickListener(goal));
+            goalText.setOnClickListener(new DialogOnClickListener(goal));
             // Add the text view to the screen
             layout.addView(goalText);
 
             alternateColor = !alternateColor;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            user = (User) data.getSerializableExtra("user");
+            populateGoals();
+        }
+    }
+
     // Custom click listener implementation, so that we can access the goal data.
     class DialogOnClickListener implements View.OnClickListener{
         Goal goal;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class CreateGoalActivity extends AppCompatActivity{
 
-
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,33 +19,26 @@ public class CreateGoalActivity extends AppCompatActivity{
 
         ((Button)findViewById(R.id.newGoalSubmitButton)).setEnabled(true);
 
+        user = (User) getIntent().getSerializableExtra("user");
+
         // Create on click listener for submit button
         findViewById(R.id.newGoalSubmitButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the logged in user instance
-                AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-                    @Override
-                    public void onUserPopulated(User user) {
-                        if (user == null) {
-                            throw new IllegalStateException("Not logged in");
-                        }
+                // Get the goal data from the fields
+                String name = ((TextView) findViewById(R.id.newGoalName)).getText().toString();
+                String description = ((TextView) findViewById(R.id.newGoalDescription)).getText().toString();
+                int time = 0;
 
-                        // Get the goal data from the fields
-                        String name = ((TextView) findViewById(R.id.newGoalName)).getText().toString();
-                        String description = ((TextView) findViewById(R.id.newGoalDescription)).getText().toString();
-                        int time = 0;
-
-                        ((Button)findViewById(R.id.newGoalSubmitButton)).setEnabled(false);
-                        // Add goal to user
-                        user.addUserGoal(new Goal(name, description));
-                        AccountManager.updateUser(user);
-                        // Switch back to goals activity
-                        Intent goalsActivityIntent = new Intent(CreateGoalActivity.this, GoalsActivity.class);
-                        goalsActivityIntent.putExtras(getIntent().getExtras());
-                        startActivity(goalsActivityIntent);
-                    }
-                });
+                ((Button)findViewById(R.id.newGoalSubmitButton)).setEnabled(false);
+                // Add goal to user
+                user.addUserGoal(new Goal(name, description));
+                AccountManager.updateUser(user);
+                // Switch back to goals activity
+                Intent goalsActivityIntent = new Intent();
+                goalsActivityIntent.putExtra("user", user);
+                setResult(RESULT_OK, goalsActivityIntent);
+                finish();
             }
         });
 
