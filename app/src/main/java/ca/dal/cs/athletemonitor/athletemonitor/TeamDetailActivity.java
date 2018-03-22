@@ -118,6 +118,7 @@ public class TeamDetailActivity extends AppCompatActivity {
 
                     Intent result = new Intent();
                     result.putExtra("user", user);
+
                     setResult(1, result);
 
                     finish();
@@ -200,8 +201,6 @@ public class TeamDetailActivity extends AppCompatActivity {
         // Get the layout to add exercises to
         final LinearLayout layout = findViewById(R.id.membersLinearLayout);
         layout.removeAllViewsInLayout();
-
-
 
         final ArrayList<String> teamMembers = new ArrayList<>();
 

@@ -182,7 +182,7 @@ public class TeamManager {
         // retrieve database reference to the teams
         final DatabaseReference userInvitations = database.getReference("teams_invitations/" + user.getUsername());
 
-        userInvitations.addValueEventListener(new ValueEventListener() {
+        userInvitations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> invitations = dataSnapshot.getChildren();
