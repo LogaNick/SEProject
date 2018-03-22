@@ -1,8 +1,10 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +19,7 @@ import java.util.List;
 
 public class WorkoutActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
+    public static User user;
 
     // TODO Refactor these private variables to make code safer, i.e. either make variables
     // local to methods or check for null where necessary
@@ -35,26 +38,27 @@ public class WorkoutActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
+        // get the active user
+        user = (User) getIntent().getExtras().getSerializable("user");
+
+        // Get the layout to add exercises to
+        layout = findViewById(R.id.workoutLinearLayout);
+
+        // Spinner for workout selection, and its adapter
+        spinner = (Spinner) findViewById (R.id.spinner);
+        spinner.setOnItemSelectedListener(WorkoutActivity.this);
+
+        updateSpinnerWorkouts(user);
+
+        submitButton = findViewById(R.id.submitDataButton);
+        submitButton.setClickable(false);
+
+        findViewById(R.id.createWorkoutButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onUserPopulated(User user) {
-                // Get the layout to add exercises to
-                layout = findViewById(R.id.workoutLinearLayout);
-
-                // Get the user's list of exercises
-                workouts = user.getUserWorkouts();
-
-                // Spinner for workout selection, and its adapter
-                spinner = (Spinner) findViewById (R.id.spinner);
-                spinner.setOnItemSelectedListener(WorkoutActivity.this);
-                ArrayAdapter<Workout> adapter = new ArrayAdapter<Workout>(getApplicationContext(),
-                        android.R.layout.simple_spinner_item, workouts);
-                adapter.setDropDownViewResource
-                        (android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-
-                submitButton = findViewById(R.id.submitDataButton);
-                submitButton.setClickable(false);
+            public void onClick(View v) {
+                Intent createWorkoutActivityIntent = new Intent(WorkoutActivity.this, CreateWorkoutActivity.class);
+                createWorkoutActivityIntent.putExtras(getIntent().getExtras());
+                startActivityForResult(createWorkoutActivityIntent, 1);
             }
         });
     }
@@ -67,6 +71,7 @@ public class WorkoutActivity extends AppCompatActivity implements
         boolean isCompleted = currentWorkout.isCompleted();
         final ArrayList<WorkoutExercise> exerciseList = currentWorkout.getExercises();
 
+        layout.removeAllViews();
         // For each exercise in the workout, add the required elements to the layout
         for (int i = 0; i< exerciseList.size(); i++) {
             currentExercise = exerciseList.get(i);
@@ -77,6 +82,8 @@ public class WorkoutActivity extends AppCompatActivity implements
             exerciseText.setPadding(0, 10, 0, 10);
 
             exerciseText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+            exerciseText.setTag("exerciseName" + i);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -124,41 +131,35 @@ public class WorkoutActivity extends AppCompatActivity implements
             submitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Get the logged in user instance
-                    AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-                        @Override
-                        public void onUserPopulated(User user) {
-                            if (user == null) {
-                                throw new IllegalStateException("Not logged in");
-                            }
+                    if (user == null) {
+                        throw new IllegalStateException("Not logged in");
+                    }
 
-                            for (int i=0; i<exerciseList.size(); i++) {
-                                // Get the exercise data from the fields
-                                currentExercise = exerciseList.get(i);
-                                TextView exerciseView = (TextView) layout.findViewWithTag("workoutExercise" + i);
-                                String data = exerciseView.getText().toString();
-                                int dataValue = 0;
-                                try {
-                                    dataValue = Integer.parseInt(data);
-                                    if (dataValue >= currentExercise.getTime())
-                                    {
-                                        exerciseView.setBackgroundColor(Color.GREEN);
-                                    }
-                                    else
-                                    {
-                                        exerciseView.setBackgroundColor(Color.RED);
-                                    }
-                                    exerciseView.setEnabled(false);
-                                    currentExercise.setData(dataValue);
-                                }
-                                catch(Exception e) {
-
-                                }
+                    for (int i=0; i<exerciseList.size(); i++) {
+                        // Get the exercise data from the fields
+                        currentExercise = exerciseList.get(i);
+                        TextView exerciseView = (TextView) layout.findViewWithTag("workoutExercise" + i);
+                        String data = exerciseView.getText().toString();
+                        int dataValue = 0;
+                        try {
+                            dataValue = Integer.parseInt(data);
+                            if (dataValue >= currentExercise.getTime())
+                            {
+                                exerciseView.setBackgroundColor(Color.GREEN);
                             }
-                            currentWorkout.setCompleted(true);
-                            AccountManager.updateUser(user);
+                            else
+                            {
+                                exerciseView.setBackgroundColor(Color.RED);
+                            }
+                            exerciseView.setEnabled(false);
+                            currentExercise.setData(dataValue);
                         }
-                    });
+                        catch(Exception e) {
+
+                        }
+                    }
+                    currentWorkout.setCompleted(true);
+                    AccountManager.updateUser(user);
                 }
             });
         }
@@ -167,5 +168,28 @@ public class WorkoutActivity extends AppCompatActivity implements
     public void onNothingSelected (AdapterView<?> parent)
     {
 
+    }
+
+    public void updateSpinnerWorkouts(User user){
+        // Get the user's list of exercises
+        workouts = user.getUserWorkouts();
+        ArrayAdapter<Workout> adapter = new ArrayAdapter<Workout>(getApplicationContext(),
+                android.R.layout.simple_spinner_item, workouts);
+        adapter.setDropDownViewResource
+                (android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1) {
+            /* Returning from create workout activity */
+            AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
+                @Override
+                public void onUserPopulated(User user) {
+                    updateSpinnerWorkouts(user);
+                }
+            });
+        }
     }
 }

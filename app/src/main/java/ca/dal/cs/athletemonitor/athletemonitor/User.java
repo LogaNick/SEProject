@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,13 +8,14 @@ import java.util.List;
  * This class represents the account information of a user, including all data associated with
  * functionality of the app.
  */
-public class User {
+public class User implements Serializable {
     private String username; //login username and unique identifier
     private String password; //login password
 
     // Initialize exercises list
     private List<Exercise> userExercises = new ArrayList<Exercise>();
     private List<Workout> userWorkouts = new ArrayList<Workout>();
+    private List<Team> userTeams = new ArrayList<Team>();
 
     private List<Goal> userGoals = new ArrayList<Goal>();
 
@@ -32,6 +34,20 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
+    /**
+     * Retrieves the list of teams associated with this user
+     *
+     * @return List of teams
+     */
+    public List<Team> getUserTeams() { return this.userTeams;}
+
+    /**
+     * Adds the specified team to this users list of teams
+     *
+     * @param team Team to add to user
+     */
+    public void addUserTeam(Team team) { this.userTeams.add(team); }
 
     public List<Exercise> getUserExercises() {
         return userExercises;

@@ -16,6 +16,7 @@
     <string name="accountCreated">Account created.</string>
     <string name="accountNotCreated">Cannot create account.</string>
     <string name="activity_main_user_information">User Info</string>
+    <string name="activity_main_record">Record</string>
     <string name="title_activity_user_information">User Information</string>
     <string name="title_activity_user_information_edit">Edit User Information</string>
     <!--These strings are to be used for DB actions in UserInformationActivity-->
@@ -49,4 +50,21 @@
     <string name="user_information_test_weight_kg">98 kg</string>
     <string name="user_information_test_athlete_type">Hockey Player</string>
     <string name="user_information_test_statement">I want to win the Stanley Cup</string>
+
+    <!--These strings are for the record activity-->
+    <string name="activity_record_navigation_record_button">Record</string>
+    <string name="activity_record_navigation_pause_button">Pause</string>
+    <string name="activity_record_firebase">recorded_workouts/%s</string>
+    <string name="activity_record_save_dialog">Do you want to save this workout?</string>
+    <string name="activity_record_yes">Yes</string>
+    <string name="activity_record_no">No</string>
+
+    <string name="logout_while_offline_warning">You have locally saved data.</string>
+    <string name="logout_while_offline_warning_save">Save and quit</string>
+    <string name="logout_while_offline_warning_quit">Quit</string>
+    <string name="submitChanges">Submit Changes</string>
+    <string name="editTeam">Edit Team</string>
+    <string name="transferOwnership">Transfer Ownership</string>
+    <string name="ownershipTransferred">Ownership transferred.</string>
+    <string name="ownershipTransferredFailed">Owner Transfer Failed</string>
 </resources>

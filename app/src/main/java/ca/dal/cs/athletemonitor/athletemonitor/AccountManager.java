@@ -25,6 +25,16 @@ public class AccountManager {
     private static String lastAuth = "";
 
     /**
+     * online holds the online status of the logged in user, if there is one.
+     */
+    private static boolean online = false;
+
+    /**
+     * User object for an offline user
+     */
+    private static User user;
+
+    /**
      * Listener interface for checking if a user exists.
      *
      * Callers of userExists must implement this listener interface.
@@ -51,6 +61,16 @@ public class AccountManager {
      */
     public static void getUser(String username, @NonNull final UserObjectListener listener) {
         Objects.requireNonNull(listener, "Null value for UserObjectListener is not valid.");
+        Objects.requireNonNull(user, "Get user called in offline mode before logging in");
+
+        if(!online) {
+            if(username.equals(user.getUsername())){
+                listener.onUserPopulated(user);
+            }else{
+                listener.onUserPopulated(null);
+            }
+            return;
+        }
 
         //retrieve a reference to the users node
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -104,6 +124,8 @@ public class AccountManager {
                     if (userLoggingIn.getPassword().equals(user.getPassword())) {
                         AccountManager.setUserLoginState(user.getUsername(), true);
                         lastAuth = user.getUsername();
+                        online = true;
+                        AccountManager.user = userLoggingIn;
                         authResult = true;
                     }
                 }
@@ -173,11 +195,15 @@ public class AccountManager {
      * @param updatedUser User details
      */
     public static void updateUser(final User updatedUser){
-        // Ensure that the user is the currently authenticated user
-        if(lastAuth.equals(updatedUser.getUsername())){
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
-            usersReference.setValue(updatedUser, null);
+        AccountManager.user = updatedUser;
+
+        if(online) {
+            // Ensure that the user is the currently authenticated user
+            if (lastAuth.equals(updatedUser.getUsername())) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference usersReference = database.getReference("users/" + updatedUser.getUsername());
+                usersReference.setValue(updatedUser, null);
+            }
         }
     }
 
@@ -203,7 +229,6 @@ public class AccountManager {
      */
     public static void createUser(final User newUser, final UserObjectListener userObjectListener) {
         Log.d("AC.createUser", "AccountManager.createUser entered...");
-
 
         AccountManager.userExists(newUser.getUsername(), new UserExistsListener() {
             @Override
@@ -292,6 +317,84 @@ public class AccountManager {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    /**
+     * Get the online status of the user
+     * @return online
+     */
+    public static boolean isOnline(){
+        return online;
+    }
+
+    /**
+     * Set the online status of the user
+     * @param online
+     */
+    public static void setOnline(boolean online){
+        AccountManager.online = online;
+        AccountManager.updateUser(user);
+    }
+
+    /**
+     * Transfers ownership of a team to a new user.
+     *
+     * If user exists and database operation succeeds then the method returns true to the callback.
+     * Otherwise, false is returned.  NOTE:  Tranferring ownership will fail if user is marked as
+     * being in offline mode.
+     *
+     * @param team Team to transfer ownership
+     * @param newOwner Username of the new team owner
+     * @param listener Callback for success/failure of transfer
+     */
+    public static void transferOwnership(final Team team, final String newOwner, final BooleanResultListener listener) {
+        final String oldOwner = team.getOwner();
+
+        AccountManager.getUser(newOwner, new UserObjectListener() {
+            @Override
+            public void onUserPopulated(User user) {
+                if (user == null) {
+                    listener.onResult(false);
+                } else {
+                    if (user.getUserTeams().indexOf(team) != -1) {
+                       user.getUserTeams().get(user.getUserTeams().indexOf(team)).setOwner(user.getUsername());
+
+                       //TODO: UPDATE TEAM OWNER FOR ALL OTHER MEMBERS OF THE TEAM WHEN USER INVITES IS IMPLEMENTED
+                    } else { // only users on the team can get ownership
+                        team.setOwner(user.getUsername());
+                        user.addUserTeam(team);
+
+                    }
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference usersReference = database.getReference("users/" + user.getUsername());
+                    usersReference.setValue(user, null);
+
+                    AccountManager.getUser(oldOwner, new UserObjectListener() {
+                        @Override
+                        public void onUserPopulated(User user) {
+                            team.setOwner(oldOwner);
+                            if (user.getUserTeams().indexOf(team) != -1) {
+
+                                user.getUserTeams().get(user.getUserTeams().indexOf(team)).setOwner(newOwner);
+
+                                //TODO: UPDATE TEAM OWNER FOR ALL OTHER MEMBERS OF THE TEAM WHEN USER INVITES IS IMPLEMENTED
+                            } else { // only users on the team can get ownership
+                                team.setOwner(newOwner);
+                                user.addUserTeam(team);
+
+                            }
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference usersReference = database.getReference("users/" + user.getUsername());
+                            usersReference.setValue(user, null);
+                        }
+                    });
+
+                    listener.onResult(true);
+                }
             }
         });
     }

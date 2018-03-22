@@ -1,12 +1,13 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 /**
  * The Exercise class contains data for a single exercise
  */
-public class Exercise {
+public class Exercise implements Serializable {
     private String name;
     private String description;
     private int time;
@@ -145,5 +146,10 @@ public class Exercise {
      */
     public static boolean validateTime(int time){
         return time > 0;
+    }
+
+    public boolean equals(Exercise e){
+        return name.equals(e.getName()) && description.equals(e.getDescription())
+                && time == e.getTime() && timeUnit.equals(e.getTimeUnit());
     }
 }

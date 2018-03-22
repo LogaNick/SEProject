@@ -1,6 +1,8 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,7 +11,7 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Test the User class's control of the exercises
  */
-
+@RunWith(JUnit4.class)
 public class UserExerciseTest {
 
     @Test
