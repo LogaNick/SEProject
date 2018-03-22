@@ -36,6 +36,13 @@
             android:text="@string/activity_main_user_information" />
 
         <Button
+            android:id="@+id/goToGoalsActivityButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Goals" />
+
+        <Button
             android:id="@+id/goToWorkoutActivityButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

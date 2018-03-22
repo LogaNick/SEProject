@@ -128,6 +128,15 @@ public class TestingHelper {
     }
 
     /**
+     * Test helper to reset the testuser's goals list
+     */
+    public static void resetTestUserGoals(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersReference = database.getReference("users/testuser");
+        usersReference.child("userGoals").setValue(null);
+    }
+
+    /**
      * Test helper to add test exercises to testuser
      */
     public static void addTestUserExercises(){

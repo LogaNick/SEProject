@@ -99,9 +99,19 @@ public class MainActivityTest {
      * Assert that the Record button takes you to Record.
      */
     @Test
-    public void testGoToRecordButton() {
+    public void testGoToRecordButton() throws Exception{
         onView(withId(R.id.goToRecordButton)).perform(click());
         intended(hasComponent(RecordActivity.class.getName()));
+    }
+
+    /**
+     * Assert that the Goals button takes you to Goals
+     * @throws Exception
+     */
+    @Test
+    public void testGoalsButton() {
+        onView(withId(R.id.goToGoalsActivityButton)).perform(click());
+        intended(hasComponent(GoalsActivity.class.getName()));
     }
 
     /**

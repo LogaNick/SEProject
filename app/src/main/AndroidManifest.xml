@@ -39,6 +39,13 @@
         <activity
             android:name=".WorkoutActivity"
             android:label="Workouts" />
+        <activity
+            android:name=".GoalsActivity"
+            android:label="Goals" />
+        <activity
+            android:name=".CreateGoalActivity"
+            android:label="CreateGoal"/>
+            android:label="Workouts" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

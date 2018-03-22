@@ -16,6 +16,7 @@ public class User implements Serializable {
     private List<Exercise> userExercises = new ArrayList<Exercise>();
     private List<Workout> userWorkouts = new ArrayList<Workout>();
     private List<Team> userTeams = new ArrayList<Team>();
+    private List<Goal> userGoals = new ArrayList<Goal>();
 
     /**
      * No args constructor used primarily for database based initialization of user objects
@@ -67,6 +68,19 @@ public class User implements Serializable {
 
     public void addUserWorkout(Workout workout) { userWorkouts.add(workout); }
 
+    /**
+     * Retrieves the user's goal's
+     *
+     * @return List of user's goals
+     */
+    public List<Goal> getUserGoals(){ return userGoals; }
+
+    /**
+     * Add's a goal to the user's list of goals
+     *
+     * @param goal
+     */
+    public void addUserGoal(Goal goal){ userGoals.add(goal); }
     /**
      * Retrieves the username of the user
      *
