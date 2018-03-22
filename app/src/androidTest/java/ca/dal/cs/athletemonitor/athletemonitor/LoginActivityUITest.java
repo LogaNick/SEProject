@@ -117,11 +117,11 @@ public class LoginActivityUITest {
         onView(withId(R.id.btnSignIn)).perform(click());
         sleep(1000);
 
+        intended(hasComponent(MainActivity.class.getName()));
+
         //clean up test user
         AccountManager.setUserLoginState(testUser.getUsername(), false);
-        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-
-        intended(hasComponent(MainActivity.class.getName()));
+        AccountManager.deleteUser(testUser, null);
     }
 
     /**
