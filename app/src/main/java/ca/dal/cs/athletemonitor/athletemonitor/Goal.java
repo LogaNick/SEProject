@@ -3,6 +3,7 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  * The Goal class, when instantiated, can be used store and manipulate data about a particular gaol
  */
 
-public class Goal {
+public class Goal implements Serializable {
     private String name;
     private Date deadline;
     private String description;

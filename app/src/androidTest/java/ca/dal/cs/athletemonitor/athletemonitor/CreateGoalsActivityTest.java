@@ -30,7 +30,7 @@ import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.
 public class CreateGoalsActivityTest {
     @Rule
     public IntentsTestRule<CreateGoalActivity> mActivityRule =
-            new IntentsTestRule(CreateGoalActivity.class, false, false);
+            new IntentsTestRule<>(CreateGoalActivity.class, false, false);
 
     @BeforeClass
     public static void setupEnvironment(){

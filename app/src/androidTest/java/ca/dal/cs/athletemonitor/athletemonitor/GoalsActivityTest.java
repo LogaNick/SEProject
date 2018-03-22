@@ -39,7 +39,7 @@ public class GoalsActivityTest {
 
     @Rule
     public IntentsTestRule<GoalsActivity> mActivityRule =
-            new IntentsTestRule(GoalsActivity.class, false, false);
+            new IntentsTestRule<>(GoalsActivity.class, false, false);
 
     @BeforeClass
     public static void setupTestEnvironment() throws Exception{
