@@ -16,16 +16,15 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper.authTestUser;
-import static org.hamcrest.CoreMatchers.not;
 
 /**
  * Created by nicholasbarreyre on 2018-03-21.
+ *
+ *  UI test for Create Goals activity.
  */
 @RunWith(AndroidJUnit4.class)
 public class CreateGoalsActivityTest {
@@ -63,9 +62,9 @@ public class CreateGoalsActivityTest {
      * Test that the submit new exercise button works
      */
     @Test
-    public void testSubmitButtonEnabled() throws Exception {
-        onView(withId(R.id.newGoalName)).perform(typeText("Run"));
-        onView(withId(R.id.newGoalDescription)).perform(typeText("Run outside"),closeSoftKeyboard());
+    public void testSubmitButton() throws Exception {
+        onView(withId(R.id.newGoalName)).perform(typeText("Push Ups"));
+        onView(withId(R.id.newGoalDescription)).perform(typeText("Do Push Ups workout 3 times"),closeSoftKeyboard());
 
         //Try to click the button.
         onView(withId(R.id.newGoalSubmitButton)).perform(click());

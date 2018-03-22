@@ -68,23 +68,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ((Switch)findViewById(R.id.onlineToggleSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AccountManager.setOnline(isChecked);
-            }
-        });
-
         // Add the goals button click listener
         findViewById(R.id.goToGoalsActivityButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent goalsActivityIntent = new Intent(MainActivity.this, GoalsActivity.class);
-                goalsActivityIntent.putExtra("username", extras.getString("username"));
+                goalsActivityIntent.putExtra("user", activeUser);
                 startActivity(goalsActivityIntent);
             }
         });
-    }
+
+
+
 
         findViewById(R.id.goToRecordButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +90,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ((Switch)findViewById(R.id.onlineToggleSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AccountManager.setOnline(isChecked);
+            }
+        });
     }
 
     /**

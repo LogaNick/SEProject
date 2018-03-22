@@ -15,14 +15,14 @@ import java.util.List;
 
 public class GoalsActivity extends AppCompatActivity {
 
-
+    public User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goals);
 
-        // Click listener for create new exercise button
+        // Click listener for create new goal button
         findViewById(R.id.createGoalButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,44 +32,41 @@ public class GoalsActivity extends AppCompatActivity {
             }
         });
 
-        AccountManager.getUser(getIntent().getExtras().getString("username"), new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                // Get the layout to add goals to
-                LinearLayout layout = findViewById(R.id.goalLinearLayout);
+        user = (User) getIntent().getExtras().getSerializable("user");
 
-                boolean alternateColor = false;
+        LinearLayout layout = findViewById(R.id.goalLinearLayout);
 
-                // Get the user's list of goals
-                List<Goal> goals = user.getUserGoals();
-                // Iterate and add exercises to screen
-                for (Goal goal : goals) {
-                    // Build a new TextView for this goal
-                    TextView goalText = new TextView(GoalsActivity.this);
-                    goalText.setText(goal.getName());
-                    goalText.setTextSize(28);
-                    goalText.setPadding(0, 30, 0, 30);
+        boolean alternateColor = false;
 
-                    if (alternateColor) goalText.setBackgroundColor(Color.LTGRAY);
+        //get the user's list of goals
+        List<Goal> goals = user.getUserGoals();
 
-                    goalText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        //iterate and add goals to screen
+        for (Goal goal : goals) {
+            // Build a new for this goal
+            TextView goalText = new TextView(GoalsActivity.this);
+            goalText.setText(goal.getName());
+            goalText.setTextSize(28);
+            goalText.setPadding(0, 30, 0, 30);
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 4, 0, 0);
+            if (alternateColor) goalText.setBackgroundColor(Color.LTGRAY);
 
-                    goalText.setLayoutParams(params);
+            goalText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-                    // REMOVE Add a click listener to show more information
-                    goalText.setOnClickListener(new GoalsActivity.DialogOnClickListener(goal));
-                    // Add the text view to the screen
-                    layout.addView(goalText);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 4, 0, 0);
 
-                    alternateColor = !alternateColor;
-                }
-            }
-        });
+            goalText.setLayoutParams(params);
+
+            // Add a click listener to show more information
+            goalText.setOnClickListener(new GoalsActivity.DialogOnClickListener(goal));
+            // Add the text view to the screen
+            layout.addView(goalText);
+
+            alternateColor = !alternateColor;
+        }
     }
     // Custom click listener implementation, so that we can access the goal data.
     class DialogOnClickListener implements View.OnClickListener{
@@ -90,7 +87,7 @@ public class GoalsActivity extends AppCompatActivity {
                 }
             })
                     .setTitle(goal.getName())
-                    //REMOVE .setMessage("\n" + exercise.getDescription() + "\n\n" + exercise.getTime() + " " + exercise.getTimeUnit().toString().toLowerCase())
+                    .setMessage("\n" + goal.getDescription() + "\n\n")
                     .show();
         }
     }

@@ -16,7 +16,6 @@ public class User implements Serializable {
     private List<Exercise> userExercises = new ArrayList<Exercise>();
     private List<Workout> userWorkouts = new ArrayList<Workout>();
     private List<Team> userTeams = new ArrayList<Team>();
-
     private List<Goal> userGoals = new ArrayList<Goal>();
 
     /**

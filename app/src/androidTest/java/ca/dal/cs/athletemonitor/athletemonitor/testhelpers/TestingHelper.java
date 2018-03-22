@@ -135,7 +135,6 @@ public class TestingHelper {
         DatabaseReference usersReference = database.getReference("users/testuser");
         usersReference.child("userGoals").setValue(null);
     }
-}
 
     /**
      * Test helper to add test exercises to testuser

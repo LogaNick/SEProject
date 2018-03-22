@@ -53,6 +53,7 @@ public class Goal {
         this.name = name;
     }
 
+
     /**
      * Check if string can be used as a name for a goal
      * @param name
@@ -80,6 +81,14 @@ public class Goal {
      */
     public Date getDeadline(){
         return this.deadline;
+    }
+
+    /**
+     * Retrieve description of this goal
+     * @return description of this goal
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**
