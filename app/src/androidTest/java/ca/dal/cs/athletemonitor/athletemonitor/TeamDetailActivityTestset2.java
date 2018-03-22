@@ -86,12 +86,14 @@ public class TeamDetailActivityTestset2 {
         User testUser = TestingHelper.createTestUser();
         AccountManager.createUser(testUser);
 
-        sleep(300);
+        sleep(600);
         onView(withId(R.id.editTeamButton)).perform(click());
         onView(withId(R.id.teamOwner)).perform(clearText(), typeText(testUser.getUsername()), closeSoftKeyboard());
         onView(withId(R.id.transferOwnerButton)).perform(click());
+
+        sleep(600);
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.ownershipTransferred)));
 
-        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
+        AccountManager.deleteUser(testUser, null);
     }
 }
