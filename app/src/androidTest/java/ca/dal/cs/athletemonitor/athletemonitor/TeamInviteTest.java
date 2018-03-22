@@ -13,11 +13,9 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
 import ca.dal.cs.athletemonitor.athletemonitor.CreateTeamActivity;
@@ -46,8 +44,8 @@ import static org.hamcrest.Matchers.not;
 /**
  * Tests TeamDetailActivity functionality
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TeamDetailActivityTest {
+
+public class TeamInviteTest {
     /**
      * Test user for this test set
      */
@@ -91,84 +89,61 @@ public class TeamDetailActivityTest {
     public void launchActivity() throws Exception {
         sleep(250);
         mActivityRule.launchActivity(intent);
-        testUser = (User) mActivityRule.getActivity().getIntent().getSerializableExtra("user");
         onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
         onView(allOf(withText("More"))).perform(click());
     }
 
     /**
-     * Tests that the correct views are on the activity
+     * Tests that a team owner can invite another user to a team
      *
      * @throws Exception
      */
     @Test
-    public void testProperFieldsExist() throws Exception {
-        //Try to get the fields and button.
-        onView(withId(R.id.editTeamButton));
-        onView(withId(R.id.teamName));
-        onView(withId(R.id.teamMotto));
-        onView(withId(R.id.transferOwnerButton));
-        onView(withId(R.id.inviteUserButton));
-        onView(withId(R.id.inviteUsername));
+    public void inviteTeamMemberTest() throws Exception {
+        onView(withId(R.id.editTeamButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUsername)).perform(clearText(), typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText("Invitation sent!")));
     }
 
     /**
-     * Tests that the team information cannot be changed if not in edit mode
+     * Tests that a member is added to a team when the user accepts an invitation
      *
-     * @throws Exception Generic exception
+     * @throws Exception
      */
     @Test
-    public void testNotEditable() throws Exception {
-        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
-        onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
-        onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
+    public void teamInviteAcceptTest() throws Exception {
+        onView(withId(R.id.editTeamButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUsername)).perform(clearText(), typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText("Invitation sent!")));
+        pressBack();
+
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Accept"))).perform(click());
+        onView(withId(R.id.teamLinearLayout)).check(matches(Matchers.withListSize(2)));
     }
 
     /**
-     * Tests that when the Edit button is clicked, the fields become enabled
+     * Tests that a member is not added to a team when the user declines an invitation
      *
-     * @throws Exception Generic exception
+     * @throws Exception
      */
     @Test
-    public void testisEditable() throws Exception {
-        onView(withId(R.id.editTeamButton)).perform(click());
-        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.submitChanges)));
-        onView(withId(R.id.teamName)).check(matches(isEnabled()));
-        onView(withId(R.id.teamMotto)).check(matches(isEnabled()));
-    }
-
-    /**
-     * Tests that when Submit Changes button is clicked, the team information is editable and
-     * that edits are reflected in the database
-     *
-     * @throws Exception Generic exception
-     */
-    //@Ignore
-    @Test
-    public void z_testUpdatedInfo() throws Exception {
-        onView(withId(R.id.editTeamButton)).perform(click());
-        onView(withId(R.id.teamName)).perform(clearText(), typeText("UpdatedTeamName"), closeSoftKeyboard());
-        onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
-        onView(withId(R.id.editTeamButton)).perform(click());
-        onView(allOf(withText("UpdatedTeamName")));
+    public void teamInviteDeclineTest() throws Exception {
+        onView(withId(R.id.editTeamButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click(), closeSoftKeyboard());
+        onView(withId(R.id.inviteUsername)).perform(clearText(), typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.inviteUserButton)).perform(click());
+        onView(withId(R.id.lblMessage)).check(matches(withText("Invitation sent!")));
+        pressBack();
         sleep(500);
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Decline"))).perform(click());
+        onView(withId(R.id.teamLinearLayout)).check(matches(Matchers.withListSize(1)));
     }
-}
 
-/**
- * Custom adapted from Cory Roy @ https://stackoverflow.com/a/30361345/3169479
- *
- */
-class Matchers {
-    public static Matcher<View> withListSize (final int size) {
-        return new TypeSafeMatcher<View>() {
-            @Override public boolean matchesSafely (final View view) {
-                return ((LinearLayout) view).getChildCount() == size;
-            }
 
-            @Override public void describeTo (final Description description) {
-                description.appendText ("Expected " + size + " items");
-            }
-        };
-    }
 }

@@ -47,6 +47,14 @@ public class User implements Serializable {
      */
     public void addUserTeam(Team team) { this.userTeams.add(team); }
 
+    public void removeUserTeam(Team team) {this.userTeams.remove(team);}
+    /*public void removeUserTeam(String teamName) {
+            for (Team team : userTeams) {
+            if(team.getName()==teamName) {
+                userTeams.remove(team);
+            }
+        }
+        }*/
     public List<Exercise> getUserExercises() {
         return userExercises;
     }
