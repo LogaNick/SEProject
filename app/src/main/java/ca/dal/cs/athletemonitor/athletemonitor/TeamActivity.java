@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,17 +43,6 @@ public class TeamActivity extends AppCompatActivity {
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
 
-        // Click listener for create new exercise button
-        findViewById(R.id.createTeamButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent createTeamActivityIntent = new Intent(TeamActivity.this, CreateTeamActivity.class);
-
-                createTeamActivityIntent.putExtra("user", user);
-                startActivity(createTeamActivityIntent);
-                finish();
-            }
-        });
         this.populateTeamList();
         this.handleTeamInvitations();
     }
@@ -62,6 +52,41 @@ public class TeamActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_team, menu);
         return true;
+    }
+
+    /**
+     * This hook is called whenever an item in your options menu is selected.
+     * The default implementation simply returns false to have the normal
+     * processing happen (calling the item's Runnable or sending a message to
+     * its Handler as appropriate).  You can use this method for any items
+     * for which you would like to do processing without those other
+     * facilities.
+     * <p>
+     * <p>Derived classes should call through to the base class for it to
+     * perform the default menu handling.</p>
+     *
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to
+     * proceed, true to consume it here.
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_join_team:
+                //TODO: handle join team
+                return true;
+            case R.id.action_create_team:
+                Intent createTeamActivityIntent = new Intent(TeamActivity.this, CreateTeamActivity.class);
+
+                createTeamActivityIntent.putExtra("user", user);
+                startActivity(createTeamActivityIntent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     /**

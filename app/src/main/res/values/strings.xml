@@ -69,5 +69,8 @@
     <string name="transferOwnership">Transfer Ownership</string>
     <string name="ownershipTransferred">Ownership transferred.</string>
     <string name="ownershipTransferredFailed">Owner Transfer Failed</string>
+
+    <!-- Team menu options -->
     <string name="action_join_team">Join a team</string>
+    <string name="action_create_team">Create a team</string>
 </resources>
