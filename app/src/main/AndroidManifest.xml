@@ -59,7 +59,9 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".RecordActivity" />
-	      <activity android:name=".TeamActivity" />
+        <activity
+            android:name=".TeamActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".CreateWorkoutActivity" />
         <activity android:name=".TeamDetailActivity" />
     </application>
