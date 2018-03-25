@@ -73,4 +73,5 @@
     <!-- Team menu options -->
     <string name="action_join_team">Join a team</string>
     <string name="action_create_team">Create a team</string>
+    <string name="search_team_name_hint">Enter team name...</string>
 </resources>

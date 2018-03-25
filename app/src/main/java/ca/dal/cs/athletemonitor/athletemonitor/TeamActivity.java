@@ -1,17 +1,22 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -49,9 +54,12 @@ public class TeamActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_team, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.menu_team, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_join_team);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setSearchableInfo(((SearchManager)getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getComponentName()));
+        return true;//super.onCreateOptionsMenu(menu);
     }
 
     /**
@@ -74,7 +82,8 @@ public class TeamActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_join_team:
-                //TODO: handle join team
+                //onSearchRequested();
+                super.onOptionsItemSelected(item);
                 return true;
             case R.id.action_create_team:
                 Intent createTeamActivityIntent = new Intent(TeamActivity.this, CreateTeamActivity.class);
