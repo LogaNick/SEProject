@@ -15,7 +15,9 @@ import org.junit.runner.RunWith;
 
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -130,5 +132,18 @@ public class TeamActivityTest {
         }catch(NoMatchingViewException e){
             // team not found, test is successful
         }
+    }
+
+    /**
+     * Tests that the action bar has the join team option
+     *
+     * @throws Exception
+     */
+    @Test
+    public void actionBarHasJoinTeam() throws Exception {
+       openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+       sleep(5000);
+       onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.action_join_team)));
     }
 }
