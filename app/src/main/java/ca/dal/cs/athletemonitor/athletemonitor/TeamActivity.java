@@ -59,6 +59,7 @@ public class TeamActivity extends AppCompatActivity {
         MenuItem searchItem = menu.findItem(R.id.action_join_team);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setSearchableInfo(((SearchManager)getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getComponentName()));
+        searchView.onActionViewExpanded();
         return true;//super.onCreateOptionsMenu(menu);
     }
 
@@ -82,8 +83,8 @@ public class TeamActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_join_team:
-                //onSearchRequested();
-                super.onOptionsItemSelected(item);
+
+
                 return true;
             case R.id.action_create_team:
                 Intent createTeamActivityIntent = new Intent(TeamActivity.this, CreateTeamActivity.class);
