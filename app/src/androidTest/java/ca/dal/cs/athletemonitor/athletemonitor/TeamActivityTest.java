@@ -86,6 +86,7 @@ public class TeamActivityTest {
         onView(withId(R.id.createTeamButton));
         onView(withId(R.id.teamLayoutScrollView));
         onView(withId(R.id.teamLinearLayout));
+        onView(withId(R.id.toolbar));
     }
 
     /**
