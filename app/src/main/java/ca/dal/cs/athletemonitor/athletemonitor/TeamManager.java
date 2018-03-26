@@ -1,22 +1,18 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * The TeamManager class manages Team data in Firebase
  */
 
-public class TeamManager {
+public abstract class TeamManager {
     /**
      * Listener interface for receiving team invitations.
      *
@@ -34,8 +30,6 @@ public class TeamManager {
     public interface TeamPopulatedListener {
         void onTeamPopulated(Team team);
     }
-
-    private TeamManager() {}
 
     /**
      * Submit team data to firebase
@@ -81,7 +75,6 @@ public class TeamManager {
 
             }
         });
-
     }
 
     /**
@@ -199,11 +192,5 @@ public class TeamManager {
 
             }
         });
-
-
-
     }
-
-
-
 }
