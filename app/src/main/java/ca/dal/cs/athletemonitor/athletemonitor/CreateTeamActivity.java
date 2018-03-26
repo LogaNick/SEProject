@@ -1,11 +1,15 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,6 +29,12 @@ public class CreateTeamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_team);
 
+        //set window dimensions
+        Rect displayRectangle = new Rect();
+        Window window = this.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+        this.getWindow().setLayout((int)(displayRectangle.width()*0.90), (int)(displayRectangle.height() * 0.90));
+       
         ((Button)findViewById(R.id.submitTeamButton)).setEnabled(false);
 
         // get the active user

@@ -27,6 +27,7 @@
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".CreateTeamActivity"
+            android:theme="@style/AppTheme.Dialog"
             android:label="New Team" />
         <activity
             android:name=".UserInformationActivity"
@@ -70,7 +71,6 @@
         <activity android:name=".TeamDetailActivity" />
 
         <!-- Generic search result activity for handling various types of searching. -->
-
         <activity
             android:name=".SearchResultsActivity"
             android:excludeFromRecents="true"
