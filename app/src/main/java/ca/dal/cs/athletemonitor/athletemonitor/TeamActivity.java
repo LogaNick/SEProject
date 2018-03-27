@@ -230,38 +230,10 @@ public class TeamActivity extends AppCompatActivity {
          */
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final Team team = (Team) teamAdapter.getItem(position);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
-
-            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }})
-                    .setPositiveButton("More", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent TeamDetailActivityIntent = new Intent(TeamActivity.this, TeamDetailActivity.class);
-                            TeamDetailActivityIntent.putExtra("team", team);
-                            TeamDetailActivityIntent.putExtras(getIntent().getExtras());
-                            startActivityForResult(TeamDetailActivityIntent, 1);
-                        }})
-                    .setTitle(team.getName())
-                    .setMessage("\nMotto: " + team.getMotto() + "\nOwner: " + team.getOwner());
-
-            // only display quit team if the team isn't owned by the user
-            if (!team.getOwner().equals(user.getUsername())) {
-                builder.setNeutralButton("Quit Team", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        teamAdapter.remove(team);
-                        TeamManager.removeMemberFromTeam(team, user);
-                        dialog.dismiss();
-                    }
-                });
-            }
-            builder.show();
+            Intent TeamDetailActivityIntent = new Intent(TeamActivity.this, TeamDetailActivity.class);
+            TeamDetailActivityIntent.putExtra("team", (Team) teamAdapter.getItem(position));
+            TeamDetailActivityIntent.putExtras(getIntent().getExtras());
+            startActivityForResult(TeamDetailActivityIntent, 1);
         }
     }
 }

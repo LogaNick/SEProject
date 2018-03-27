@@ -69,10 +69,14 @@ public class TeamDetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //TODO: Move quit team here
-        if (user.getUsername().equals(team.getOwner())) {
         getMenuInflater().inflate(R.menu.menu_team_detail, menu);
-
-            //menu.findItem(R.id.action_edit_team).setVisible(false);
+        if (user.getUsername().equals(team.getOwner())) {
+            menu.findItem(R.id.action_quit_team).setVisible(false);
+        } else {
+            menu.findItem(R.id.action_quit_team).setVisible(true);
+            menu.findItem(R.id.action_edit_team).setVisible(false);
+            menu.findItem(R.id.action_transfer_ownership).setVisible(false);
+            menu.findItem(R.id.action_invite_user).setVisible(false);
         }
 //        MenuItem searchItem = menu.findItem(R.id.action_join_team);
 //        SearchView searchView = (SearchView) searchItem.getActionView();
@@ -106,6 +110,13 @@ public class TeamDetailActivity extends AppCompatActivity {
                 setEditTextEditable(R.id.teamMotto, true);
                 findViewById(R.id.saveInfo).setVisibility(View.VISIBLE);
                 return true;
+            case R.id.action_quit_team:
+                TeamManager.removeMemberFromTeam(team, user);
+                Intent result = new Intent();
+                result.putExtra("user", user);
+                setResult(0, result);
+
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }

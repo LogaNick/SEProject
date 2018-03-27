@@ -18,4 +18,11 @@
         android:title="@string/action_transfer_ownership"
         app:showAsAction="never"/>
 
+    <!-- Quit team -->
+    <item android:id="@+id/action_quit_team"
+        android:title="Quit team"
+        app:showAsAction="never"/>
+
+
+
 </menu>
