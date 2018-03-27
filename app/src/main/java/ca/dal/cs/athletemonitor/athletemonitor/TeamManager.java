@@ -240,4 +240,33 @@ public abstract class TeamManager {
             }
         });
     }
+
+    /**
+     * Adds the user to the specified team.
+     *
+     * @param team Team that user belongs to
+     * @param user User to be removed
+     */
+    public static void addMemberToTeam(Team team, final User user) {
+        // retrieve database reference to the teams
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference teamsReference = database.getReference("teams/" + team.getId());
+
+        teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Team team = dataSnapshot.getValue(Team.class);
+                    team.addTeamMember(user.getUsername());
+
+                    teamsReference.setValue(team);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

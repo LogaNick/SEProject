@@ -182,8 +182,8 @@ public class TeamActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getValue(Team.class).getTeamMembers().contains(user.getUsername())) {
-                    //TODO: UPdate team information
-                    //teamAdapter.add(dataSnapshot.getValue(Team.class));
+
+                    teamAdapter.add(dataSnapshot.getValue(Team.class));
                 } else if (teamAdapter.getPosition(dataSnapshot.getValue(Team.class)) != -1) {
                     teamAdapter.remove(dataSnapshot.getValue(Team.class));
                 }

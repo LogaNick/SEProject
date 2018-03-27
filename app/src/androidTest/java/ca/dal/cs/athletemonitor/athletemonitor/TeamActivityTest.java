@@ -32,6 +32,7 @@ import static java.lang.Thread.sleep;
 import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * Test class for Team Activity
@@ -65,6 +66,7 @@ public class TeamActivityTest {
     public void cleanupEnvironment() throws Exception {
         AccountManager.setUserLoginState(testUser.getUsername(), false);
         AccountManager.deleteUser(testUser, null);
+        //TODO: TeamManager.deleteTeam(testTeam);
     }
 
     /**
@@ -123,16 +125,24 @@ public class TeamActivityTest {
      */
     @Test
     public void quitTeamTest() throws Exception {
-        Team testTeam = testUser.getUserTeams().get(0);
-        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText(testTeam.getName()))).perform(click());
-        onView(withText("Quit Team")).perform(click());
+        Team unownedTeam = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
+        TeamManager.newTeam(unownedTeam);
+        TeamManager.addMemberToTeam(unownedTeam, testUser);
 
-        try{
-            onView(withText(testTeam.getName())).check(matches(isDisplayed()));
-            fail();
-        }catch(NoMatchingViewException e){
-            // team not found, test is successful
-        }
+        onView(allOf(withText(unownedTeam.getOwner()))).perform(click());
+        onView(withText("Quit Team")).perform(click());
+        onData(not(is(withText(unownedTeam.getName()))));
+    }
+
+    /**
+     * Tests that quit team option is not available for team owners
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamOwnerCannotQuitTeamTest() throws Exception {
+        onView(withText(testTeam.getName())).perform(click());
+        onView(not(withText("Quit Team")));
     }
 
     /**
