@@ -42,12 +42,16 @@ public abstract class TeamManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference teamsReference = database.getReference("teams");
 
+        //generate a new business id
+        team.setId(teamsReference.push().getKey());
+
         // Submit the team to the database
-        teamsReference.child(team.getName()).setValue(team);
+        teamsReference.child(team.getId()).setValue(team);
 
         // TODO check whether the team was successfully created (for example, does not already exist)
         return true;
     }
+
     /**
      This method invite a user to a team.
 
@@ -117,19 +121,22 @@ public abstract class TeamManager {
         });
     }
 
+    /**
+     * Retrieves a team from firebase for accessing the list of team members
+     *
+     * @param team Team to access
+     * @param listener Callback to pass information to
+     */
     public static void getTeamMembers(final Team team, final TeamPopulatedListener listener) {
         // retrieve database reference to the teams
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference teamsReference = database.getReference("users/" + team.getOwner());
+        DatabaseReference teamsReference = database.getReference("teams/" + team.getId());
 
         teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // return an empty list if no records found
-                User teamOwner = dataSnapshot.getValue(User.class);
-
                 if (dataSnapshot.exists()) {
-                    listener.onTeamPopulated(teamOwner.getUserTeams().get(teamOwner.getUserTeams().indexOf(team)));
+                    listener.onTeamPopulated(dataSnapshot.getValue(Team.class));
                     return;
                 } else {
                     listener.onTeamPopulated(null);
@@ -143,6 +150,13 @@ public abstract class TeamManager {
         });
     }
 
+    /**
+     * Updates team membership based on whether the user accepted or declined the invitation
+     *
+     * @param user User responding to an invitation
+     * @param team Team associated with the invitation
+     * @param accepted Whether or not the user accepted or declined.  True if accepted, otherwise false
+     */
     public static void handleInvitation(final User user, final Team team, boolean accepted) {
         // retrieve database reference to the teams
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -156,7 +170,7 @@ public abstract class TeamManager {
                     User teamOwner = dataSnapshot.getValue(User.class);
                     Team ownersTeam = teamOwner.getUserTeams().get(teamOwner.getUserTeams().indexOf(team));
 
-                    ownersTeam.addTeamMembers(user.getUsername());
+                    ownersTeam.addTeamMember(user.getUsername());
 
                     DatabaseReference teamReference = database.getReference("users/" + team.getOwner() + "/userTeams/");
                     teamReference.child(String.valueOf(teamOwner.getUserTeams().indexOf(team))).setValue(team);
@@ -183,6 +197,39 @@ public abstract class TeamManager {
                 for (DataSnapshot invitation : invitations) {
                     if (invitation.getValue(Team.class).getName().equals(team.getName())) {
                         userInvitations.child(invitation.getKey()).removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Removes the user from the specified team.
+     *
+     * @param team Team that user belongs to
+     * @param user User to be removed
+     */
+    public static void removeMemberFromTeam(Team team, final User user) {
+        // retrieve database reference to the teams
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference teamsReference = database.getReference("teams/" + team.getId() + "/teamMembers");
+
+        teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> members = dataSnapshot.getChildren();
+
+                    for (DataSnapshot member : members) {
+                        if (((String)member.getValue()).equals(user.getUsername())) {
+                            teamsReference.child(member.getKey()).removeValue();
+                            break;
+                        }
                     }
                 }
             }

@@ -28,37 +28,52 @@ public class CreateTeamActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_team);
-
-        //set window dimensions
-        Rect displayRectangle = new Rect();
-        Window window = this.getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
-        this.getWindow().setLayout((int)(displayRectangle.width()*0.90), (int)(displayRectangle.height() * 0.90));
-       
-        ((Button)findViewById(R.id.submitTeamButton)).setEnabled(false);
+        setWindowSize(0.9, 0.9);
 
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
+        configureViews();
+    }
+
+    /**
+     * Adjust activity window size to a percentage of height/width
+     *
+     * @param widthScale Percentage of window width
+     * @param heightScale Percentage of window height
+     */
+    private void setWindowSize(double widthScale, double heightScale) {
+        Rect displayRectangle = new Rect();
+        Window window = this.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+        this.getWindow().setLayout((int)(displayRectangle.width() * widthScale),
+                (int)(displayRectangle.height() * heightScale));
+    }
+
+    /**
+     * Configures the view components on this activity
+     */
+    private void configureViews() {
+        ((Button)findViewById(R.id.submitTeamButton)).setEnabled(false);
 
         findViewById(R.id.submitTeamButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the Team data from the fields
-                String name = ((TextView) findViewById(R.id.newTeamName)).getText().toString();
-                String motto = ((TextView) findViewById(R.id.newTeamMotto)).getText().toString();
-                String owner = user.getUsername();
+                Team newTeam = new Team(
+                        ((TextView) findViewById(R.id.newTeamName)).getText().toString(),
+                        ((TextView) findViewById(R.id.newTeamMotto)).getText().toString(),
+                        user.getUsername());
 
-                // Validate fields and submit data
-                if (Team.validateAll(name, motto, owner)) {
-                    // Add Team to user
-                    user.addUserTeam(new Team(name, motto, owner));
-                    AccountManager.updateUser(user);
+                TeamManager.newTeam(newTeam);
+
+                // Add Team to user
+                //user.addUserTeam(newTeam);
+                //    AccountManager.updateUser(user);
 
                     // Switch back to exercise activity
                     Intent intent = new Intent(CreateTeamActivity.this, TeamActivity.class);
                     intent.putExtra("user", user);
                     startActivity(intent);
-                }
+               // }
             }
         });
 
