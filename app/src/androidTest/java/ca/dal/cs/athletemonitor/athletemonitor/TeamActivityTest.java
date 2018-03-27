@@ -128,7 +128,7 @@ public class TeamActivityTest {
         Team unownedTeam = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
         TeamManager.newTeam(unownedTeam);
         TeamManager.addMemberToTeam(unownedTeam, testUser);
-
+        sleep(250);
         onView(allOf(withText(unownedTeam.getOwner()))).perform(click());
         onView(withText("Quit Team")).perform(click());
         onData(not(is(withText(unownedTeam.getName()))));
