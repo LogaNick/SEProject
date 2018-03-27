@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.goToRecordButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
+                Intent recordIntent = new Intent(MainActivity.this, MapsActivity.class);
                 recordIntent.putExtra("user", activeUser);
                 startActivity(recordIntent);
             }

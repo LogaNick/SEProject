@@ -58,8 +58,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".RecordActivity" />
-	      <activity android:name=".TeamActivity" />
+        <activity android:name=".MapsActivity" />
+        <activity android:name=".TeamActivity" />
         <activity android:name=".CreateWorkoutActivity" />
         <activity android:name=".TeamDetailActivity" />
     </application>

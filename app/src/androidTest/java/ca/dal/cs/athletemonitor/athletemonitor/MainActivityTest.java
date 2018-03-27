@@ -8,14 +8,12 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -101,7 +99,7 @@ public class MainActivityTest {
     @Test
     public void testGoToRecordButton() throws Exception{
         onView(withId(R.id.goToRecordButton)).perform(click());
-        intended(hasComponent(RecordActivity.class.getName()));
+        intended(hasComponent(MapsActivity.class.getName()));
     }
 
     /**

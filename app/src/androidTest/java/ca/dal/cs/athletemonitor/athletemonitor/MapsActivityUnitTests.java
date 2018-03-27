@@ -22,11 +22,11 @@ import static org.junit.Assert.*;
  * This class contains tests which assert the correct functionality of the
  * Record Activity.
  */
-public class RecordActivityUnitTests {
+public class MapsActivityUnitTests {
 
     @Rule
-    public ActivityTestRule<RecordActivity> recordActivityTestRule =
-            new ActivityTestRule<RecordActivity>(RecordActivity.class, false, false);
+    public ActivityTestRule<MapsActivity> recordActivityTestRule =
+            new ActivityTestRule<MapsActivity>(MapsActivity.class, false, false);
 
     @Before
     public void init() {
@@ -105,7 +105,7 @@ public class RecordActivityUnitTests {
         onView(withId(R.id.record_button)).perform(click());
         onView(withId(R.id.record_button)).perform(click());
 
-        onView(withText(R.string.activity_record_save_dialog)).check(matches(isDisplayed()));
+        onView(withText(R.string.activity_maps_save_dialog)).check(matches(isDisplayed()));
     }
 
     /**

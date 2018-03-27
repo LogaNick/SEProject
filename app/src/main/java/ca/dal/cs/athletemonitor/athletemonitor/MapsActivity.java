@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  * This class contains functionality to allow a user to record their workout
  * while it is in progress.
  */
-public class RecordActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int ACCESS_FINE_LOCATION = 0;
     private static final String DATABASE_REFERENCE = "DATABASE_REFERENCE";
@@ -100,9 +100,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(R.string.activity_record_save_dialog);
+            builder.setMessage(R.string.activity_maps_save_dialog);
             builder.setPositiveButton(
-                    R.string.activity_record_yes,
+                    R.string.activity_maps_yes,
                     new DialogInterface.OnClickListener() {
                         /**
                          * This method saves the user's workout to Firebase.
@@ -120,7 +120,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
             );
             builder.setNegativeButton(
-                    R.string.activity_record_no,
+                    R.string.activity_maps_no,
                     new DialogInterface.OnClickListener() {
                         /**
                          * This method does not do anything, but must be here as per the interface.
@@ -142,7 +142,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+        setContentView(R.layout.activity_maps);
 
         ((MapFragment) getFragmentManager().findFragmentById(R.id.record_map))
                 .getMapAsync(this);
@@ -186,7 +186,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     /**
-     * This method is used when this RecordActivity is paused to possibly
+     * This method is used when this MapsActivity is paused to possibly
      * disable location updates.
      */
     @Override
@@ -198,7 +198,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     /**
-     * This method is used when this RecordActivity is resumed to possibly
+     * This method is used when this MapsActivity is resumed to possibly
      * enable location updates.
      */
     @Override
@@ -271,7 +271,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
             RecordSaveFragment fragment = new RecordSaveFragment();
             Bundle bundle = new Bundle();
-            bundle.putString(DATABASE_REFERENCE, getString(R.string.activity_record_firebase, user.getUsername()));
+            bundle.putString(DATABASE_REFERENCE, getString(R.string.activity_maps_firebase, user.getUsername()));
             bundle.putLong(ELAPSED_TIME, time);
             bundle.putParcelableArrayList(LOCATION_LIST, locationList);
             fragment.setArguments(bundle);
