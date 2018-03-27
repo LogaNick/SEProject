@@ -98,9 +98,10 @@ public class TeamActivityTest {
      * @throws Exception General exception
      */
     @Test
-    public void testGoCreateTeamButton() throws Exception {
+    public void testCreateTeamButton() throws Exception {
         //Try to click the button.
-        onView(withId(R.id.createTeamButton)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_create_team)).perform(click());
         intended(hasComponent(CreateTeamActivity.class.getName()));
     }
 
