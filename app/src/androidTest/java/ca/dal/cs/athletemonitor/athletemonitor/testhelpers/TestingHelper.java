@@ -14,14 +14,10 @@ import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
 import ca.dal.cs.athletemonitor.athletemonitor.Exercise;
 import ca.dal.cs.athletemonitor.athletemonitor.Team;
 import ca.dal.cs.athletemonitor.athletemonitor.User;
-import ca.dal.cs.athletemonitor.athletemonitor.Workout;
-import ca.dal.cs.athletemonitor.athletemonitor.WorkoutExercise;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -78,7 +74,6 @@ public class TestingHelper {
      */
     public static User createTestUser() {
         User user =new User("test_user" + getRandomNumber(), "test_password");
-        user.addUserTeam(createTestTeam(user.getUsername()));
         return user;
     }
 
@@ -88,9 +83,10 @@ public class TestingHelper {
      * @return Randomly generated team
      */
     public static Team createTestTeam(String owner) {
-        return new Team("Test Team" + getRandomNumber(),
+        Team team = new Team("Test Team" + getRandomNumber(),
                 "Cool motto #" + getRandomNumber(),
                 owner);
+        return team;
     }
 
     /**
