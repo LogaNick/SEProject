@@ -263,6 +263,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 isRecording ? R.drawable.ic_record_stop : R.drawable.ic_record_rec
         );
 
+        //TODO clear route from map
+
         if (!isRecording) {
             timer.stop();
             long time = SystemClock.elapsedRealtime() - timer.getBase();

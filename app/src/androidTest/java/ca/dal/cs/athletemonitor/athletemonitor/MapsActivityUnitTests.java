@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 /**
  * This class contains tests which assert the correct functionality of the
- * Record Activity.
+ * Maps Activity.
  */
 public class MapsActivityUnitTests {
 
@@ -129,6 +129,25 @@ public class MapsActivityUnitTests {
         }
 
         assertTrue(recordActivityTestRule.getActivity().getIsRecording());
+    }
+
+    @Test
+    public void displayUsers() {
+        assertTrue(false);
+        // assertTrue(!markerList.isEmpty());
+    }
+
+    public void checkMarkerImage() {
+        assertTrue(false);
+//        if (!friendLocationList.isEmpty()) {
+//            // choose a test user
+//            for (Friend f : friendLocationList) {
+//                //TODO change to proper test user
+//                if (f.username.equals("test_zachary")) {
+//                    assertTrue(f.imageId != defaultvalue);
+//                }
+//            }
+//        }
     }
 
 }

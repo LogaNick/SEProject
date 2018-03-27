@@ -10,17 +10,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.app.Activity.RESULT_OK;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_INFORMATION;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivityUnitTests.TEST_ID;
+import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.*;
 
 /**
@@ -71,6 +74,7 @@ public class UserInformationEditActivityUnitTests {
         onView(withId(R.id.weightEditText)).check(matches(withText(TEST_WEIGHT + " kg")));
         onView(withId(R.id.athleteTypeEditText)).check(matches(withText(TEST_ATHLETE_TYPE)));
         onView(withId(R.id.statementEditText)).check(matches(withText(TEST_STATEMENT)));
+        onView(withId(R.id.imageSpinner)).check(matches(withContentDescription("ic_map_pizza")));
     }
 
     /**
@@ -192,6 +196,17 @@ public class UserInformationEditActivityUnitTests {
         Intent intent = uiEditIntentRule.getActivityResult().getResultData();
         UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
         assertEquals(info.getPersonalStatement(), TEST_STATEMENT);
+    }
+
+    @Test
+    public void editUserImage() {
+        onView(withId(R.id.imageSpinner)).perform(click());
+        onData(anything()).atPosition(0/*TODO????*/).perform(click());
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getImageId(), 0/*TODO????*/);
     }
 
 }

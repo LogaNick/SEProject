@@ -14,6 +14,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER;
@@ -64,6 +65,7 @@ public class UserInformationActivityUnitTests {
         onView(withId(R.id.weightDisplayView)).check(matches(withText(TEST_WEIGHT + " kg")));
         onView(withId(R.id.athleteTypeDisplayView)).check(matches(withText(TEST_ATHLETE_TYPE)));
         onView(withId(R.id.statementTextView)).check(matches(withText(TEST_STATEMENT)));
+        onView(withId(R.id.imageView)).check(matches(withContentDescription("ic_map_pizza")));
     }
 
     /**
