@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -24,10 +25,12 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Espresso Test for the CreateTeam Activity.
@@ -113,22 +116,12 @@ public class CreateTeamActivityTest {
      */
     @Test
     public void testOnCreateTeamButtonClick() throws Exception {
-        onView(withId(R.id.newTeamName)).perform(typeText("testteam"));
-        onView(withId(R.id.newTeamMotto)).perform(typeText("testmotto"), closeSoftKeyboard());
-
-        //Try to click the button.
+        final Team testTeam = TestingHelper.createTestTeam(testUser.getUsername());
+        onView(withId(R.id.newTeamName)).perform(typeText(testTeam.getName()));
+        onView(withId(R.id.newTeamMotto)).perform(typeText(testTeam.getMotto()), closeSoftKeyboard());
         onView(withId(R.id.submitTeamButton)).perform(click());
-        //test that the team was created in the database
-        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                assertNotNull(user);
-
-                assertTrue(user.getUserTeams().contains(
-                        new Team("testteam", "testmotto", user.getUsername())));
-            }
-        });
 
         intended(hasComponent(TeamActivity.class.getName()));
+        onData(is(withText(testTeam.getName())));
     }
 }
