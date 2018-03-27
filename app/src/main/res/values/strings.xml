@@ -6,6 +6,7 @@
         <item>Minutes</item>
         <item>Hours</item>
     </string-array>
+    <string name="open_nav_drawer">Home</string> <!-- refactor? -->
     <string name="ButtonText_SignIn">Sign In</string>
     <string name="ButtonText_RegisterAccount">Register one here...</string>
     <string name="TextView_NoAccount">Don\'t have an account?</string>
