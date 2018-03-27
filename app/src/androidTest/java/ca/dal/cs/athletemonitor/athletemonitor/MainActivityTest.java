@@ -76,6 +76,15 @@ public class MainActivityTest {
     }
 
     /**
+     * Test that the nav drawer button exists
+     * @throws Exception
+     */
+     @Test
+     public void testNavDrawerButtonExists() throws Exception{
+         onView(withId(R.id.navDrawerButton));
+     }
+     
+    /**
      * Test that the button to transfer to the exercise activity works.
      * @throws Exception
      */
