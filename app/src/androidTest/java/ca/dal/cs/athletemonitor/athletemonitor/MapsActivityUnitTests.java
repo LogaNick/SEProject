@@ -134,7 +134,7 @@ public class MapsActivityUnitTests {
     @Test
     public void displayUsers() {
         assertTrue(false);
-        // assertTrue(!markerList.isEmpty());
+//         assertTrue(!markerList.isEmpty());
     }
 
     @Test

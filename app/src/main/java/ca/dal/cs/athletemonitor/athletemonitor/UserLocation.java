@@ -2,8 +2,12 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.HashMap;
 
 /**
  * This class describes a user associated with a location for display
@@ -11,29 +15,53 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class UserLocation implements Parcelable {
 
+    public static final SparseIntArray IMAGE_ID_MAP = new SparseIntArray();
+
+    static {
+        IMAGE_ID_MAP.put(0, R.drawable.ic_map_bicycle);
+        IMAGE_ID_MAP.put(1, R.drawable.ic_map_face);
+        IMAGE_ID_MAP.put(2, R.drawable.ic_map_film);
+        IMAGE_ID_MAP.put(3, R.drawable.ic_map_key);
+        IMAGE_ID_MAP.put(4, R.drawable.ic_map_monkey);
+        IMAGE_ID_MAP.put(5, R.drawable.ic_map_music);
+        IMAGE_ID_MAP.put(6, R.drawable.ic_map_paw);
+        IMAGE_ID_MAP.put(7, R.drawable.ic_map_pizza);
+        IMAGE_ID_MAP.put(8, R.drawable.ic_map_row);
+        IMAGE_ID_MAP.put(9, R.drawable.ic_map_run);
+        IMAGE_ID_MAP.put(10, R.drawable.ic_map_smiley);
+        IMAGE_ID_MAP.put(11, R.drawable.ic_map_swim);
+        IMAGE_ID_MAP.put(12, R.drawable.ic_map_walk);
+        IMAGE_ID_MAP.put(13, R.drawable.ic_map_weight);
+        IMAGE_ID_MAP.put(14, R.drawable.ic_map_wheelchair);
+    }
+
     private String username;
     private long time;
     private int imageId;
-    private LatLng loc;
+    private double lat;
+    private double lon;
 
     /**
      * @param username the username to be set
      * @param time the time to be set
      * @param imageId the imageId to be set
-     * @param loc the location to be set
+     * @param lat the latitude to be set
+     * @param lon the longitude to be set
      */
-    public UserLocation(String username, long time, int imageId, LatLng loc) {
+    public UserLocation(String username, long time, int imageId, double lat, double lon) {
         this.username = username;
         this.time = time;
         this.imageId = imageId;
-        this.loc = loc;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     private UserLocation(Parcel in) {
         username = in.readString();
         time = in.readLong();
         imageId = in.readInt();
-        loc = in.readParcelable(LatLng.class.getClassLoader());
+        lat = in.readDouble();
+        lon = in.readDouble();
     }
 
     /** Default constructor, for parcelization */
@@ -51,7 +79,8 @@ public class UserLocation implements Parcelable {
         out.writeString(username);
         out.writeLong(time);
         out.writeInt(imageId);
-        out.writeParcelable(loc, 0);
+        out.writeDouble(lat);
+        out.writeDouble(lon);
     }
 
     /** For parcelization */
@@ -75,24 +104,10 @@ public class UserLocation implements Parcelable {
     }
 
     /**
-     * @param username the username to be set
-     */
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    /**
      * @return the time
      */
     public long getTime() {
         return time;
-    }
-
-    /**
-     * @param time the time to be set
-     */
-    public void setTime(long time) {
-        this.time = time;
     }
 
     /**
@@ -103,24 +118,17 @@ public class UserLocation implements Parcelable {
     }
 
     /**
-     * @param imageId the imageId to be set
+     * @return the user latitude
      */
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public double getLat() {
+        return lat;
     }
 
     /**
-     * @return the location
+     * @return the user longitude
      */
-    public LatLng getLoc() {
-        return loc;
-    }
-
-    /**
-     * @param loc the location to be set
-     */
-    public void setLoc(LatLng loc) {
-        this.loc = loc;
+    public double getLon() {
+        return lon;
     }
 
 }

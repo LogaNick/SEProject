@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
@@ -23,16 +24,24 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +66,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isRecording = false;
     private boolean isPaused = false;
     private ArrayList<Location> locationList = new ArrayList<>();
+    private ArrayList<Marker> markerList = new ArrayList<>();
+    private ArrayList<UserLocation> friendLocationList = new ArrayList<>();
     private Polyline currentRoute = null;
     private GoogleMap mMap;
     private FusedLocationProviderClient locationProviderClient;
@@ -151,6 +162,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         recordButton = findViewById(R.id.record_button);
         pauseButton = findViewById(R.id.pause_button);
 
+        retrieveUserLocs();
+
         if (checkForLocPermission()) {
             createLocationParameters();
             requestLocationUpdates();
@@ -161,6 +174,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
+    }
+
+    private void retrieveUserLocs() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef
+                = db.getReference(getString(R.string.activity_maps_firebase_user_locs));
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> it = dataSnapshot.getChildren().iterator();
+                while (it.hasNext()) {
+                    UserLocation userLocation = it.next().getValue(UserLocation.class);
+                    friendLocationList.add(userLocation);
+                }
+                populateMapMarkers();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("MAPSACTIVITY", "Failed to retrieve user locs from Firebase.");
+            }
+        });
+    }
+
+    private void populateMapMarkers() {
+        for (Marker m : markerList) {
+            m.remove();
+        }
+        for (UserLocation userLoc : friendLocationList) {
+            if (isRecent(userLoc.getTime())) {
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(
+                        UserLocation.IMAGE_ID_MAP.get(userLoc.getImageId())
+                );
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(userLoc.getLat(), userLoc.getLon()))
+                        .icon(icon)
+                        .title(userLoc.getUsername())
+                );
+                markerList.add(marker);
+            }
+        }
+    }
+
+    private boolean isRecent(long time) {
+
+        //TODO if less than 2 hours
+        return true;
     }
 
     private void requestLocPermissions() {
@@ -357,6 +417,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void moveToInitialLocation() throws SecurityException {
         Task<Location> locationTask = locationProviderClient.getLastLocation();
+        //TODO can we set our own image for location?
         mMap.setMyLocationEnabled(true);
         locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
