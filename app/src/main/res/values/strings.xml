@@ -55,6 +55,7 @@
     <string name="activity_maps_navigation_record_button">Record</string>
     <string name="activity_maps_navigation_pause_button">Pause</string>
     <string name="activity_maps_firebase">recorded_workouts/%s</string>
+    <string name="activity_maps_firebase_user_locs">user_locations</string>
     <string name="activity_maps_save_dialog">Do you want to save this workout?</string>
     <string name="activity_maps_yes">Yes</string>
     <string name="activity_maps_no">No</string>
@@ -69,4 +70,23 @@
     <string name="transferOwnership">Transfer Ownership</string>
     <string name="ownershipTransferred">Ownership transferred.</string>
     <string name="ownershipTransferredFailed">Owner Transfer Failed</string>
+
+    <string-array name="ImageIds">
+        <item>Bicycle</item>
+        <item>Face</item>
+        <item>Film</item>
+        <item>Key</item>
+        <item>Monkey</item>
+        <item>Music</item>
+        <item>Paw</item>
+        <item>Pizza</item>
+        <item>Row</item>
+        <item>Run</item>
+        <item>Smiley</item>
+        <item>Swim</item>
+        <item>Walk</item>
+        <item>Weight</item>
+        <item>Wheelchair</item>
+    </string-array>
+
 </resources>

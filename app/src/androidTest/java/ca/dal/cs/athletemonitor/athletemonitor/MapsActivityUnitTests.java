@@ -137,6 +137,7 @@ public class MapsActivityUnitTests {
         // assertTrue(!markerList.isEmpty());
     }
 
+    @Test
     public void checkMarkerImage() {
         assertTrue(false);
 //        if (!friendLocationList.isEmpty()) {
