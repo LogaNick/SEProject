@@ -6,9 +6,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,11 +14,10 @@ import org.junit.runner.RunWith;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -28,14 +25,13 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import android.util.Log;
-
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Test class for Team Activity
@@ -46,6 +42,11 @@ public class TeamActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Test team for this test set
+     */
+    private static Team testTeam;
 
     /**
      * Intent used to launch the activity
@@ -72,6 +73,9 @@ public class TeamActivityTest {
     @Before
     public void launchActivity() throws Exception {
         testUser = TestingHelper.createTestUser();
+        testTeam = TestingHelper.createTestTeam(testUser.getUsername());
+
+        TeamManager.newTeam(testTeam);
         TestingHelper.setupTestEnvironment(intent, testUser);
         sleep(1000);
         mActivityRule.launchActivity(intent);
@@ -84,10 +88,7 @@ public class TeamActivityTest {
      */
     @Test
     public void testCorrectComponentsTest() throws Exception {
-        //Try to get the button.
-        onView(withId(R.id.createTeamButton));
-        onView(withId(R.id.teamLayoutScrollView));
-        onView(withId(R.id.teamLinearLayout));
+        onView(withId(R.id.teamList));
         onView(withId(R.id.toolbar));
     }
 
