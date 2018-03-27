@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Edit the team -->
+    <item android:id="@+id/action_edit_team"
+        android:title="@string/action_edit_team"
+        app:showAsAction = "collapseActionView"
+        app:actionViewClass="android.widget.SearchView"/>
+
+    <!-- Invite a user to join the team -->
+    <item android:id="@+id/action_invite_user"
+        android:title="@string/action_invite_user"
+        app:showAsAction="never"/>
+
+    <!-- Transfer ownership of team -->
+    <item android:id="@+id/action_transfer_ownership"
+        android:title="@string/action_transfer_ownership"
+        app:showAsAction="never"/>
+
+</menu>

@@ -63,16 +63,27 @@
     <string name="logout_while_offline_warning_save">Save and quit</string>
     <string name="logout_while_offline_warning_quit">Quit</string>
     <string name="submitChanges">Submit Changes</string>
-    <string name="editTeam">Edit Team</string>
+
     <string name="sendInvite">Send Invitation</string>
-    <string name="inviteUser">Invite User</string>
-    <string name="transferOwnership">Transfer Ownership</string>
+
+
     <string name="ownershipTransferred">Ownership transferred.</string>
     <string name="ownershipTransferredFailed">Owner Transfer Failed</string>
+
+
+    <!-- Search Results -->
+    <string name="apply">Apply</string>
 
     <!-- Team menu options -->
     <string name="action_join_team">Join a team</string>
     <string name="action_create_team">Create a team</string>
     <string name="search_team_name_hint">Enter team name...</string>
-    <string name="apply">Apply</string>
+
+    <!-- Team details menu options -->
+    <string name="action_transfer_ownership">Transfer Ownership</string>
+    <string name="action_invite_user">Invite new member</string>
+    <string name="action_edit_team">Edit team</string>
+    <string name="your_team_name">Your Team Name</string>
+    <string name="your_team_motto">Your team motto</string>
+    <string name="team_members">Team Members</string>
 </resources>

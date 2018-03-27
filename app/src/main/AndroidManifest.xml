@@ -68,7 +68,10 @@
                 android:value=".SearchResultsActivity" />
         </activity>
         <activity android:name=".CreateWorkoutActivity" />
-        <activity android:name=".TeamDetailActivity" />
+
+
+        <activity android:name=".TeamDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- Generic search result activity for handling various types of searching. -->
         <activity
