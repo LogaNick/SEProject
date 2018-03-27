@@ -28,7 +28,7 @@ public class CreateTeamActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_team);
-        setWindowSize(0.9, 0.9);
+        setWindowSize(0.9, 0.4);
 
         // get the active user
         user = (User) getIntent().getExtras().getSerializable("user");
