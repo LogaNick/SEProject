@@ -141,10 +141,9 @@ public class TeamActivityTest {
      * @throws Exception
      */
     @Test
-    public void actionBarHasJoinTeam() throws Exception {
+    public void actionBarHasCorrectActions() throws Exception {
        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-
-       sleep(5000);
        onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.action_join_team)));
+       onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.action_create_team)));
     }
 }
