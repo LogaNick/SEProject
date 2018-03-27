@@ -86,4 +86,6 @@
     <string name="your_team_name">Your Team Name</string>
     <string name="your_team_motto">Your team motto</string>
     <string name="team_members">Team Members</string>
+    <string name="name">Name</string>
+    <string name="last_online">last online:</string>
 </resources>

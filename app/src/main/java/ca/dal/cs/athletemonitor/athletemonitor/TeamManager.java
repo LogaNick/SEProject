@@ -8,6 +8,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
+
 /**
  * The TeamManager class manages Team data in Firebase
  */
@@ -269,4 +271,22 @@ public abstract class TeamManager {
             }
         });
     }
+
+    public static void updateTeam(Team team, final BooleanResultListener listener) {
+        if(AccountManager.isOnline()) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference usersReference = database.getReference("teams/" + team.getId());
+            usersReference.setValue(team, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    listener.onResult(databaseError == null);
+                }
+            });
+        } else {
+            listener.onResult(false);
+        }
+
+    }
+
+
 }

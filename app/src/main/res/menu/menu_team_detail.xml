@@ -4,13 +4,14 @@
     <!-- Edit the team -->
     <item android:id="@+id/action_edit_team"
         android:title="@string/action_edit_team"
-        app:showAsAction = "collapseActionView"
-        app:actionViewClass="android.widget.SearchView"/>
+        app:showAsAction = "never"
+        />
 
     <!-- Invite a user to join the team -->
     <item android:id="@+id/action_invite_user"
         android:title="@string/action_invite_user"
-        app:showAsAction="never"/>
+        app:showAsAction="collapseActionView"
+        app:actionViewClass="android.widget.SearchView"/>
 
     <!-- Transfer ownership of team -->
     <item android:id="@+id/action_transfer_ownership"
