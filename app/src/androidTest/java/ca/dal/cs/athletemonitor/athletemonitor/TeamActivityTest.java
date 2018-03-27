@@ -113,9 +113,8 @@ public class TeamActivityTest {
      */
     @Test
     public void testViewTeam() throws Exception{
-        Team testTeam = testUser.getUserTeams().get(0);
-        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText(testTeam.getName()))).perform(click());
-        onView(withText(testTeam.getName()));
+        onView(withId(R.id.teamList));
+        onData(is(withText(testTeam.getName())));
     }
 
     /**
