@@ -70,6 +70,7 @@ public class TeamDetailActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_team_detail, menu);
         if (user.getUsername().equals(team.getOwner())) {
             menu.findItem(R.id.action_quit_team).setVisible(false);

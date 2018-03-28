@@ -157,4 +157,33 @@ public class TeamActivityTest {
        onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.action_join_team)));
        onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.action_create_team)));
     }
+
+    /**
+     * Tests that transfer ownership UI works
+     *
+     * @throws Exception
+     */
+    @Test
+    public void transferOwnerShipTestSuccess() throws Exception {
+        //create a test user to transfer ownership of a team to
+        User toBeNewOwner = TestingHelper.createTestUser();
+        AccountManager.createUser(toBeNewOwner);
+
+        //create a second team owned by the test user and add the second test user to the team
+        Team secondOwnedTeam = TestingHelper.createTestTeam(testUser.getUsername());
+        TeamManager.newTeam(secondOwnedTeam);
+        TeamManager.addMemberToTeam(secondOwnedTeam, toBeNewOwner);
+        sleep(2500);
+
+        //go to the team details and choose the newly added member
+        onView(withText(secondOwnedTeam.getName())).perform(click());
+        onView(withText(toBeNewOwner.getUsername())).perform(click());
+
+        //transfer ownership
+        onView(withText(R.string.action_transfer_ownership)).perform(click());
+        onView(withText("Yes")).perform(click());
+
+        AccountManager.deleteUser(testUser, null);
+        //TODO: clean up test teams
+    }
 }

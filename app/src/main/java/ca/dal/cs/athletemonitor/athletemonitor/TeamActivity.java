@@ -1,5 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -175,15 +176,21 @@ public class TeamActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getValue(Team.class).getTeamMembers().contains(user.getUsername())) {
-                    teamAdapter.add(dataSnapshot.getValue(Team.class));
+                    if (teamAdapter.getPosition(dataSnapshot.getValue(Team.class)) == -1)
+                        teamAdapter.add(dataSnapshot.getValue(Team.class));
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getValue(Team.class).getTeamMembers().contains(user.getUsername())) {
+                    if (teamAdapter.getPosition(dataSnapshot.getValue(Team.class)) == -1) {
+                        teamAdapter.add(dataSnapshot.getValue(Team.class));
+                    } else {
+                        teamAdapter.remove(teamAdapter.getItem(teamAdapter.getPosition(dataSnapshot.getValue(Team.class))));
+                        teamAdapter.add(dataSnapshot.getValue(Team.class));
+                    }
 
-                    teamAdapter.add(dataSnapshot.getValue(Team.class));
                 } else if (teamAdapter.getPosition(dataSnapshot.getValue(Team.class)) != -1) {
                     teamAdapter.remove(dataSnapshot.getValue(Team.class));
                 }
@@ -192,7 +199,8 @@ public class TeamActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue(Team.class).getTeamMembers().contains(user.getUsername())) {
-                    teamAdapter.remove(dataSnapshot.getValue(Team.class));
+                    if (teamAdapter.getPosition(dataSnapshot.getValue(Team.class)) != -1)
+                        teamAdapter.remove(dataSnapshot.getValue(Team.class));
                 }
             }
 
