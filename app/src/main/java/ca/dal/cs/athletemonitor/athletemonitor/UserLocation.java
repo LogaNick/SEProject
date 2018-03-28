@@ -2,12 +2,7 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.SparseArray;
 import android.util.SparseIntArray;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.HashMap;
 
 /**
  * This class describes a user associated with a location for display

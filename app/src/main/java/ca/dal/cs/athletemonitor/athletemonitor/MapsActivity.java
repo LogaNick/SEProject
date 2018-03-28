@@ -202,8 +202,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (Marker m : markerList) {
             m.remove();
         }
+
         for (UserLocation userLoc : friendLocationList) {
-            if (isRecent(userLoc.getTime())) {
+            if (!userLoc.getUsername().equals(user.getUsername()) && isRecent(userLoc.getTime())) {
                 BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(
                         UserLocation.IMAGE_ID_MAP.get(userLoc.getImageId())
                 );
@@ -218,9 +219,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private boolean isRecent(long time) {
-
-        //TODO if less than 2 hours
-        return true;
+        long elapsed = System.currentTimeMillis() - time;
+        return TimeUnit.MILLISECONDS.toHours(elapsed) < 2;
     }
 
     private void requestLocPermissions() {
@@ -323,8 +323,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 isRecording ? R.drawable.ic_record_stop : R.drawable.ic_record_rec
         );
 
-        //TODO clear route from map
-
         if (!isRecording) {
             timer.stop();
             long time = SystemClock.elapsedRealtime() - timer.getBase();
@@ -341,7 +339,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         else {
             locationList = new ArrayList<>();
-            currentRoute = null;
+            if (currentRoute != null) {
+                currentRoute.remove();
+                currentRoute = null;
+            }
             timer.setBase(SystemClock.elapsedRealtime());
             timer.start();
             pauseButton.setVisibility(View.VISIBLE);
@@ -417,7 +418,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void moveToInitialLocation() throws SecurityException {
         Task<Location> locationTask = locationProviderClient.getLastLocation();
-        //TODO can we set our own image for location?
         mMap.setMyLocationEnabled(true);
         locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
@@ -444,6 +444,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     protected boolean getIsPaused() {
         return isPaused;
+    }
+
+    /**
+     * This method gets the markerList field
+     * @return the markerList field
+     */
+    protected ArrayList<Marker> getMarkerList() {
+        return markerList;
+    }
+
+    /**
+     * This method gets the friendLocationList field
+     * @return the friendLocationList field
+     */
+    protected ArrayList<UserLocation> getFriendLocationList() {
+        return friendLocationList;
     }
 
 }
