@@ -112,9 +112,8 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void testNotEditable() throws Exception {
-        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
-        onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
-        onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
+        onView(allOf(withParent(withId(R.id.mainLayout)), withId(R.id.teamName))).check(matches(not(isFocusable())));
+        onView(withId(R.id.teamMotto)).check(matches(not(isFocusable())));
     }
 
     /**
