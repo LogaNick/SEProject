@@ -2,25 +2,14 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
-import ca.dal.cs.athletemonitor.athletemonitor.CreateTeamActivity;
-import ca.dal.cs.athletemonitor.athletemonitor.R;
-import ca.dal.cs.athletemonitor.athletemonitor.User;
+import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.Matchers;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 
@@ -31,11 +20,9 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.v4.content.res.TypedArrayUtils.getString;
 import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;

@@ -1,7 +1,6 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -18,18 +17,15 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
