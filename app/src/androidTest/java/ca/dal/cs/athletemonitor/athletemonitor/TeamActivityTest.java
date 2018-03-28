@@ -125,12 +125,16 @@ public class TeamActivityTest {
      */
     @Test
     public void quitTeamTest() throws Exception {
+        //create a team not owned by the test user and add the test user to the team
         Team unownedTeam = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
         TeamManager.newTeam(unownedTeam);
         TeamManager.addMemberToTeam(unownedTeam, testUser);
         sleep(250);
+
+        //open the unowned team information, click the actions button and click quit team
         onView(allOf(withText(unownedTeam.getOwner()))).perform(click());
-        onView(withText("Quit Team")).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_quit_team)).perform(click());
         onData(not(is(withText(unownedTeam.getName()))));
     }
 
