@@ -19,11 +19,13 @@ import static android.support.test.espresso.Espresso.openActionBarOverflowOrOpti
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -145,6 +147,28 @@ public class TeamDetailActivityTest {
         onView(allOf(withText("UpdatedTeamName")));
         onView(withId(R.id.teamName)).check(matches(not(isFocusable())));
         onView(withId(R.id.teamMotto)).check(matches(not(isFocusable())));
+    }
+
+    /**
+     * Tests that a team owner can invite another user to a team
+     *
+     * @throws Exception
+     */
+    @Test
+    public void inviteTeamMemberTest() throws Exception {
+        User userToInvite = TestingHelper.createTestUser();
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_invite_user)).perform(click());
+        onView(withResourceName("search_src_text")).perform(
+                typeText(userToInvite.getUsername()), pressImeActionButton());
+
+        onView(withText("No")).perform(click());
+        onView(withResourceName("search_src_text")).check(matches(withText(userToInvite.getUsername())));
+
+        onView(withResourceName("search_src_text")).perform(pressImeActionButton());
+
+        onView(withText("Yes")).perform(click());
     }
 }
 
