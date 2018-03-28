@@ -168,17 +168,7 @@ public abstract class TeamManager {
             teamOwnerReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    // return an empty list if no records found
-                    User teamOwner = dataSnapshot.getValue(User.class);
-                    Team ownersTeam = teamOwner.getUserTeams().get(teamOwner.getUserTeams().indexOf(team));
-
-                    ownersTeam.addTeamMember(user.getUsername());
-
-                    DatabaseReference teamReference = database.getReference("users/" + team.getOwner() + "/userTeams/");
-                    teamReference.child(String.valueOf(teamOwner.getUserTeams().indexOf(team))).setValue(team);
-
-                    ownersTeam.getTeamMembers();
-
+                    TeamManager.addMemberToTeam(team, user);
                 }
 
                 @Override

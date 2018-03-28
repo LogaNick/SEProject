@@ -16,6 +16,7 @@ import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -169,6 +170,44 @@ public class TeamDetailActivityTest {
         onView(withResourceName("search_src_text")).perform(pressImeActionButton());
 
         onView(withText("Yes")).perform(click());
+    }
+
+    /**
+     * Tests that a member is added to a team when the user accepts an invitation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamInviteAcceptTest() throws Exception {
+        //mock up a test team and invitation
+        Team teamToJoinOn = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
+        TeamManager.newTeam(teamToJoinOn);
+        TeamManager.inviteUser(testUser.getUsername(), teamToJoinOn);
+        sleep(250);
+        pressBack();
+
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Accept"))).perform(click());
+        onView(allOf(withParent(withId(R.id.teamList)), withText(teamToJoinOn.getName())));
+    }
+
+    /**
+     * Tests that a member is not added to a team when the user declines an invitation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamInviteDeclineTest() throws Exception {
+        //mock up a test team and invitation
+        Team teamToJoinOn = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
+        TeamManager.newTeam(teamToJoinOn);
+        TeamManager.inviteUser(testUser.getUsername(), teamToJoinOn);
+        sleep(250);
+        pressBack();
+
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Decline"))).perform(click());
+        onView(not(allOf(withParent(withId(R.id.teamList)), withText(teamToJoinOn.getName()))));
     }
 }
 
