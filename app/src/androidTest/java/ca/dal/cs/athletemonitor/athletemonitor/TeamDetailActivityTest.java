@@ -2,44 +2,30 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
-import ca.dal.cs.athletemonitor.athletemonitor.CreateTeamActivity;
-import ca.dal.cs.athletemonitor.athletemonitor.R;
-import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
-
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
+import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.v4.content.res.TypedArrayUtils.getString;
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
 
@@ -52,6 +38,11 @@ public class TeamDetailActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Test team for this test set
+     */
+    private static Team testTeam;
 
     /**
      * Intent used to launch the activity
@@ -89,11 +80,15 @@ public class TeamDetailActivityTest {
      */
     @Before
     public void launchActivity() throws Exception {
+        testUser = TestingHelper.createTestUser();
+        testTeam = TestingHelper.createTestTeam(testUser.getUsername());
+
+        TeamManager.newTeam(testTeam);
+        TestingHelper.setupTestEnvironment(intent, testUser);
         sleep(250);
         mActivityRule.launchActivity(intent);
-        testUser = (User) mActivityRule.getActivity().getIntent().getSerializableExtra("user");
-        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
-        onView(allOf(withText("More"))).perform(click());
+
+        onView(withParent(withId(R.id.teamList))).perform(click());
     }
 
     /**
@@ -103,13 +98,11 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void testProperFieldsExist() throws Exception {
-        //Try to get the fields and button.
-        onView(withId(R.id.editTeamButton));
+        onView(withId(R.id.toolbar));
         onView(withId(R.id.teamName));
         onView(withId(R.id.teamMotto));
-        onView(withId(R.id.transferOwnerButton));
-        onView(withId(R.id.inviteUserButton));
-        onView(withId(R.id.inviteUsername));
+        onView(withId(R.id.memberList));
+        onView(withId(R.id.separatorBar));
     }
 
     /**
