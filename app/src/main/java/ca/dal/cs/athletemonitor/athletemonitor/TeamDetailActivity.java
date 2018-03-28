@@ -1,5 +1,7 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.support.annotation.IdRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.view.Menu;
@@ -15,7 +18,6 @@ import android.view.View;
 
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -68,22 +70,68 @@ public class TeamDetailActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //TODO: Move quit team here
         getMenuInflater().inflate(R.menu.menu_team_detail, menu);
         if (user.getUsername().equals(team.getOwner())) {
             menu.findItem(R.id.action_quit_team).setVisible(false);
         } else {
             menu.findItem(R.id.action_quit_team).setVisible(true);
             menu.findItem(R.id.action_edit_team).setVisible(false);
-            menu.findItem(R.id.action_transfer_ownership).setVisible(false);
             menu.findItem(R.id.action_invite_user).setVisible(false);
         }
-//        MenuItem searchItem = menu.findItem(R.id.action_join_team);
-//        SearchView searchView = (SearchView) searchItem.getActionView();
-//        searchView.setSearchableInfo(((SearchManager)getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getComponentName()));
-//        searchView.onActionViewExpanded();
+
+        configureInviteMemberSearchView((SearchView) menu.findItem(R.id.action_invite_user).getActionView());
 
         return true;
+    }
+
+    /**
+     * Configures the search view for inviting members to a team
+     *
+     * @param searchView
+     */
+    private void configureInviteMemberSearchView(final SearchView searchView) {
+        searchView.setSearchableInfo(
+                ((SearchManager)getSystemService(Context.SEARCH_SERVICE))
+                        .getSearchableInfo(getComponentName()));
+        searchView.onActionViewExpanded();
+        searchView.setQueryHint("Search for a member");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                final AlertDialog.Builder confirmDialog = new AlertDialog.Builder(TeamDetailActivity.this);
+
+                confirmDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                confirmDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TeamManager.inviteUser(searchView.getQuery().toString(),team);
+                        searchView.setQuery("", true);
+                        searchView.onActionViewCollapsed();
+                        ((Toolbar)findViewById(R.id.toolbar)).collapseActionView();
+                        dialog.dismiss();
+                    }
+                });
+
+                confirmDialog.setTitle("Confirm Invitation")
+                        .setMessage("Are you sure you want to invite " + searchView.getQuery().toString() + " to the team?")
+                        .show();
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setSubmitButtonEnabled(true);
     }
 
     /**
@@ -102,6 +150,7 @@ public class TeamDetailActivity extends AppCompatActivity {
      * proceed, true to consume it here.
      * @see #onCreateOptionsMenu
      */
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -117,6 +166,9 @@ public class TeamDetailActivity extends AppCompatActivity {
                 setResult(0, result);
 
                 finish();
+                return true;
+            case R.id.action_invite_user:
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -188,72 +240,47 @@ public class TeamDetailActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }});
 
+            if (user.getUsername().equals(team.getOwner())) {
+
+                builder.setPositiveButton("Transfer Ownership", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final AlertDialog.Builder confirmDialog = new AlertDialog.Builder(TeamDetailActivity.this);
+
+                        confirmDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        confirmDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                team.setOwner(member);
+                                TeamManager.updateTeam(team, new BooleanResultListener() {
+                                    @Override
+                                    public void onResult(boolean result) {
+
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+
+                        confirmDialog.setTitle("Confirm Transfer")
+                                .setMessage("Are you sure you want to transfer ownership to " + member + "?")
+                                .show();
+
+                    }
+                });
+            }
+
             builder.setTitle("Team Member")
                    .setMessage("\nUsername: " + member)
                    .show();
         }
     }
-
-    /**
-     * Configures the transfer ownership button
-     */
-    private void setupTransferOwnershipButton() {
-//        final Button transferOwnershipButton = findViewById(R.id.transferOwnerButton);
-//
-//        transferOwnershipButton.setOnClickListener(new View.OnClickListener() {
-//            /**
-//             * Set the components on this activity to editable if not currently editing, otherwise
-//             * update the database with the new information and return to the previous activity
-//             *
-//             * @param v View that received the click event
-//             */
-//            @Override
-//            public void onClick(View v) {
-//                final Team teamToUpdate = user.getUserTeams().get(user.getUserTeams().indexOf(team));
-//
-//                AccountManager.transferOwnership(team, ((EditText) findViewById(R.id.teamOwner)).getText().toString(), new BooleanResultListener() {
-//                    @Override
-//                    public void onResult(boolean result) {
-//                        if (result) {
-//                            teamToUpdate.setOwner(((EditText) findViewById(R.id.teamOwner)).getText().toString());
-//                            AccountManager.updateUser(user);
-//
-//                            ((Button) findViewById(R.id.editTeamButton)).setVisibility(View.INVISIBLE);
-//                            ((Button) findViewById(R.id.transferOwnerButton)).setVisibility(View.INVISIBLE);
-//                            ((TextView) findViewById(R.id.lblMessage)).setText(R.string.ownershipTransferred);
-//
-//                        } else {
-//                            ((TextView) findViewById(R.id.lblMessage)).setText(R.string.ownershipTransferredFailed);
-//                        }
-//                    }
-//                });
-//            }
-//        });
-    }
-
-//    private void setupInviteUser(){
-//        final Button inviteUserButton = findViewById(R.id.inviteUserButton);
-//
-//        inviteUserButton.setOnClickListener(new View.OnClickListener() {
-//              @Override
-//              public void onClick(View v) {
-//                  if (inviteUserButton.getText().toString().equals(getString(R.string.inviteUser))) {
-//                      findViewById(R.id.inviteUsername).setVisibility(View.VISIBLE);
-//                      findViewById(R.id.inviteUsername).setEnabled(true);
-//                      inviteUserButton.setText(R.string.sendInvite);
-//                  }
-//                  else {
-//                      findViewById(R.id.inviteUsername).setVisibility(View.GONE);
-//                      findViewById(R.id.inviteUsername).setEnabled(false);
-//                      String inviteUser = ((TextView) findViewById(R.id.inviteUsername)).getText().toString();
-//                      inviteUserButton.setText(R.string.inviteUser);
-//                      //Write some firebase stuff.
-//                      TeamManager.inviteUser(inviteUser,team);
-//                      ((TextView)findViewById(R.id.lblMessage)).setText("Invitation sent!");
-//                  }
-//              }
-//        });
-//    }
 
     /**
      * Populates the views on this activity with relevant information
@@ -316,6 +343,9 @@ public class TeamDetailActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Handle back button presses
+     */
     @Override
     public void onBackPressed() {
         Intent result = new Intent();

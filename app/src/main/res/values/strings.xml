@@ -88,4 +88,5 @@
     <string name="team_members">Team Members</string>
     <string name="name">Name</string>
     <string name="last_online">last online:</string>
+    <string name="search_for_team_members_hint">Search other users</string>
 </resources>

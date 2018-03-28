@@ -11,12 +11,7 @@
     <item android:id="@+id/action_invite_user"
         android:title="@string/action_invite_user"
         app:showAsAction="collapseActionView"
-        app:actionViewClass="android.widget.SearchView"/>
-
-    <!-- Transfer ownership of team -->
-    <item android:id="@+id/action_transfer_ownership"
-        android:title="@string/action_transfer_ownership"
-        app:showAsAction="never"/>
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 
     <!-- Quit team -->
     <item android:id="@+id/action_quit_team"
