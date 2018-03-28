@@ -14,9 +14,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,8 +33,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -56,6 +63,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private User user;
     private boolean isRecording = false;
     private boolean isPaused = false;
+
+    private boolean isPublishing = false;
+
     private ArrayList<Location> locationList = new ArrayList<>();
     private Polyline currentRoute = null;
     private GoogleMap mMap;
@@ -70,6 +80,11 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
             Location location = locationResult.getLastLocation();
             LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+
+            if(isPublishing){
+                UserLocation userlocation = new UserLocation(location.getTime(),user.getUsername(), 7, location.getLatitude(), location.getLongitude());
+                updateLocationData(userlocation);
+            }
 
             if (isRecording && !isPaused) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
@@ -161,6 +176,18 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
+
+
+        Switch toggle = (Switch) findViewById(R.id.toggle_report);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isPublishing = true;
+                } else {
+                    isPublishing = false;
+                }
+            }
+        });
     }
 
     private void requestLocPermissions() {
@@ -286,6 +313,31 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
+
+    private static void updateLocationData(final UserLocation userLocation){
+        final String username = userLocation.getUserLocationName();
+        final FirebaseDatabase db = FirebaseDatabase.getInstance();
+        final DatabaseReference userLocationRef
+                = db.getReference("user_locations" );
+
+        userLocationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChild(username)) {
+                    userLocationRef.child(username).setValue(username);
+                }
+
+                DatabaseReference userLocatReference = db.getReference("user_locations/" + username);
+                userLocatReference.setValue(userLocation);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private static void saveToFirebase(String dbRef, long time, List<Location> locationList) {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference myRef
@@ -297,16 +349,16 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private boolean checkForLocPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return false;
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+            else
+                return true;
         }
-        else
-            return true;
-    }
 
-    private void requestLocationUpdates() {
-        try {
+        private void requestLocationUpdates() {
+            try {
             locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
         } catch (SecurityException e) {
             e.printStackTrace();

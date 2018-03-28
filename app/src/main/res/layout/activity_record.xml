@@ -65,7 +65,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:text="Switch"
+        android:checked="false"
+        android:text="Publish Location"
         app:layout_constraintBottom_toTopOf="@+id/layout_record_navigation"
         app:layout_constraintStart_toStartOf="parent" />
 
