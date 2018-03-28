@@ -131,4 +131,22 @@ public class RecordActivityUnitTests {
         assertTrue(recordActivityTestRule.getActivity().getIsRecording());
     }
 
+    /**
+     * Test if the toggle changes
+     */
+    @Test
+    public void toggleChange() {
+        boolean current = onView(withId(R.id.toggle_report).isChecked());
+        onView(withId(R.id.toggle_report)).perform(click());
+        assertNotEquals(current,onView(withId(R.id.toggle_report).isChecked()));
+    }
+
+    /**
+     * Test if the data are published on firebase.
+     */
+    @Test
+    public void publishReport(){
+        onView(withId(R.id.toggle_report)).perform(click());
+        //Check if firebase has our location.
+    }
 }
