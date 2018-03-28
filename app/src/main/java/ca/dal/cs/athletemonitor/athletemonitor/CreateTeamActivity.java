@@ -60,15 +60,11 @@ public class CreateTeamActivity extends AppCompatActivity {
 
                 TeamManager.newTeam(newTeam);
 
-                // Add Team to user
-                //user.addUserTeam(newTeam);
-                //    AccountManager.updateUser(user);
-
-                    // Switch back to exercise activity
-                    Intent intent = new Intent(CreateTeamActivity.this, TeamActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
-               // }
+                //TODO: startActivityForResult
+                // Switch back to exercise activity
+                Intent intent = new Intent(CreateTeamActivity.this, TeamActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
             }
         });
 
