@@ -7,7 +7,7 @@
     tools:context="ca.dal.cs.athletemonitor.athletemonitor.CreateTeamActivity">
 
     <TextView
-        android:id="@+id/teamName"
+        android:id="@+id/memberName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -30,7 +30,7 @@
         android:textSize="18dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/teamName" />
+        app:layout_constraintTop_toBottomOf="@+id/memberName" />
 
     <TextView
         android:id="@+id/onlineTime"

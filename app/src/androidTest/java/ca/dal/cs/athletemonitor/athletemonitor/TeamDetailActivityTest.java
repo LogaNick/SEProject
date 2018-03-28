@@ -123,10 +123,10 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void testisEditable() throws Exception {
-        onView(withId(R.id.editTeamButton)).perform(click());
-        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.submitChanges)));
-        onView(withId(R.id.teamName)).check(matches(isEnabled()));
-        onView(withId(R.id.teamMotto)).check(matches(isEnabled()));
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_edit_team)).perform(click());
+        onView(withId(R.id.teamName)).check(matches(isFocusable()));
+        onView(withId(R.id.teamMotto)).check(matches(isFocusable()));
     }
 
     /**
