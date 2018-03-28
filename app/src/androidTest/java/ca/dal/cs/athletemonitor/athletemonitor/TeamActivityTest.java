@@ -146,7 +146,8 @@ public class TeamActivityTest {
     @Test
     public void teamOwnerCannotQuitTeamTest() throws Exception {
         onView(withText(testTeam.getName())).perform(click());
-        onView(not(withText("Quit Team")));
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(not(withText(R.string.action_quit_team)));
     }
 
     /**
