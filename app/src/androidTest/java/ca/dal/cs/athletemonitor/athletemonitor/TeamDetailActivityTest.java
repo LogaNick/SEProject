@@ -135,32 +135,16 @@ public class TeamDetailActivityTest {
      *
      * @throws Exception Generic exception
      */
-    //@Ignore
     @Test
-    public void z_testUpdatedInfo() throws Exception {
-        onView(withId(R.id.editTeamButton)).perform(click());
+    public void testUpdatedInfo() throws Exception {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_edit_team)).perform(click());
         onView(withId(R.id.teamName)).perform(clearText(), typeText("UpdatedTeamName"), closeSoftKeyboard());
         onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
-        onView(withId(R.id.editTeamButton)).perform(click());
+        onView(withId(R.id.saveInfo)).perform(click());
         onView(allOf(withText("UpdatedTeamName")));
-        sleep(500);
+        onView(withId(R.id.teamName)).check(matches(not(isFocusable())));
+        onView(withId(R.id.teamMotto)).check(matches(not(isFocusable())));
     }
 }
 
-/**
- * Custom adapted from Cory Roy @ https://stackoverflow.com/a/30361345/3169479
- *
- */
-class Matchers {
-    public static Matcher<View> withListSize (final int size) {
-        return new TypeSafeMatcher<View>() {
-            @Override public boolean matchesSafely (final View view) {
-                return ((LinearLayout) view).getChildCount() == size;
-            }
-
-            @Override public void describeTo (final Description description) {
-                description.appendText ("Expected " + size + " items");
-            }
-        };
-    }
-}
