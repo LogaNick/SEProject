@@ -15,7 +15,7 @@
 
     <!-- Quit team -->
     <item android:id="@+id/action_quit_team"
-        android:title="Quit team"
+        android:title="@string/action_quit_team"
         app:showAsAction="never"/>
 
 
