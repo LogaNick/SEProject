@@ -26,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -185,5 +186,50 @@ public class TeamActivityTest {
 
         AccountManager.deleteUser(testUser, null);
         //TODO: clean up test teams
+    }
+
+    /**
+     * Tests requesting to join team functionality
+     *
+     * @throws Exception
+     */
+    @Test
+    public void requestToJoinTeamTest() throws Exception {
+        assertTrue(false);
+        //create test account to make request to
+        //click join team
+        //enter search information
+        //click the search result
+        //choose close, then choose apply, then choose no, then choose yes
+        //search result should return to team activity
+    }
+
+    /**
+     * Tests that accepting a request from a user to join a team succeeds
+     *
+     * @throws Exception
+     */
+    @Test
+    public void acceptRequestToJoinTeamTest() throws Exception {
+        assertTrue(false);
+        //mock up an invitation
+
+        // receive the request
+        // accept the request and verify member is on team list
+    }
+
+    /**
+     * Tests that declining a request to join a team succeeds
+     *
+     * @throws Exception
+     */
+    @Test
+    public void declineRequestToJoinTeamTest() throws Exception {
+        assertTrue(false);
+
+        // mock up aninvitation
+
+        // receive the request
+        // decline the request and verify member is not on team list
     }
 }
