@@ -17,12 +17,15 @@ import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
@@ -195,13 +198,20 @@ public class TeamActivityTest {
      */
     @Test
     public void requestToJoinTeamTest() throws Exception {
-        assertTrue(false);
-        //create test account to make request to
-        //click join team
-        //enter search information
-        //click the search result
-        //choose close, then choose apply, then choose no, then choose yes
-        //search result should return to team activity
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_join_team)).perform(click());
+
+        onView(withResourceName("search_src_text")).perform(
+                typeText(testTeam.getName()), pressImeActionButton());
+
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withText("Close")).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withText("Apply")).perform(click());
+        onView(withText("No")).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withText("Apply")).perform(click());
+        onView(withText("Yes")).perform(click());
     }
 
     /**

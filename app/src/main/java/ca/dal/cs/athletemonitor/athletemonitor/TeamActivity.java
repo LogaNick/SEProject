@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -66,11 +66,32 @@ public class TeamActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_team, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_join_team);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        final MenuItem searchItem = menu.findItem(R.id.action_join_team);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setSearchableInfo(((SearchManager)getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getComponentName()));
         searchView.onActionViewExpanded();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @SuppressWarnings("RestrictedApi")
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Bundle appData = new Bundle();
+                appData.putSerializable("user", user);
+                searchView.setAppSearchData(appData);
+                //Intent searchIntent = new Intent(TeamActivity.this, SearchResultsActivity.class);
+                //searchIntent.putExtra(SearchManager.QUERY, query);
 
+                //startActivity(searchIntent, appData);
+
+                //startSearch(null, false, appData, false);
+                return false;
+                //return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 

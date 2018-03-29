@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
@@ -278,5 +279,27 @@ public abstract class TeamManager {
 
     }
 
+    /**
+     * Creates a request to join a team
+     *
+     * @param team Team to be joined
+     * @param user User requesting to join the team
+     */
+    public static void requestToJoinTeam(final Team team, final User user){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference joinRequestsReference = database.getReference("join_requests/" + team.getId());
+        //attempt to write the data
 
+        joinRequestsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                joinRequestsReference.child(user.getUsername()).setValue(System.currentTimeMillis());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
