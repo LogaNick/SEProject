@@ -7,8 +7,12 @@ import java.util.List;
 /**
  * The Team class contains data for a team
  */
-
 public class Team implements Serializable {
+    /**
+     * Unique identifier for the team
+     */
+    private String id;
+
     /**
      * Team name
      */
@@ -28,6 +32,7 @@ public class Team implements Serializable {
      * User that belong to the team
      */
     private List<String> teamMembers = new ArrayList<String>();
+
     /**
      * No args constructor used primarily for database based initialization of exercise objects
      */
@@ -44,27 +49,43 @@ public class Team implements Serializable {
         if (!(Team.validateAll(name, motto))) {
             throw new IllegalArgumentException("Invalid Exercise parameters");
         }
-
+        this.id = id;
         this.name = name;
         this.motto = motto;
         this.owner = owner;
-        this.addTeamMembers(owner);
+        this.addTeamMember(owner);
     }
+
+    /**
+     * Sets team identifier
+     *
+     * @param id
+     */
+    public void setId(String id) { this.id = id;}
+
+    /**
+     * Retrieves the team identifier
+     * @return
+     */
+    public String getId() { return this.id; }
+
     /**
      * Retrieve the teamMenbers
      * @return teamMembers
      */
     public List<String> getTeamMembers(){return teamMembers;}
+
     /**
      * Add a member.
      * @return void
      */
-    public void addTeamMembers(String username){this.teamMembers.add(username);}
+    public void addTeamMember(String username){this.teamMembers.add(username);}
+
     /**
      * Remove a team member.
      * @return void
      */
-    public void removeTeamMembers(String username){this.teamMembers.remove(username);}
+    public void removeTeamMember(String username){this.teamMembers.remove(username);}
 
     /**
      * Retrieve name of team

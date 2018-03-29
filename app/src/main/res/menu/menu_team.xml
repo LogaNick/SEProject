@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Join a team -->
+    <item android:id="@+id/action_join_team"
+        android:title="@string/action_join_team"
+        app:showAsAction = "collapseActionView"
+        app:actionViewClass="android.widget.SearchView"/>
+
+    <!-- Create a team -->
+    <item android:id="@+id/action_create_team"
+        android:title="@string/action_create_team"
+        app:showAsAction="never"/>
+
+</menu>

@@ -12,11 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ExerciseActivity"
@@ -24,9 +20,17 @@
         <activity
             android:name=".CreateExerciseActivity"
             android:label="New Exercise" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".CreateTeamActivity"
+            android:theme="@style/AppTheme.Dialog"
             android:label="New Team" />
         <activity
             android:name=".UserInformationActivity"
@@ -59,9 +63,29 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".RecordActivity" />
-	      <activity android:name=".TeamActivity" />
-        <activity android:name=".CreateWorkoutActivity" />
-        <activity android:name=".TeamDetailActivity" />
-    </application>
+        <activity
+            android:name=".TeamActivity"
+            android:theme="@style/AppTheme.NoActionBar">
 
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchResultsActivity" />
+        </activity>
+        <activity android:name=".CreateWorkoutActivity" />
+
+
+        <activity android:name=".TeamDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:excludeFromRecents="true"/>
+
+        <!-- Generic search result activity for handling various types of searching. -->
+        <activity
+            android:name=".SearchResultsActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/AppTheme.Dialog">
+
+            <intent-filter><action android:name="android.intent.action.SEARCH" /></intent-filter>
+
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+        </activity>
+    </application>
 </manifest>

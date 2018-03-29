@@ -2,44 +2,33 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import ca.dal.cs.athletemonitor.athletemonitor.AccountManager;
-import ca.dal.cs.athletemonitor.athletemonitor.CreateTeamActivity;
-import ca.dal.cs.athletemonitor.athletemonitor.R;
-import ca.dal.cs.athletemonitor.athletemonitor.User;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
-
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
+import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.v4.content.res.TypedArrayUtils.getString;
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.not;
 
@@ -52,6 +41,11 @@ public class TeamDetailActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Test team for this test set
+     */
+    private static Team testTeam;
 
     /**
      * Intent used to launch the activity
@@ -89,11 +83,15 @@ public class TeamDetailActivityTest {
      */
     @Before
     public void launchActivity() throws Exception {
+        testUser = TestingHelper.createTestUser();
+        testTeam = TestingHelper.createTestTeam(testUser.getUsername());
+
+        TeamManager.newTeam(testTeam);
+        TestingHelper.setupTestEnvironment(intent, testUser);
         sleep(250);
         mActivityRule.launchActivity(intent);
-        testUser = (User) mActivityRule.getActivity().getIntent().getSerializableExtra("user");
-        onView(withParent(withId(R.id.teamLinearLayout))).perform(click());
-        onView(allOf(withText("More"))).perform(click());
+
+        onView(withParent(withId(R.id.teamList))).perform(click());
     }
 
     /**
@@ -103,13 +101,11 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void testProperFieldsExist() throws Exception {
-        //Try to get the fields and button.
-        onView(withId(R.id.editTeamButton));
+        onView(withId(R.id.toolbar));
         onView(withId(R.id.teamName));
         onView(withId(R.id.teamMotto));
-        onView(withId(R.id.transferOwnerButton));
-        onView(withId(R.id.inviteUserButton));
-        onView(withId(R.id.inviteUsername));
+        onView(withId(R.id.memberList));
+        onView(withId(R.id.separatorBar));
     }
 
     /**
@@ -119,9 +115,8 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void testNotEditable() throws Exception {
-        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.editTeam)));
-        onView(withId(R.id.teamName)).check(matches(not(isEnabled())));
-        onView(withId(R.id.teamMotto)).check(matches(not(isEnabled())));
+        onView(allOf(withParent(withId(R.id.mainLayout)), withId(R.id.teamName))).check(matches(not(isFocusable())));
+        onView(withId(R.id.teamMotto)).check(matches(not(isFocusable())));
     }
 
     /**
@@ -131,10 +126,10 @@ public class TeamDetailActivityTest {
      */
     @Test
     public void testisEditable() throws Exception {
-        onView(withId(R.id.editTeamButton)).perform(click());
-        onView(withId(R.id.editTeamButton)).check(matches(withText(R.string.submitChanges)));
-        onView(withId(R.id.teamName)).check(matches(isEnabled()));
-        onView(withId(R.id.teamMotto)).check(matches(isEnabled()));
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_edit_team)).perform(click());
+        onView(withId(R.id.teamName)).check(matches(isFocusable()));
+        onView(withId(R.id.teamMotto)).check(matches(isFocusable()));
     }
 
     /**
@@ -143,32 +138,76 @@ public class TeamDetailActivityTest {
      *
      * @throws Exception Generic exception
      */
-    //@Ignore
     @Test
-    public void z_testUpdatedInfo() throws Exception {
-        onView(withId(R.id.editTeamButton)).perform(click());
+    public void testUpdatedInfo() throws Exception {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_edit_team)).perform(click());
         onView(withId(R.id.teamName)).perform(clearText(), typeText("UpdatedTeamName"), closeSoftKeyboard());
         onView(withId(R.id.teamMotto)).perform(clearText(), typeText("UpdatedTeamMotto"), closeSoftKeyboard());
-        onView(withId(R.id.editTeamButton)).perform(click());
+        onView(withId(R.id.saveInfo)).perform(click());
         onView(allOf(withText("UpdatedTeamName")));
-        sleep(500);
+        onView(withId(R.id.teamName)).check(matches(not(isFocusable())));
+        onView(withId(R.id.teamMotto)).check(matches(not(isFocusable())));
+    }
+
+    /**
+     * Tests that a team owner can invite another user to a team
+     *
+     * @throws Exception
+     */
+    @Test
+    public void inviteTeamMemberTest() throws Exception {
+        User userToInvite = TestingHelper.createTestUser();
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_invite_user)).perform(click());
+        onView(withResourceName("search_src_text")).perform(
+                typeText(userToInvite.getUsername()), pressImeActionButton());
+
+        onView(withText("No")).perform(click());
+        onView(withResourceName("search_src_text")).check(matches(withText(userToInvite.getUsername())));
+
+        onView(withResourceName("search_src_text")).perform(pressImeActionButton());
+
+        onView(withText("Yes")).perform(click());
+    }
+
+    /**
+     * Tests that a member is added to a team when the user accepts an invitation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamInviteAcceptTest() throws Exception {
+        //mock up a test team and invitation
+        Team teamToJoinOn = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
+        TeamManager.newTeam(teamToJoinOn);
+        TeamManager.inviteUser(testUser.getUsername(), teamToJoinOn);
+        sleep(250);
+        pressBack();
+
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Accept"))).perform(click());
+        onView(allOf(withParent(withId(R.id.teamList)), withText(teamToJoinOn.getName())));
+    }
+
+    /**
+     * Tests that a member is not added to a team when the user declines an invitation
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamInviteDeclineTest() throws Exception {
+        //mock up a test team and invitation
+        Team teamToJoinOn = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
+        TeamManager.newTeam(teamToJoinOn);
+        TeamManager.inviteUser(testUser.getUsername(), teamToJoinOn);
+        sleep(250);
+        pressBack();
+
+        onView(allOf(withText("You have an invitation!")));
+        onView(allOf(withText("Decline"))).perform(click());
+        onView(not(allOf(withParent(withId(R.id.teamList)), withText(teamToJoinOn.getName()))));
     }
 }
 
-/**
- * Custom adapted from Cory Roy @ https://stackoverflow.com/a/30361345/3169479
- *
- */
-class Matchers {
-    public static Matcher<View> withListSize (final int size) {
-        return new TypeSafeMatcher<View>() {
-            @Override public boolean matchesSafely (final View view) {
-                return ((LinearLayout) view).getChildCount() == size;
-            }
-
-            @Override public void describeTo (final Description description) {
-                description.appendText ("Expected " + size + " items");
-            }
-        };
-    }
-}

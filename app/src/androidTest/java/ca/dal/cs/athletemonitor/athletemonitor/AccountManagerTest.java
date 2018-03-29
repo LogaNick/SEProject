@@ -446,26 +446,4 @@ public class AccountManagerTest {
         sleep(1000);
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
-
-    /**
-     * Tests that transferring ownership fails when user does not exist
-     *
-     * @throws Exception
-     */
-    @Test
-    public void transferOwnershipTestFailure() throws Exception {
-        final User testUser = TestingHelper.createTestUser();
-
-        // create test accounts
-        AccountManager.createUser(testUser);
-        // authenticate test user
-        AccountManager.authenticate(testUser, TestingHelper.assertTrueBooleanResult());
-        sleep(300); // wait for authentication to finish before proceeding
-        //transfer ownership
-        AccountManager.transferOwnership(testUser.getUserTeams().get(0),
-                "non_existing_user", TestingHelper.assertFalseBooleanResult());
-
-        //clean up test accounts
-        AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
-    }
 }
