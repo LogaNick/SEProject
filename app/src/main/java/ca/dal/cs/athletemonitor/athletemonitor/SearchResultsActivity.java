@@ -41,7 +41,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
         setWindowSize(0.9, 0.6);
-        //this.setFinishOnTouchOutside(false);
+        this.setFinishOnTouchOutside(false);
         handleIntent(getIntent());
     }
 
