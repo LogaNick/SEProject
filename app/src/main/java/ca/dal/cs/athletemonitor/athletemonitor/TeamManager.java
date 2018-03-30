@@ -7,7 +7,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
@@ -23,6 +22,10 @@ public abstract class TeamManager {
      */
     public interface TeamListListener {
         void onInvitationsPopulated(ArrayList<Team> invitations);
+    }
+
+    public interface JoinRequestListener {
+        void onRequestsPopulated(ArrayList<String> requests);
     }
 
     /**
@@ -294,6 +297,104 @@ public abstract class TeamManager {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 joinRequestsReference.child(user.getUsername()).setValue(System.currentTimeMillis());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Retrieves a list of join requests for the specified team.  Returns a list of usernames
+     * of users requesting to join the team through the callback.  If no requests exist then the
+     * returned list is empty.
+     *
+     * @param team Team to lookup
+     * @param listener Callback to receive list of requests if they exist
+     */
+    public static void getJoinRequests(Team team, final JoinRequestListener listener) {
+        final ArrayList<String> joinRequests = new ArrayList<>();
+
+        // retrieve database reference
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference teamsReference = database.getReference("join_requests/" + team.getId());
+
+        teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // return an empty list if no records found
+                if (dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> invitations = dataSnapshot.getChildren();
+
+                    for (DataSnapshot invitation : invitations) {
+                        joinRequests.add(invitation.getKey());
+                    }
+                }
+
+                listener.onRequestsPopulated(joinRequests);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Updates team membership based on whether the owner accepted or declined a request to join
+     *
+     * @param team Team associated with the join request
+     * @param requester Username of the user requesting to join
+     * @param accepted Whether or not the user accepted or declined.  True if accepted, otherwise false
+     */
+    public static void handleRequestToJoin(final Team team, final String requester, final boolean accepted) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference teamReference = database.getReference("teams/" + team.getId());
+
+        teamReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                database.getReference("users/" + requester).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            User requestingUser = dataSnapshot.getValue(User.class);
+
+                            if (accepted) {
+                                TeamManager.addMemberToTeam(team, requestingUser);
+                            }
+
+                            // retrieve database reference to the teams
+                            final DatabaseReference joinRequests = database.getReference("join_requests/" + team.getId());
+
+                            joinRequests.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Iterable<DataSnapshot> requests = dataSnapshot.getChildren();
+
+                                    for (DataSnapshot request : requests) {
+                                        if (request.getKey().equals(requester)) {
+                                            joinRequests.child(request.getKey()).removeValue();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override

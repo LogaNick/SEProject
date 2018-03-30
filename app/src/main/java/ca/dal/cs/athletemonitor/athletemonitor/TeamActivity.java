@@ -164,6 +164,46 @@ public class TeamActivity extends AppCompatActivity {
     }
 
     /**
+     * Manages team join requests
+     */
+    private void handleJoinRequests(final Team team) {
+        TeamManager.getJoinRequests(team, new TeamManager.JoinRequestListener() {
+            @Override
+            public void onRequestsPopulated(ArrayList<String> requests) {
+                for (int i = 0; i < requests.size(); i++) {
+                    final String requester = requests.get(i);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
+
+                    builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            TeamManager.handleRequestToJoin(team, requester, false);
+                            dialog.dismiss();
+                        }})
+                            .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    TeamManager.handleRequestToJoin(team, requester, true);
+                                    dialog.dismiss();
+                                }})
+                            .setTitle("Join Request!")
+                            .setMessage("\nTeam: " + team.getName() + "\nRequesting user: " + requester)
+                            .show();
+                }
+            }
+        });
+
+
+        TeamManager.getTeamInvites(user, new TeamManager.TeamListListener() {
+            @Override
+            public void onInvitationsPopulated(ArrayList<Team> invitations) {
+
+            }
+        });
+    }
+
+    /**
      * Handles updating the activity when activated as a result of starting a child activity
      *
      * @param requestCode
@@ -198,6 +238,10 @@ public class TeamActivity extends AppCompatActivity {
                 if (dataSnapshot.getValue(Team.class).getTeamMembers().contains(user.getUsername())) {
                     if (teamAdapter.getPosition(dataSnapshot.getValue(Team.class)) == -1)
                         teamAdapter.add(dataSnapshot.getValue(Team.class));
+                }
+
+                if (dataSnapshot.getValue(Team.class).getOwner().equals(user.getUsername())) {
+                    TeamActivity.this.handleJoinRequests(dataSnapshot.getValue(Team.class));
                 }
             }
 
