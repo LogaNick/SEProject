@@ -1,6 +1,5 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -66,11 +65,32 @@ public class TeamActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_team, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_join_team);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        final MenuItem searchItem = menu.findItem(R.id.action_join_team);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setSearchableInfo(((SearchManager)getSystemService(Context.SEARCH_SERVICE)).getSearchableInfo(getComponentName()));
         searchView.onActionViewExpanded();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @SuppressWarnings("RestrictedApi")
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Bundle appData = new Bundle();
+                appData.putSerializable("user", user);
+                searchView.setAppSearchData(appData);
+                //Intent searchIntent = new Intent(TeamActivity.this, SearchResultsActivity.class);
+                //searchIntent.putExtra(SearchManager.QUERY, query);
 
+                //startActivity(searchIntent, appData);
+
+                //startSearch(null, false, appData, false);
+                return false;
+                //return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 
@@ -111,7 +131,7 @@ public class TeamActivity extends AppCompatActivity {
      * Manages team invitations
      */
     private void handleTeamInvitations() {
-        TeamManager.getTeamInvites(user, new TeamManager.TeamInvitationListener() {
+        TeamManager.getTeamInvites(user, new TeamManager.TeamListListener() {
             @Override
             public void onInvitationsPopulated(ArrayList<Team> invitations) {
                 for (int i = 0; i < invitations.size(); i++) {
@@ -139,6 +159,46 @@ public class TeamActivity extends AppCompatActivity {
                             .setMessage("\nTeam: " + team.getName() + "\nOwner: " + team.getOwner())
                             .show();
                 }
+            }
+        });
+    }
+
+    /**
+     * Manages team join requests
+     */
+    private void handleJoinRequests(final Team team) {
+        TeamManager.getJoinRequests(team, new TeamManager.JoinRequestListener() {
+            @Override
+            public void onRequestsPopulated(ArrayList<String> requests) {
+                for (int i = 0; i < requests.size(); i++) {
+                    final String requester = requests.get(i);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TeamActivity.this);
+
+                    builder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            TeamManager.handleRequestToJoin(team, requester, false);
+                            dialog.dismiss();
+                        }})
+                            .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    TeamManager.handleRequestToJoin(team, requester, true);
+                                    dialog.dismiss();
+                                }})
+                            .setTitle("Join Request!")
+                            .setMessage("\nTeam: " + team.getName() + "\nRequesting user: " + requester)
+                            .show();
+                }
+            }
+        });
+
+
+        TeamManager.getTeamInvites(user, new TeamManager.TeamListListener() {
+            @Override
+            public void onInvitationsPopulated(ArrayList<Team> invitations) {
+
             }
         });
     }
@@ -178,6 +238,10 @@ public class TeamActivity extends AppCompatActivity {
                 if (dataSnapshot.getValue(Team.class).getTeamMembers().contains(user.getUsername())) {
                     if (teamAdapter.getPosition(dataSnapshot.getValue(Team.class)) == -1)
                         teamAdapter.add(dataSnapshot.getValue(Team.class));
+                }
+
+                if (dataSnapshot.getValue(Team.class).getOwner().equals(user.getUsername())) {
+                    TeamActivity.this.handleJoinRequests(dataSnapshot.getValue(Team.class));
                 }
             }
 

@@ -81,7 +81,8 @@
         <activity
             android:name=".SearchResultsActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/AppTheme.Dialog">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop">
 
             <intent-filter><action android:name="android.intent.action.SEARCH" /></intent-filter>
 

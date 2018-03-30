@@ -90,4 +90,5 @@
     <string name="last_online">last online:</string>
     <string name="search_for_team_members_hint">Search other users</string>
     <string name="action_quit_team">Quit team</string>
+    <string name="search_results">Search Results</string>
 </resources>

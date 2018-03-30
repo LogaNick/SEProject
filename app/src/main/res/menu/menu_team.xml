@@ -5,7 +5,7 @@
     <item android:id="@+id/action_join_team"
         android:title="@string/action_join_team"
         app:showAsAction = "collapseActionView"
-        app:actionViewClass="android.widget.SearchView"/>
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 
     <!-- Create a team -->
     <item android:id="@+id/action_create_team"
