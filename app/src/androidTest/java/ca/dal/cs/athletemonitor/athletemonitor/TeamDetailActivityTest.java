@@ -14,6 +14,7 @@ import org.junit.runners.MethodSorters;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -23,6 +24,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isFocusable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
@@ -30,6 +32,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withResourceNam
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 /**
@@ -208,6 +213,46 @@ public class TeamDetailActivityTest {
         onView(allOf(withText("You have an invitation!")));
         onView(allOf(withText("Decline"))).perform(click());
         onView(not(allOf(withParent(withId(R.id.teamList)), withText(teamToJoinOn.getName()))));
+    }
+
+    /**
+     * Tests that accepting a request from a user to join a team succeeds
+     *
+     * @throws Exception
+     */
+    @Test
+    public void acceptRequestToJoinTeamTest() throws Exception {
+        //mock up an invitation
+        User requestingUser = TestingHelper.createTestUser();
+        AccountManager.createUser(requestingUser);
+        TeamManager.requestToJoinTeam(testTeam, requestingUser);
+        sleep(250);
+        pressBack();
+
+        onView(allOf(withText("There is a request to join your team!")));
+        onView(allOf(withText("Accept"))).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withId(R.id.memberList)).check(matches(hasDescendant(withText(requestingUser.getUsername()))));
+    }
+
+    /**
+     * Tests that declining a request to join a team succeeds
+     *
+     * @throws Exception
+     */
+    @Test
+    public void declineRequestToJoinTeamTest() throws Exception {
+        //mock up an invitation
+        User requestingUser = TestingHelper.createTestUser();
+        AccountManager.createUser(requestingUser);
+        TeamManager.requestToJoinTeam(testTeam, requestingUser);
+        sleep(250);
+        pressBack();
+
+        onView(allOf(withText("There is a request to join your team!")));
+        onView(allOf(withText("Decline"))).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withId(R.id.memberList)).check(matches(not(hasDescendant(withText(requestingUser.getUsername())))));
     }
 }
 

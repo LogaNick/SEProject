@@ -213,43 +213,4 @@ public class TeamActivityTest {
         onView(withText("Apply")).perform(click());
         onView(withText("Yes")).perform(click());
     }
-
-    /**
-     * Tests that accepting a request from a user to join a team succeeds
-     *
-     * @throws Exception
-     */
-    @Test
-    public void acceptRequestToJoinTeamTest() throws Exception {
-        //mock up an invitation
-        User requestingUser = TestingHelper.createTestUser();
-        AccountManager.createUser(requestingUser);
-        TeamManager.requestToJoinTeam(testTeam, requestingUser);
-        sleep(250);
-
-        onView(allOf(withText("There is a request to join your team!")));
-        onView(allOf(withText("Accept"))).perform(click());
-        onView(withText(testTeam.getName())).perform(click());
-        onView(withText(requestingUser.getUsername()));
-    }
-
-    /**
-     * Tests that declining a request to join a team succeeds
-     *
-     * @throws Exception
-     */
-    @Test
-    public void declineRequestToJoinTeamTest() throws Exception {
-        //mock up an invitation
-        User requestingUser = TestingHelper.createTestUser();
-        AccountManager.createUser(requestingUser);
-        TeamManager.requestToJoinTeam(testTeam, requestingUser);
-        sleep(250);
-
-        onView(allOf(withText("There is a request to join your team!")));
-        onView(allOf(withText("Accept"))).perform(click());
-        onView(withText(testTeam.getName())).perform(click());
-        onView(not(withText(requestingUser.getUsername())));
-
-    }
 }
