@@ -221,11 +221,16 @@ public class TeamActivityTest {
      */
     @Test
     public void acceptRequestToJoinTeamTest() throws Exception {
-        assertTrue(false);
         //mock up an invitation
+        User requestingUser = TestingHelper.createTestUser();
+        AccountManager.createUser(requestingUser);
+        TeamManager.requestToJoinTeam(testTeam, requestingUser);
+        sleep(250);
 
-        // receive the request
-        // accept the request and verify member is on team list
+        onView(allOf(withText("There is a request to join your team!")));
+        onView(allOf(withText("Accept"))).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withText(requestingUser.getUsername()));
     }
 
     /**
@@ -235,11 +240,16 @@ public class TeamActivityTest {
      */
     @Test
     public void declineRequestToJoinTeamTest() throws Exception {
-        assertTrue(false);
+        //mock up an invitation
+        User requestingUser = TestingHelper.createTestUser();
+        AccountManager.createUser(requestingUser);
+        TeamManager.requestToJoinTeam(testTeam, requestingUser);
+        sleep(250);
 
-        // mock up aninvitation
+        onView(allOf(withText("There is a request to join your team!")));
+        onView(allOf(withText("Accept"))).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(not(withText(requestingUser.getUsername())));
 
-        // receive the request
-        // decline the request and verify member is not on team list
     }
 }
