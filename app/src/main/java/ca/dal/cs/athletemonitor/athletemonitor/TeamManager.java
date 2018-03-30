@@ -21,7 +21,7 @@ public abstract class TeamManager {
      *
      * Callers of userExists must implement this listener interface.
      */
-    public interface TeamInvitationListener {
+    public interface TeamListListener {
         void onInvitationsPopulated(ArrayList<Team> invitations);
     }
 
@@ -92,7 +92,7 @@ public abstract class TeamManager {
      * @param user User to check for team invitations
      * @param listener Callback to receive list of invitations
      */
-    public static void getTeamInvites(User user, final TeamInvitationListener listener) {
+    public static void getTeamInvites(User user, final TeamListListener listener) {
         final ArrayList<Team> teamInvitations = new ArrayList<>();
 
         // retrieve database reference to the teams

@@ -1,6 +1,5 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -132,7 +131,7 @@ public class TeamActivity extends AppCompatActivity {
      * Manages team invitations
      */
     private void handleTeamInvitations() {
-        TeamManager.getTeamInvites(user, new TeamManager.TeamInvitationListener() {
+        TeamManager.getTeamInvites(user, new TeamManager.TeamListListener() {
             @Override
             public void onInvitationsPopulated(ArrayList<Team> invitations) {
                 for (int i = 0; i < invitations.size(); i++) {
