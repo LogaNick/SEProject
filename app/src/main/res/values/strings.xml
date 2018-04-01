@@ -7,7 +7,7 @@
         <item>Hours</item>
     </string-array>
     <string name="ButtonText_SignIn">Sign In</string>
-    <string name="ButtonText_RegisterAccount">Register one here...</string>
+    <string name="ButtonText_RegisterAccount">Create New Account</string>
     <string name="TextView_NoAccount">Don\'t have an account?</string>
     <string name="TextView_WelcomeBack">We missed you, sign in below!</string>
     <string name="loginSuccess">Welcome back!</string>
@@ -91,4 +91,8 @@
     <string name="search_for_team_members_hint">Search other users</string>
     <string name="action_quit_team">Quit team</string>
     <string name="search_results">Search Results</string>
+    <string name="hint_login_enter_username">Enter username...</string>
+    <string name="hint_login_enter_password">Enter password...</string>
+    <string name="appName">AtheleteMonitor</string>
+    <string name="content_desc_dal_logo">Dalhousie University</string>
 </resources>
