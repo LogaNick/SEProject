@@ -1,51 +1,51 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import ca.dal.cs.athletemonitor.athletemonitor.AccountManagerTest;
 import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
-import android.accounts.Account;
-import android.app.Activity;
-import android.support.test.espresso.action.ViewActions;
+import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
 
-import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.not;
 
 /**
  * UI Test for Login Activity
  */
 
-public class LoginActivityUITest {
-    private String usernameInputTestText = "username";
-    private String passwordInputTestText = "password";
+public class LoginActivityTest {
+    /**
+     * Test user for this test set
+     */
+    private static User testUser;
 
    @Rule
-   public IntentsTestRule<LoginActivity> intentsTestRule = new IntentsTestRule<>(LoginActivity.class);
+   public IntentsTestRule<LoginActivity> loginTestRule = new IntentsTestRule<>(LoginActivity.class, false, false);
+
+    /**
+     * Initializes and starts the activity before each test is run
+     */
+    @Before
+    public void launchActivity() throws Exception {
+        testUser = TestingHelper.createTestUser();
+        loginTestRule.launchActivity(new Intent());
+    }
+
 
     /**
      * Test username with empty string
@@ -55,6 +55,7 @@ public class LoginActivityUITest {
     @Test
     public void usernameEmptyTest() throws Exception {
         onView(withId(R.id.txtUsername)).check(matches(withText("")));
+        onView(withId(R.id.btnSignIn)).check(matches(not(isEnabled())));
     }
 
     /**
@@ -64,9 +65,8 @@ public class LoginActivityUITest {
      */
     @Test
     public void usernameInputTextTest() throws Exception {
-        onView(withId(R.id.txtUsername)).perform(typeText(usernameInputTestText));
-        closeSoftKeyboard();
-        onView(withId(R.id.txtUsername)).check(matches(withText(usernameInputTestText)));
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.txtUsername)).check(matches(withText(testUser.getUsername())));
     }
 
     /**
@@ -77,6 +77,7 @@ public class LoginActivityUITest {
     @Test
     public void passwordEmptyTest() throws Exception {
         onView(withId(R.id.txtPassword)).check(matches(withText("")));
+        onView(withId(R.id.btnSignIn)).check(matches(not(isEnabled())));
     }
 
     /**
@@ -86,9 +87,8 @@ public class LoginActivityUITest {
      */
     @Test
     public void passwordInputTextTest() throws Exception {
-        onView(withId(R.id.txtPassword)).perform(typeText(passwordInputTestText));
-        closeSoftKeyboard();
-        onView(withId(R.id.txtPassword)).check(matches(withText(passwordInputTestText)));
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()), closeSoftKeyboard());
+        onView(withId(R.id.txtPassword)).check(matches(withText(testUser.getPassword())));
     }
 
     /**
@@ -98,24 +98,14 @@ public class LoginActivityUITest {
      */
     @Test
     public void signInSuccessTest() throws Exception {
-        //generate a test user and add it to the user accounts list
-        final User testUser = TestingHelper.createTestUser();
-
-        //use the user information to populate the controls
         AccountManager.createUser(testUser, null);
-        sleep(1000);
-
-        Log.d("signInSuccessTestDebug", "Test account created...populating controls");
+        sleep(250);
 
         //use the user information to populate the controls
-        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
-        closeSoftKeyboard();
-        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
-        closeSoftKeyboard();
-
-        Log.d("signInSuccessTestDebug", "Controls populated, performing click...");
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()), closeSoftKeyboard());
         onView(withId(R.id.btnSignIn)).perform(click());
-        sleep(1000);
+        sleep(250);
 
         intended(hasComponent(MainActivity.class.getName()));
 
@@ -131,9 +121,6 @@ public class LoginActivityUITest {
      */
     @Test
     public void signInInvalidUserTest() throws Exception {
-        //generate a test user and add it to the user accounts list
-        final User testUser = TestingHelper.createTestUser();
-
         //ensure the test account does not exist
         AccountManager.deleteUser(testUser, new BooleanResultListener() {
             @Override
@@ -141,18 +128,11 @@ public class LoginActivityUITest {
             }
         });
 
-        Log.d("signInInvalidUserTest", "Populating controls");
-
         //use the user information to populate the controls
-        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
-        closeSoftKeyboard();
-        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
-        closeSoftKeyboard();
-
-        Log.d("signInInvalidUserTest", "Controls populated, performing click...");
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()), closeSoftKeyboard());
         onView(withId(R.id.btnSignIn)).perform(click());
-
-        sleep(3000);
+        sleep(250);
 
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.loginFailure)));
     }
@@ -164,18 +144,11 @@ public class LoginActivityUITest {
      */
     @Test
     public void accountRegisterSuccessTest() throws Exception {
-        //create a test user to register
-        final User testUser = TestingHelper.createTestUser();
-        final Activity loginActivity = intentsTestRule.getActivity();
-
         //populate controls with login information
-        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
-        closeSoftKeyboard();
-        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
-        closeSoftKeyboard();
-
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()), closeSoftKeyboard());
         onView(withId(R.id.btnRegister)).perform(click());
-        sleep(1000);
+        sleep(250);
 
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountCreated)));
 
@@ -189,20 +162,13 @@ public class LoginActivityUITest {
      */
     @Test
     public void accountRegisterFailureTest() throws Exception {
-        //create a test user to register
-        final User testUser = TestingHelper.createTestUser();
-        final Activity loginActivity = intentsTestRule.getActivity();
-
         AccountManager.createUser(testUser, null);
 
         //populate controls with login information
-        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()));
-        closeSoftKeyboard();
-        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()));
-        closeSoftKeyboard();
-
+        onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()), closeSoftKeyboard());
+        onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()), closeSoftKeyboard());
         onView(withId(R.id.btnRegister)).perform(click());
-        sleep(1000);
+        sleep(250);
 
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountNotCreated)));
 
