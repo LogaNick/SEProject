@@ -7,10 +7,10 @@
         <item>Hours</item>
     </string-array>
     <string name="ButtonText_SignIn">Sign In</string>
-    <string name="ButtonText_RegisterAccount">Register one here...</string>
-    <string name="TextView_NoAccount">Don\'t have an account?</string>
+    <string name="ButtonText_RegisterAccount">Create New Account</string>
+    <string name="TextView_NoAccount">Enter details to create new account</string>
     <string name="TextView_WelcomeBack">We missed you, sign in below!</string>
-    <string name="loginSuccess">Welcome back!</string>
+    <string name="loginSuccess">We\'re logging you in!</string>
     <string name="loginFailure">Invalid username or password.</string>
     <string name="ButtonText_SignOut">Sign Out</string>
     <string name="accountCreated">Account created.</string>
@@ -91,4 +91,11 @@
     <string name="search_for_team_members_hint">Search other users</string>
     <string name="action_quit_team">Quit team</string>
     <string name="search_results">Search Results</string>
+    <string name="hint_login_enter_username">Enter username...</string>
+    <string name="hint_login_enter_password">Enter password...</string>
+    <string name="appName">AtheleteMonitor</string>
+    <string name="content_desc_dal_logo">Dalhousie University</string>
+    <string name="register_account">Create Account</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_title_create_new_account">New Account Confirmation</string>
 </resources>

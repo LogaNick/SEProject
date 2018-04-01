@@ -148,9 +148,9 @@ public class LoginActivityTest {
         onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()), closeSoftKeyboard());
         onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()), closeSoftKeyboard());
         onView(withId(R.id.btnRegister)).perform(click());
-        sleep(250);
-
-        onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountCreated)));
+        onView(withText(R.string.register_account)).perform(click());
+        sleep(1000);
+        intended(hasComponent(MainActivity.class.getName()));
 
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
@@ -168,10 +168,12 @@ public class LoginActivityTest {
         onView(withId(R.id.txtUsername)).perform(typeText(testUser.getUsername()), closeSoftKeyboard());
         onView(withId(R.id.txtPassword)).perform(typeText(testUser.getPassword()), closeSoftKeyboard());
         onView(withId(R.id.btnRegister)).perform(click());
+        onView(withText(R.string.cancel)).perform(click());
+        onView(withId(R.id.btnRegister)).perform(click());
+        onView(withText(R.string.register_account)).perform(click());
+
         sleep(250);
-
         onView(withId(R.id.lblMessage)).check(matches(withText(R.string.accountNotCreated)));
-
         AccountManager.deleteUser(testUser, TestingHelper.assertTrueBooleanResult());
     }
 }
