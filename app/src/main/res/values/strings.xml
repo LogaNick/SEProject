@@ -17,6 +17,11 @@
     <string name="accountCreated">Account created.</string>
     <string name="accountNotCreated">Cannot create account.</string>
     <string name="activity_main_user_information">User Info</string>
+    <string name="activity_main_teams">Teams</string>
+    <string name="activity_main_goals">Goals</string>
+    <string name="activity_main_recorded_workouts">Run Now</string>
+    <string name="activity_main_workouts">Workouts</string>
+    <string name="activity_main_exercises">Exercises</string>
     <string name="activity_main_record">Record</string>
     <string name="title_activity_user_information">User Information</string>
     <string name="title_activity_user_information_edit">Edit User Information</string>

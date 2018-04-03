@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/goToRecordWorkoutActivity"
+            android:title="@string/activity_main_recorded_workouts" />
+        <item
+            android:id="@+id/goToTeamActivity"
+            android:title="@string/activity_main_teams" />
+        <item
+            android:id="@+id/goToGoalsActivity"
+            android:title="@string/activity_main_goals" />
+        <item
+            android:id="@+id/goToWorkoutActivity"
+            android:title="@string/activity_main_workouts" />
+        <item
+            android:id="@+id/goToExerciseActivity"
+            android:title="@string/activity_main_exercises" />
+        <item
+            android:id="@+id/goToUserInfoActivity"
+            android:title="@string/activity_main_user_information" />
+    </group>
+</menu>
+<!--android:icon="@drawable/ic_menu_camera"-->

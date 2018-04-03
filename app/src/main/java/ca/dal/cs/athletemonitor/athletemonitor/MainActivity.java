@@ -2,6 +2,7 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -40,7 +41,53 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
 
+                        Intent nextIntent;
+
+                        switch (menuItem.getItemId()){
+                            case R.id.goToRecordWorkoutActivity:
+                                nextIntent = new Intent(MainActivity.this, RecordActivity.class);
+                                break;
+                            case R.id.goToExerciseActivity:
+                                nextIntent = new Intent(MainActivity.this, ExerciseActivity.class);
+                                break;
+                            case R.id.goToGoalsActivity:
+                                nextIntent = new Intent(MainActivity.this, GoalsActivity.class);
+                                break;
+                            case R.id.goToTeamActivity:
+                                nextIntent = new Intent(MainActivity.this, TeamActivity.class);
+                                break;
+                            case R.id.goToUserInfoActivity:
+                                Log.d("derp","deDerpdeDerp1000");
+                                nextIntent = new Intent(MainActivity.this, UserInformationActivity.class);
+                                break;
+                            case R.id.goToWorkoutActivity:
+                                nextIntent = new Intent(MainActivity.this, WorkoutActivity.class);
+                                break;
+                            default:
+                                Log.d("derp","deDerpdeDerp2000");
+                                nextIntent = new Intent(MainActivity.this, MainActivity.class);
+                        }
+
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        nextIntent.putExtra("user", activeUser);
+                        startActivityForResult(nextIntent,1);
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
 
 
 
@@ -57,77 +104,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        /*
-        // Add the exercise button click listener
-        findViewById(R.id.goToExerciseActivityButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent exerciseActivityIntent = new Intent(MainActivity.this, ExerciseActivity.class);
-                exerciseActivityIntent.putExtra("user", activeUser);
-                startActivity(exerciseActivityIntent);
-            }
-        });
 
-        findViewById(R.id.goToUserInfo).setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent userInfoIntent = new Intent(MainActivity.this, UserInformationActivity.class);
-                   userInfoIntent.putExtra("USER", activeUser);
-                   startActivity(userInfoIntent);
-               }
-		});
-
-        // Add the team button click listener
-        findViewById(R.id.teamButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent teamActivityIntent = new Intent(MainActivity.this, TeamActivity.class);
-                teamActivityIntent.putExtra("user", activeUser);
-                startActivity(teamActivityIntent);
-            }
-        });
-
-        // Add the workout button click listener
-        findViewById(R.id.goToWorkoutActivityButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
-                workoutActivityIntent.putExtra("user", activeUser);
-                startActivityForResult(workoutActivityIntent, 1);
-            }
-        });
-
-        // Add the goals button click listener
-        findViewById(R.id.goToGoalsActivityButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goalsActivityIntent = new Intent(MainActivity.this, GoalsActivity.class);
-                goalsActivityIntent.putExtra("user", activeUser);
-                startActivity(goalsActivityIntent);
-            }
-        });
-
-
-
-
-        findViewById(R.id.goToRecordButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent recordIntent = new Intent(MainActivity.this, RecordActivity.class);
-                recordIntent.putExtra("user", activeUser);
-                startActivity(recordIntent);
-            }
-        });
-
+    /*
         ((Switch)findViewById(R.id.onlineToggleSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 AccountManager.setOnline(isChecked);
             }
         });
+    */
 
-
-        */
     }
 
     @Override

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.NavigationViewActions;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -75,58 +77,82 @@ public class MainActivityTest {
         mActivityRule.launchActivity(intent);
     }
 
-    /**
-     * Test that the nav drawer button exists
-     * @throws Exception
-     */
-     @Test
-     public void testNavDrawerButtonExists() throws Exception{
-         onView(withId(android.R.id.home));
-     }
 
     /**
      * Test that the button to transfer to the exercise activity works.
      * @throws Exception
-     *//*
+     */
     @Test
     public void testGoToExerciseButton() throws Exception {
-        //Try to click the button.
-        onView(withId(R.id.goToExerciseActivityButton)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToExerciseActivity));
         intended(hasComponent(ExerciseActivity.class.getName()));
-    }*/
+    }
 
     /**
      * Assert that the User Info button takes you to User Info.
-     *//*
+     */
     @Test
     public void testGoToUserInfoButton() {
-        onView(withId(R.id.goToUserInfo)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToUserInfoActivity));
         intended(hasComponent(UserInformationActivity.class.getName()));
-    }*/
+    }
 
     /**
      * Assert that the Record button takes you to Record.
-     *//*
+     */
     @Test
     public void testGoToRecordButton() throws Exception{
-        onView(withId(R.id.goToRecordButton)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToRecordWorkoutActivity));
         intended(hasComponent(RecordActivity.class.getName()));
-    }*/
+    }
 
     /**
      * Assert that the Goals button takes you to Goals
      * @throws Exception
-     *//*
+     */
     @Test
     public void testGoalsButton() {
-        onView(withId(R.id.goToGoalsActivityButton)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToGoalsActivity));
         intended(hasComponent(GoalsActivity.class.getName()));
-    }*/
+    }
+
+    /**
+     * Test that the button to create a new team transfers to the new team activity.
+     * @throws Exception
+     */
+    @Test
+    public void testTeamButton() throws Exception {
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToTeamActivity));
+        intended(hasComponent(TeamActivity.class.getName()));
+    }
+
+    //TODO: UPDATE LOGOUT FUNCTIONALITY USING NAV DRAWER
+
+    /**
+     * Test that the online/offline toggle switch toggles offline status
+     */
+    @Test
+    public void testOnlineToggleSwitch() throws Exception {
+        sleep(1000);
+        assertTrue(AccountManager.isOnline());
+        onView(withId(R.id.onlineToggleSwitch)).perform(click());
+        assertFalse(AccountManager.isOnline());
+    }
 
     /**
      * Test that the sign out button works.
      * @throws Exception
-     *//*
+     */
     @Test
     public void testSignOutButton() throws Exception {
 
@@ -144,10 +170,10 @@ public class MainActivityTest {
         // Need to dismiss dialog before finishing
         onView(withText(R.string.logout_while_offline_warning_quit)).perform(click());
 
-        *//* During testing, there is no login activity to return to,
+        /* During testing, there is no login activity to return to,
          * so in its prior form, this test fails. To alleviate this,
-         * we simply check that the activity "isFinishing". *//*
-        assertTrue(mActivityRule.getActivity().isFinishing());
+         * we simply check that the activity "isFinishing". */
+                assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
     @Test
@@ -163,35 +189,22 @@ public class MainActivityTest {
 
         /* During testing, there is no login activity to return to,
          * so in its prior form, this test fails. To alleviate this,
-         * we simply check that the activity "isFinishing". *//*
+         * we simply check that the activity "isFinishing". */
         assertTrue(mActivityRule.getActivity().isFinishing());
     }
-
-    /**
-     * Test that the button to create a new team transfers to the new team activity.
-     * @throws Exception
-     *//*
-    @Test
-    public void testTeamButton() throws Exception {
-        // Try to click the button.
-        onView(withId(R.id.teamButton)).perform(click());
-        intended(hasComponent(TeamActivity.class.getName()));
-    }
-
-    /**
-     * Test that the online/offline toggle switch toggles offline status
-     *//*
-    @Test
-    public void testOnlineToggleSwitch() throws Exception {
-        sleep(1000);
-        assertTrue(AccountManager.isOnline());
-        onView(withId(R.id.onlineToggleSwitch)).perform(click());
-        assertFalse(AccountManager.isOnline());
-    } */
-
 
     @After
     public void release() {
         Intents.release();
     }
+
+    /**
+     * Helper for opening the navigation drawer
+     */
+    public void openNavDrawer(){
+        onView(withId(R.id.drawer_layout))
+                .perform(DrawerActions.open());
+    }
+
 }
+
