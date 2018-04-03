@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -65,23 +65,27 @@ public class MainActivity extends AppCompatActivity {
                                 nextIntent = new Intent(MainActivity.this, TeamActivity.class);
                                 break;
                             case R.id.goToUserInfoActivity:
-                                Log.d("derp","deDerpdeDerp1000");
                                 nextIntent = new Intent(MainActivity.this, UserInformationActivity.class);
                                 break;
                             case R.id.goToWorkoutActivity:
                                 nextIntent = new Intent(MainActivity.this, WorkoutActivity.class);
                                 break;
+                            case R.id.btnSignOut:
+                                logOutButtonHandler(navigationView);
+                                nextIntent = null;
+                                break;
                             default:
-                                Log.d("derp","deDerpdeDerp2000");
                                 nextIntent = new Intent(MainActivity.this, MainActivity.class);
                         }
 
                         // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
 
-                        nextIntent.putExtra("user", activeUser);
-                        startActivityForResult(nextIntent,1);
-
+                        if(nextIntent != null){
+                            nextIntent.putExtra("user", activeUser);
+                            startActivityForResult(nextIntent,1);
+                        }
+                        
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
 

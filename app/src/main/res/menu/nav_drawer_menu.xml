@@ -20,5 +20,10 @@
             android:id="@+id/goToUserInfoActivity"
             android:title="@string/activity_main_user_information" />
     </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/btnSignOut"
+            android:title="Sign Out" />
+    </group>
 </menu>
 <!--android:icon="@drawable/ic_menu_camera"-->
