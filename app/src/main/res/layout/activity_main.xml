@@ -13,47 +13,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/secondaryLightColor">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+                android:background="@color/primaryColor"/>
 
-            <LinearLayout
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/top_layout"
                 android:layout_width="match_parent"
-                android:layout_height="450dp"
-                android:layout_gravity="top"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@id/bottom_layout">
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                card_view:cardCornerRadius="12dp"
+                card_view:cardBackgroundColor="@color/secondaryColor">
 
-                <TextView
-                    android:id="@+id/textView4"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/featureBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    app:srcCompat="@android:drawable/ic_menu_add" />
+                    <TextView
+                        android:id="@+id/featureText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_main_featured_text"
+                        android:textAlignment="center"
+                        android:textSize="40sp"
+                        android:textColor="@color/secondaryTextColor"
+                        android:layout_margin="80dp"
+                        app:layout_constraintBottom_toTopOf="@id/featureBtn" />
 
-            </LinearLayout>
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/featureBtn"
+                        android:layout_width="77dp"
+                        android:layout_height="86dp"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        app:layout_constraintTop_toBottomOf="@id/featureText"
+                        app:srcCompat="@android:drawable/ic_menu_add"
+                        card_view:backgroundTint="@color/primaryDarkColor" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:id="@+id/bottom_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/top_layout">
@@ -61,14 +76,14 @@
                 <Switch
                     android:id="@+id/onlineToggleSwitch"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:checked="true"
                     android:gravity="right"
                     android:text="Online" />
 
             </LinearLayout>
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </FrameLayout>
 
