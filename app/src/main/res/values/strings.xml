@@ -19,7 +19,7 @@
     <string name="activity_main_user_information">User Info</string>
     <string name="activity_main_teams">Teams</string>
     <string name="activity_main_goals">Goals</string>
-    <string name="activity_main_recorded_workouts">Run Now</string>
+    <string name="activity_main_recorded_workouts">Record Workout</string>
     <string name="activity_main_workouts">Workouts</string>
     <string name="activity_main_exercises">Exercises</string>
     <string name="activity_main_record">Record</string>

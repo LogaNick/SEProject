@@ -19,8 +19,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.support.v7.widget.Toolbar;
 
-//TODO: ADD FEATURE BUTTON TO PASS TEST
-
 
 public class MainActivity extends AppCompatActivity {
     private User activeUser = null;
@@ -41,6 +39,16 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+
+        findViewById(R.id.featureBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent instantRecordingIntent = new Intent(MainActivity.this, RecordActivity.class);
+                instantRecordingIntent.putExtras(getIntent().getExtras());
+                instantRecordingIntent.putExtra("instantRecord", true);
+                startActivityForResult(instantRecordingIntent, 1);
+            }
+        });
 
         final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(

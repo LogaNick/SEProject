@@ -78,6 +78,15 @@ public class MainActivityTest {
     }
 
     /**
+     * Tests that the feature text appears.
+     * @throws Exception
+     */
+    @Test
+    public void testFeaturedTextAppears() throws Exception{
+        onView(withId(R.id.featureText)).check(matches(withText("Run Now.")));
+    }
+
+    /**
      * Tests the featured button on the page (in this case it will start recording a workout).
      * @throws Exception
      */
@@ -146,6 +155,7 @@ public class MainActivityTest {
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.goToTeamActivity));
         intended(hasComponent(TeamActivity.class.getName()));
+        sleep(1000);
     }
 
     /**
