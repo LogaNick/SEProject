@@ -21,6 +21,8 @@ public class UserInformation implements Parcelable {
     public String athleteType = "";
     /** A statement or goal of the user, to be displayed on their page */
     public String personalStatement = "";
+    /** Pictorial representing user on map, default to runner (9) */
+    public int imageId = 9;
 
     private UserInformation(UserInformationBuilder builder) {
         firstName = builder.firstName;
@@ -30,6 +32,7 @@ public class UserInformation implements Parcelable {
         weight = builder.weight;
         athleteType = builder.athleteType;
         personalStatement = builder.personalStatement;
+        imageId = builder.imageId;
     }
 
     private UserInformation(Parcel in) {
@@ -45,6 +48,7 @@ public class UserInformation implements Parcelable {
         age = ints[0];
         height = ints[1];
         weight = ints[2];
+        imageId = ints[3];
     }
 
     /** Default constructor, for parcelization */
@@ -60,7 +64,7 @@ public class UserInformation implements Parcelable {
     /** For parcelization */
     public void writeToParcel(Parcel out, int flags) {
         out.writeStringArray(new String[]{firstName, lastName, athleteType, personalStatement});
-        out.writeIntArray(new int[]{age, height, weight});
+        out.writeIntArray(new int[]{age, height, weight, imageId});
     }
 
     /** For parcelization */
@@ -105,6 +109,10 @@ public class UserInformation implements Parcelable {
         return personalStatement;
     }
 
+    public int getImageId() {
+        return imageId;
+    }
+
     /**
      * This class is used to instantiate a UserInformation object. It uses
      * the builder design pattern.
@@ -125,6 +133,8 @@ public class UserInformation implements Parcelable {
         private String athleteType = "";
         /** A statement or goal of the user, to be displayed on their page */
         private String personalStatement = "";
+        /** Pictorial representing user on map, default to runner (9) */
+        private int imageId = 9;
 
         /**
          * Instantiates a Builder for UserInformation
@@ -189,6 +199,16 @@ public class UserInformation implements Parcelable {
         public UserInformationBuilder personalStatement(String personalStatement) {
             if (personalStatement != null)
                 this.personalStatement = personalStatement;
+            return this;
+        }
+
+        /**
+         * Add the specified imageId to the UserInformation
+         * @param imageId the imageId of the user
+         * @return this builder, for method chaining
+         */
+        public UserInformationBuilder imageId(int imageId) {
+            this.imageId = imageId;
             return this;
         }
 
