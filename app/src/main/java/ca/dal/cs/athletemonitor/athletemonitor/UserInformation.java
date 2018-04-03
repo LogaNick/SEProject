@@ -43,7 +43,7 @@ public class UserInformation implements Parcelable {
         athleteType = strings[2];
         personalStatement = strings[3];
 
-        int[] ints = new int[3];
+        int[] ints = new int[4];
         in.readIntArray(ints);
         age = ints[0];
         height = ints[1];

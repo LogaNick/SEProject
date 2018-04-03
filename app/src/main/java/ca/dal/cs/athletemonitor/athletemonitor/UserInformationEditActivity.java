@@ -6,7 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -64,12 +66,16 @@ public class UserInformationEditActivity extends AppCompatActivity {
         EditText statementEditText = findViewById(R.id.statementEditText);
         String personalStatement = statementEditText.getText().toString();
 
+        Spinner imageIdSpinner = findViewById(R.id.imageIdSpinner);
+        int imageId = imageIdSpinner.getSelectedItemPosition();
+
         info = new UserInformation.UserInformationBuilder(firstName, lastName)
                 .age(age)
                 .height(height)
                 .weight(weight)
                 .athleteType(athleteType)
                 .personalStatement(personalStatement)
+                .imageId(imageId)
                 .build();
     }
 
@@ -98,6 +104,7 @@ public class UserInformationEditActivity extends AppCompatActivity {
         EditText heightEditText = findViewById(R.id.heightEditText);
         EditText weightEditText = findViewById(R.id.weightEditText);
         EditText athleteEditText = findViewById(R.id.athleteTypeEditText);
+        Spinner imageIdSpinner = findViewById(R.id.imageIdSpinner);
 
         nameEditText.setText(getString(
                 R.string.activity_user_information_format_name,
@@ -118,6 +125,11 @@ public class UserInformationEditActivity extends AppCompatActivity {
         athleteEditText.setText(
                 getString(R.string.activity_user_information_format_athlete_type, info.athleteType)
         );
+        ArrayAdapter<CharSequence> imageIdAdapter = ArrayAdapter.createFromResource(this,
+                R.array.ImageIds, android.R.layout.simple_spinner_dropdown_item);
+        imageIdAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        imageIdSpinner.setAdapter(imageIdAdapter);
+        imageIdSpinner.setSelection(info.imageId);
     }
 
     @Override

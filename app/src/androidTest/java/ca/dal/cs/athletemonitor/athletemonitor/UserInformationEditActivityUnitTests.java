@@ -40,6 +40,7 @@ public class UserInformationEditActivityUnitTests {
     private static final int TEST_WEIGHT = 98;
     private static final String TEST_ATHLETE_TYPE = "Hockey Player";
     private static final String TEST_STATEMENT = "I want to win the Stanley Cup";
+    private static final int TEST_IMAGE_ID = 13;
     private static final UserInformation TEST_INFO
             = new UserInformation.UserInformationBuilder(TEST_FIRST_NAME, TEST_LAST_NAME)
             .age(TEST_AGE)
@@ -201,14 +202,13 @@ public class UserInformationEditActivityUnitTests {
 
     @Test
     public void editUserImage() {
-        //TODO
-//        onView(withId(R.id.imageSpinner)).perform(click());
-//        onData(anything()).atPosition(0/*TODO????*/).perform(click());
-//
-//        onView(withId(R.id.saveInfo)).perform(click());
-//        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
-//        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
-//        assertEquals(info.getImageId(), 0/*TODO????*/);
+        onView(withId(R.id.imageIdSpinner)).perform(click());
+        onData(anything()).atPosition(13).perform(click());
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getImageId(), TEST_IMAGE_ID);
     }
 
 }

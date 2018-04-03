@@ -26,6 +26,7 @@
     <string name="activity_user_information_height">Height:</string>
     <string name="activity_user_information_weight">Weight:</string>
     <string name="activity_user_information_athlete_type">Athlete Type:</string>
+    <string name="activity_user_information_user_image">User Image:</string>
     <!--These are format strings in the UI-->
     <string name="activity_user_information_format_name">%s %s</string>
     <string name="activity_user_information_format_statement">%s</string>
@@ -33,6 +34,7 @@
     <string name="activity_user_information_format_height">%d cm</string>
     <string name="activity_user_information_format_weight">%d kg</string>
     <string name="activity_user_information_format_athlete_type">%s</string>
+    <string name="activity_user_information_format_user_image">%s</string>
     <!--These are default strings in the UI-->
     <string name="activity_user_information_default_name">Your Name</string>
     <string name="activity_user_information_default_statement">Your Personal Statement</string>
@@ -40,6 +42,7 @@
     <string name="activity_user_information_default_height">0 cm</string>
     <string name="activity_user_information_default_weight">0 kg</string>
     <string name="activity_user_information_default_athlete_type">Athlete</string>
+    <string name="activity_user_information_default_user_image">Run</string>
     <!--These strings are for testing-->
     <string name="user_information_test_first_name">Auston</string>
     <string name="user_information_test_last_name">Matthews</string>
