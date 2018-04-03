@@ -34,6 +34,7 @@ public class MapsActivityUnitTests {
     /** The default image ID is R.drawable.ic_map_run */
     private static final int DEFAULT_IMAGE_VALUE = 9;
     private static final String TEST_USERNAME = "testauston";
+    private static final String TEST_FRIEND = "testzachary";
 
     @Rule
     public ActivityTestRule<MapsActivity> mapsActivityTestRule =
@@ -45,8 +46,8 @@ public class MapsActivityUnitTests {
         DatabaseReference myRef
                 = db.getReference("user_locations");
 
-        UserLocation zLoc = new UserLocation("testzachary", System.currentTimeMillis(), 0, 0.0, 0.0);
-        myRef.child("testzachary").setValue(zLoc);
+        UserLocation zLoc = new UserLocation(TEST_FRIEND, System.currentTimeMillis(), 0, 0.0, 0.0);
+        myRef.child(TEST_FRIEND).setValue(zLoc);
     }
 
     @Before
@@ -178,7 +179,7 @@ public class MapsActivityUnitTests {
         DatabaseReference myRef
                 = db.getReference("user_locations");
 
-        myRef.child("testzachary").setValue(null);
+        myRef.child(TEST_FRIEND).setValue(null);
     }
 
 }
