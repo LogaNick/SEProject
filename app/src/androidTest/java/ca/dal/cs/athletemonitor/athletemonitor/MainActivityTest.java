@@ -77,6 +77,18 @@ public class MainActivityTest {
         mActivityRule.launchActivity(intent);
     }
 
+    /**
+     * Tests the featured button on the page (in this case it will start recording a workout).
+     * @throws Exception
+     */
+    @Test
+    public void testFeaturedActivityButton() throws Exception{
+        onView(withId(R.id.featureBtn))
+                .perform(click());
+        intended(hasComponent(RecordActivity.class.getName()));
+        onView(withId(R.id.pause_button))
+                .perform(click());
+    }
 
     /**
      * Test that the button to transfer to the exercise activity works.
@@ -136,18 +148,16 @@ public class MainActivityTest {
         intended(hasComponent(TeamActivity.class.getName()));
     }
 
-    //TODO: UPDATE LOGOUT FUNCTIONALITY USING NAV DRAWER
-
     /**
      * Test that the online/offline toggle switch toggles offline status
-     *//*
+     */
     @Test
     public void testOnlineToggleSwitch() throws Exception {
         sleep(1000);
         assertTrue(AccountManager.isOnline());
         onView(withId(R.id.onlineToggleSwitch)).perform(click());
         assertFalse(AccountManager.isOnline());
-    }*/
+    }
 
     /**
      * Test that the sign out button works.
@@ -170,7 +180,7 @@ public class MainActivityTest {
         AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
 
         // Need to dismiss dialog before finishing
-        //onView(withText(R.string.logout_while_offline_warning_quit)).perform(click());
+        onView(withText(R.string.logout_while_offline_warning_quit)).perform(click());
 
         /* During testing, there is no login activity to return to,
          * so in its prior form, this test fails. To alleviate this,

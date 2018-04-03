@@ -19,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.support.v7.widget.Toolbar;
 
+//TODO: ADD FEATURE BUTTON TO PASS TEST
 
 
 public class MainActivity extends AppCompatActivity {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                             nextIntent.putExtra("user", activeUser);
                             startActivityForResult(nextIntent,1);
                         }
-                        
+
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments here
 
@@ -109,14 +110,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    /*
+
         ((Switch)findViewById(R.id.onlineToggleSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 AccountManager.setOnline(isChecked);
             }
         });
-    */
+
 
     }
 
