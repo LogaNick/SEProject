@@ -14,13 +14,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
-import android.widget.ToggleButton;
 
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -82,7 +80,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
 
             if(isPublishing){
-                UserLocation userlocation = new UserLocation(location.getTime(),user.getUsername(), 7, location.getLatitude(), location.getLongitude());
+                UserLocation userlocation = new UserLocation(user.getUsername(),location.getTime(),7, location.getLatitude(), location.getLongitude());
                 updateLocationData(userlocation);
             }
 
@@ -315,7 +313,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
     private static void updateLocationData(final UserLocation userLocation){
-        final String username = userLocation.getUserLocationName();
+        final String username = userLocation.getUsername();
         final FirebaseDatabase db = FirebaseDatabase.getInstance();
         final DatabaseReference userLocationRef
                 = db.getReference("user_locations" );
