@@ -1,29 +1,31 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+
+import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 
 /**
  * The TeamManager class manages Team data in Firebase
  */
 
-public class TeamManager {
+public abstract class TeamManager {
     /**
      * Listener interface for receiving team invitations.
      *
      * Callers of userExists must implement this listener interface.
      */
-    public interface TeamInvitationListener {
+    public interface TeamListListener {
         void onInvitationsPopulated(ArrayList<Team> invitations);
+    }
+
+    public interface JoinRequestListener {
+        void onRequestsPopulated(ArrayList<String> requests);
     }
 
     /**
@@ -34,8 +36,6 @@ public class TeamManager {
     public interface TeamPopulatedListener {
         void onTeamPopulated(Team team);
     }
-
-    private TeamManager() {}
 
     /**
      * Submit team data to firebase
@@ -48,12 +48,16 @@ public class TeamManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference teamsReference = database.getReference("teams");
 
+        //generate a new business id
+        team.setId(teamsReference.push().getKey());
+
         // Submit the team to the database
-        teamsReference.child(team.getName()).setValue(team);
+        teamsReference.child(team.getId()).setValue(team);
 
         // TODO check whether the team was successfully created (for example, does not already exist)
         return true;
     }
+
     /**
      This method invite a user to a team.
 
@@ -81,7 +85,6 @@ public class TeamManager {
 
             }
         });
-
     }
 
     /**
@@ -92,7 +95,7 @@ public class TeamManager {
      * @param user User to check for team invitations
      * @param listener Callback to receive list of invitations
      */
-    public static void getTeamInvites(User user, final TeamInvitationListener listener) {
+    public static void getTeamInvites(User user, final TeamListListener listener) {
         final ArrayList<Team> teamInvitations = new ArrayList<>();
 
         // retrieve database reference to the teams
@@ -124,19 +127,22 @@ public class TeamManager {
         });
     }
 
+    /**
+     * Retrieves a team from firebase for accessing the list of team members
+     *
+     * @param team Team to access
+     * @param listener Callback to pass information to
+     */
     public static void getTeamMembers(final Team team, final TeamPopulatedListener listener) {
         // retrieve database reference to the teams
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference teamsReference = database.getReference("users/" + team.getOwner());
+        DatabaseReference teamsReference = database.getReference("teams/" + team.getId());
 
         teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // return an empty list if no records found
-                User teamOwner = dataSnapshot.getValue(User.class);
-
                 if (dataSnapshot.exists()) {
-                    listener.onTeamPopulated(teamOwner.getUserTeams().get(teamOwner.getUserTeams().indexOf(team)));
+                    listener.onTeamPopulated(dataSnapshot.getValue(Team.class));
                     return;
                 } else {
                     listener.onTeamPopulated(null);
@@ -150,6 +156,13 @@ public class TeamManager {
         });
     }
 
+    /**
+     * Updates team membership based on whether the user accepted or declined the invitation
+     *
+     * @param user User responding to an invitation
+     * @param team Team associated with the invitation
+     * @param accepted Whether or not the user accepted or declined.  True if accepted, otherwise false
+     */
     public static void handleInvitation(final User user, final Team team, boolean accepted) {
         // retrieve database reference to the teams
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -159,17 +172,7 @@ public class TeamManager {
             teamOwnerReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    // return an empty list if no records found
-                    User teamOwner = dataSnapshot.getValue(User.class);
-                    Team ownersTeam = teamOwner.getUserTeams().get(teamOwner.getUserTeams().indexOf(team));
-
-                    ownersTeam.addTeamMembers(user.getUsername());
-
-                    DatabaseReference teamReference = database.getReference("users/" + team.getOwner() + "/userTeams/");
-                    teamReference.child(String.valueOf(teamOwner.getUserTeams().indexOf(team))).setValue(team);
-
-                    ownersTeam.getTeamMembers();
-
+                    TeamManager.addMemberToTeam(team, user);
                 }
 
                 @Override
@@ -199,11 +202,205 @@ public class TeamManager {
 
             }
         });
+    }
 
+    /**
+     * Removes the user from the specified team.
+     *
+     * @param team Team that user belongs to
+     * @param user User to be removed
+     */
+    public static void removeMemberFromTeam(Team team, final User user) {
+        // retrieve database reference to the teams
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference teamsReference = database.getReference("teams/" + team.getId() + "/teamMembers");
 
+        teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> members = dataSnapshot.getChildren();
+
+                    for (DataSnapshot member : members) {
+                        if (((String)member.getValue()).equals(user.getUsername())) {
+                            teamsReference.child(member.getKey()).removeValue();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Adds the user to the specified team.
+     *
+     * @param team Team that user belongs to
+     * @param user User to be removed
+     */
+    public static void addMemberToTeam(Team team, final User user) {
+        // retrieve database reference to the teams
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference teamsReference = database.getReference("teams/" + team.getId());
+
+        teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Team team = dataSnapshot.getValue(Team.class);
+                    team.addTeamMember(user.getUsername());
+
+                    teamsReference.setValue(team);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void updateTeam(Team team, final BooleanResultListener listener) {
+        if(AccountManager.isOnline()) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference usersReference = database.getReference("teams/" + team.getId());
+            usersReference.setValue(team, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    listener.onResult(databaseError == null);
+                }
+            });
+        } else {
+            listener.onResult(false);
+        }
 
     }
 
+    /**
+     * Creates a request to join a team
+     *
+     * @param team Team to be joined
+     * @param user User requesting to join the team
+     */
+    public static void requestToJoinTeam(final Team team, final User user){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference joinRequestsReference = database.getReference("join_requests/" + team.getId());
+        //attempt to write the data
 
+        joinRequestsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                joinRequestsReference.child(user.getUsername()).setValue(System.currentTimeMillis());
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Retrieves a list of join requests for the specified team.  Returns a list of usernames
+     * of users requesting to join the team through the callback.  If no requests exist then the
+     * returned list is empty.
+     *
+     * @param team Team to lookup
+     * @param listener Callback to receive list of requests if they exist
+     */
+    public static void getJoinRequests(Team team, final JoinRequestListener listener) {
+        final ArrayList<String> joinRequests = new ArrayList<>();
+
+        // retrieve database reference
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference teamsReference = database.getReference("join_requests/" + team.getId());
+
+        teamsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // return an empty list if no records found
+                if (dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> invitations = dataSnapshot.getChildren();
+
+                    for (DataSnapshot invitation : invitations) {
+                        joinRequests.add(invitation.getKey());
+                    }
+                }
+
+                listener.onRequestsPopulated(joinRequests);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * Updates team membership based on whether the owner accepted or declined a request to join
+     *
+     * @param team Team associated with the join request
+     * @param requester Username of the user requesting to join
+     * @param accepted Whether or not the user accepted or declined.  True if accepted, otherwise false
+     */
+    public static void handleRequestToJoin(final Team team, final String requester, final boolean accepted) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference teamReference = database.getReference("teams/" + team.getId());
+
+        teamReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                database.getReference("users/" + requester).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            User requestingUser = dataSnapshot.getValue(User.class);
+
+                            if (accepted) {
+                                TeamManager.addMemberToTeam(team, requestingUser);
+                            }
+
+                            // retrieve database reference to the teams
+                            final DatabaseReference joinRequests = database.getReference("join_requests/" + team.getId());
+
+                            joinRequests.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Iterable<DataSnapshot> requests = dataSnapshot.getChildren();
+
+                                    for (DataSnapshot request : requests) {
+                                        if (request.getKey().equals(requester)) {
+                                            joinRequests.child(request.getKey()).removeValue();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

@@ -1,6 +1,5 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
-
 import android.content.Intent;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.filters.LargeTest;
@@ -15,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -24,10 +24,10 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Espresso Test for the CreateTeam Activity.
@@ -39,6 +39,10 @@ public class CreateTeamActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Intent for launching activity
+     */
     private static Intent intent = new Intent();
 
     @Rule
@@ -58,7 +62,8 @@ public class CreateTeamActivityTest {
 
     /**
      * Clean up test environment after this test set has run
-     * @throws Exception
+     *
+     * @throws Exception General exceptions
      */
     @AfterClass
     public static void cleanupEnvironment() throws Exception {
@@ -77,11 +82,11 @@ public class CreateTeamActivityTest {
 
     /**
      * Test that the proper button and fields exist.
-     * @throws Exception
+     *
+     * @throws Exception General exceptions
      */
     @Test
     public void testProperFieldsExist() throws Exception {
-        //Try to get the fields and button.
         onView(withId(R.id.newTeamName));
         onView(withId(R.id.newTeamMotto));
         onView(withId(R.id.submitTeamButton));
@@ -89,6 +94,8 @@ public class CreateTeamActivityTest {
 
     /**
      * Test that the submit new team button is disabled if the fields are invalid
+     *
+     * @throws Exception General exceptions
      */
     @Test
     public void testSubmitButtonDisabled(){
@@ -97,12 +104,13 @@ public class CreateTeamActivityTest {
 
     /**
      * Test that the submit new team button is enabled if the fields are valid
+     *
+     * @throws Exception General exceptions
      */
     @Test
     public void testSubmitButtonEnabled() throws Exception {
         onView(withId(R.id.newTeamName)).perform(typeText("testteam"));
         onView(withId(R.id.newTeamMotto)).perform(typeText("testmotto"), closeSoftKeyboard());
-
         onView(withId(R.id.submitTeamButton)).check(matches(isEnabled()));
     }
 
@@ -113,22 +121,12 @@ public class CreateTeamActivityTest {
      */
     @Test
     public void testOnCreateTeamButtonClick() throws Exception {
-        onView(withId(R.id.newTeamName)).perform(typeText("testteam"));
-        onView(withId(R.id.newTeamMotto)).perform(typeText("testmotto"), closeSoftKeyboard());
-
-        //Try to click the button.
+        final Team testTeam = TestingHelper.createTestTeam(testUser.getUsername());
+        onView(withId(R.id.newTeamName)).perform(typeText(testTeam.getName()));
+        onView(withId(R.id.newTeamMotto)).perform(typeText(testTeam.getMotto()), closeSoftKeyboard());
         onView(withId(R.id.submitTeamButton)).perform(click());
-        //test that the team was created in the database
-        AccountManager.getUser(testUser.getUsername(), new AccountManager.UserObjectListener() {
-            @Override
-            public void onUserPopulated(User user) {
-                assertNotNull(user);
-
-                assertTrue(user.getUserTeams().contains(
-                        new Team("testteam", "testmotto", user.getUsername())));
-            }
-        });
 
         intended(hasComponent(TeamActivity.class.getName()));
+        onData(is(withText(testTeam.getName())));
     }
 }

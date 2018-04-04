@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Edit the team -->
+    <item android:id="@+id/action_edit_team"
+        android:title="@string/action_edit_team"
+        app:showAsAction = "never"
+        />
+
+    <!-- Invite a user to join the team -->
+    <item android:id="@+id/action_invite_user"
+        android:title="@string/action_invite_user"
+        app:showAsAction="collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
+
+    <!-- Quit team -->
+    <item android:id="@+id/action_quit_team"
+        android:title="@string/action_quit_team"
+        app:showAsAction="never"/>
+
+
+
+</menu>

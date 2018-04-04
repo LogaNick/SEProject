@@ -2,95 +2,133 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayoutContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ca.dal.cs.athletemonitor.athletemonitor.LoginActivity">
 
-    <Button
-        android:id="@+id/btnSignIn"
-        android:layout_width="211dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:onClick="signInClick"
-        android:text="@string/ButtonText_SignIn"
-        app:layout_constraintBottom_toTopOf="@+id/lblRegisterPrompt"
-        app:layout_constraintHorizontal_bias="0.502"
+    <View
+        android:id="@+id/separatorBar"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/much_darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.564" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblMessage" />
+
+    <Button
+        android:id="@+id/btnSignIn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="signInClick"
+        android:text="@string/ButtonText_SignIn"
+        app:layout_constraintEnd_toEndOf="@+id/txtPassword"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/txtPassword"
+        app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
     <EditText
         android:id="@+id/txtUsername"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter username..."
+        android:hint="@string/hint_login_enter_username"
         android:inputType="textPersonName"
         android:singleLine="true"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/txtPassword"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
         android:id="@+id/txtPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter password..."
+        android:hint="@string/hint_login_enter_password"
         android:inputType="textPassword"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/btnSignIn"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintEnd_toEndOf="@+id/txtUsername"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/txtUsername"
+        app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
 
     <TextView
         android:id="@+id/lblRegisterPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="4dp"
         android:text="@string/TextView_NoAccount"
-        app:layout_constraintBottom_toTopOf="@+id/btnRegister"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separatorBar" />
 
     <Button
         android:id="@+id/btnRegister"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         android:onClick="onRegisterButtonClick"
         android:text="@string/ButtonText_RegisterAccount"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/txtPassword"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/txtPassword"
+        app:layout_constraintTop_toBottomOf="@+id/lblRegisterPrompt" />
+
+    <TextView
+        android:id="@+id/lblMessage"
+        android:layout_width="352dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/content_desc_dal_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/dal_logo" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:clickable="false"
-        android:text="@string/TextView_WelcomeBack"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/audiowide"
+        android:text="@string/appName"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/txtUsername"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/lblMessage"
-        android:layout_width="352dp"
-        android:layout_height="104dp"
-        android:layout_marginTop="8dp"
-        android:textAlignment="center"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
+        app:layout_constraintEnd_toEndOf="@+id/imageView" />
 </android.support.constraint.ConstraintLayout>
