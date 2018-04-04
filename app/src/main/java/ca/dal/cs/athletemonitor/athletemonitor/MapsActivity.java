@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -95,6 +98,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
     };
+    private Runnable userLocRun = new Runnable() {
+        @Override
+        public void run() {
+            retrieveUserLocs();
+        }
+    };
+    private ScheduledExecutorService userLocationPool;
 
     /**
      * This class is used to allow a user to save their workout. It appears
@@ -162,7 +172,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         recordButton = findViewById(R.id.record_button);
         pauseButton = findViewById(R.id.pause_button);
 
-        retrieveUserLocs();
+        userLocationPool = Executors.newScheduledThreadPool(1);
+        userLocationPool.scheduleAtFixedRate(userLocRun, 0, 10, TimeUnit.SECONDS);
 
         if (checkForLocPermission()) {
             createLocationParameters();
@@ -184,6 +195,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> it = dataSnapshot.getChildren().iterator();
+                friendLocationList.clear();
                 while (it.hasNext()) {
                     UserLocation userLocation = it.next().getValue(UserLocation.class);
                     friendLocationList.add(userLocation);
@@ -253,6 +265,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onPause() {
         super.onPause();
 
+        userLocationPool.shutdownNow();
+
         if (locationProviderClient != null && !isRecording)
             locationProviderClient.removeLocationUpdates(locationCallback);
     }
@@ -264,6 +278,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onResume() {
         super.onResume();
+
+        userLocationPool = Executors.newScheduledThreadPool(1);
+        userLocationPool.scheduleAtFixedRate(userLocRun, 0, 30, TimeUnit.SECONDS);
 
         if (!isRecording) {
             if (checkForLocPermission()) {
@@ -460,6 +477,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     protected ArrayList<UserLocation> getFriendLocationList() {
         return friendLocationList;
+    }
+
+    /**
+     * This method gets the userLocationPool field
+     * @return the userLocationPool field
+     */
+    protected ExecutorService getUserLocationPool() {
+        return userLocationPool;
     }
 
 }

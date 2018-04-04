@@ -173,6 +173,12 @@ public class MapsActivityUnitTests {
         }
     }
 
+    @Test
+    public void checkUpdateThread() {
+        assertFalse(mapsActivityTestRule.getActivity().getUserLocationPool().isShutdown());
+        assertFalse(mapsActivityTestRule.getActivity().getUserLocationPool().isTerminated());
+    }
+
     @AfterClass
     public static void teardownTestLoc() {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
