@@ -56,8 +56,7 @@ public class RecordActivityUnitTests {
         onView(withId(R.id.record_button)).perform(click());
         try {
             Thread.sleep(2000);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         onView(withId(R.id.record_button)).perform(click());
@@ -87,8 +86,7 @@ public class RecordActivityUnitTests {
         onView(withId(R.id.pause_button)).perform(click());
         try {
             Thread.sleep(2000);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         onView(withId(R.id.pause_button)).perform(click());
@@ -121,11 +119,9 @@ public class RecordActivityUnitTests {
             dev.sleep();
             Thread.sleep(2000);
             dev.wakeUp();
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             e.printStackTrace();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
@@ -139,14 +135,5 @@ public class RecordActivityUnitTests {
     public void toggleChange() {
         onView(withId(R.id.toggle_report)).perform(click());
         onView(withId(R.id.toggle_report)).check(matches(isChecked()));
-    }
-
-    /**
-     * Test if the data are published on firebase.
-     */
-    @Test
-    public void publishReport(){
-        onView(withId(R.id.toggle_report)).perform(click());
-        //Check if firebase has our location.
     }
 }
