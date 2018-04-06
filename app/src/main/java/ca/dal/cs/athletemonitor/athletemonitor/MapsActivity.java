@@ -68,6 +68,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private long timeWhenStopped = 0L;
     private User user;
+    private UserInformation userInformation;
     private boolean isRecording = false;
     private boolean isPaused = false;
 
@@ -90,8 +91,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Location location = locationResult.getLastLocation();
             LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
 
-            if(isPublishing){
-                UserLocation userlocation = new UserLocation(user.getUsername(),location.getTime(),7, location.getLatitude(), location.getLongitude());
+            if (isPublishing) {
+                UserLocation userlocation =
+                        new UserLocation(
+                                user.getUsername(),
+                                location.getTime(),
+                                userInformation != null ? userInformation.getImageId() : 9,
+                                location.getLatitude(),
+                                location.getLongitude()
+                        );
                 updateLocationData(userlocation);
             }
 
@@ -196,6 +204,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
 
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef
+                = db.getReference(getString(R.string.activity_user_information_firebase, user.getUsername()));
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userInformation = dataSnapshot.getValue(UserInformation.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("MAPS", "DB call to UserInfo cancelled");
+            }
+        });
 
         Switch toggle = (Switch) findViewById(R.id.toggle_report);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
