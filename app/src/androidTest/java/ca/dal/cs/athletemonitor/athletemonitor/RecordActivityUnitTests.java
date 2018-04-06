@@ -13,6 +13,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -55,8 +56,7 @@ public class RecordActivityUnitTests {
         onView(withId(R.id.record_button)).perform(click());
         try {
             Thread.sleep(2000);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         onView(withId(R.id.record_button)).perform(click());
@@ -86,8 +86,7 @@ public class RecordActivityUnitTests {
         onView(withId(R.id.pause_button)).perform(click());
         try {
             Thread.sleep(2000);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         onView(withId(R.id.pause_button)).perform(click());
@@ -120,15 +119,21 @@ public class RecordActivityUnitTests {
             dev.sleep();
             Thread.sleep(2000);
             dev.wakeUp();
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             e.printStackTrace();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
         assertTrue(recordActivityTestRule.getActivity().getIsRecording());
     }
 
+    /**
+     * Test if the toggle changes
+     */
+    @Test
+    public void toggleChange() {
+        onView(withId(R.id.toggle_report)).perform(click());
+        onView(withId(R.id.toggle_report)).check(matches(isChecked()));
+    }
 }
