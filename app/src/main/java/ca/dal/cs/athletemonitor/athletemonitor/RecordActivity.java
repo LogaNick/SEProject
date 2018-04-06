@@ -180,7 +180,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isPublishing = isChecked;
-                }
+            }
         });
     }
 
@@ -327,11 +327,12 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private boolean checkForLocPermission() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-        private void requestLocationUpdates() {
-            try {
+    private void requestLocationUpdates() {
+        try {
             locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
         } catch (SecurityException e) {
             e.printStackTrace();
