@@ -179,12 +179,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         Switch toggle = (Switch) findViewById(R.id.toggle_report);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    isPublishing = true;
-                } else {
-                    isPublishing = false;
+                isPublishing = isChecked;
                 }
-            }
         });
     }
 
@@ -317,23 +313,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         final FirebaseDatabase db = FirebaseDatabase.getInstance();
         final DatabaseReference userLocationRef
                 = db.getReference("user_locations" );
-
-        userLocationRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(username)) {
-                    userLocationRef.child(username).setValue(username);
-                }
-
-                DatabaseReference userLocatReference = db.getReference("user_locations/" + username);
-                userLocatReference.setValue(userLocation);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        userLocationRef.child(username).setValue(userLocation);
     }
 
     private static void saveToFirebase(String dbRef, long time, List<Location> locationList) {
@@ -347,13 +327,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private boolean checkForLocPermission() {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-            else
-                return true;
-        }
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
 
         private void requestLocationUpdates() {
             try {
