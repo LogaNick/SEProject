@@ -16,7 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Switch;
 
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,8 +31,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -56,6 +61,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     private User user;
     private boolean isRecording = false;
     private boolean isPaused = false;
+
+    private boolean isPublishing = false;
+
     private ArrayList<Location> locationList = new ArrayList<>();
     private Polyline currentRoute = null;
     private GoogleMap mMap;
@@ -70,6 +78,11 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
             Location location = locationResult.getLastLocation();
             LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+
+            if(isPublishing){
+                UserLocation userlocation = new UserLocation(user.getUsername(),location.getTime(),7, location.getLatitude(), location.getLongitude());
+                updateLocationData(userlocation);
+            }
 
             if (isRecording && !isPaused) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
@@ -165,6 +178,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
         if (instantRecord)
             toggleRecordStatus(null);
+
+        Switch toggle = (Switch) findViewById(R.id.toggle_report);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isPublishing = isChecked;
+            }
+        });
     }
 
     private void requestLocPermissions() {
@@ -290,6 +310,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 
+
+    private static void updateLocationData(final UserLocation userLocation){
+        final String username = userLocation.getUsername();
+        final FirebaseDatabase db = FirebaseDatabase.getInstance();
+        final DatabaseReference userLocationRef
+                = db.getReference("user_locations" );
+        userLocationRef.child(username).setValue(userLocation);
+    }
+
     private static void saveToFirebase(String dbRef, long time, List<Location> locationList) {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference myRef
@@ -301,12 +330,8 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private boolean checkForLocPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        else
-            return true;
+        return ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestLocationUpdates() {

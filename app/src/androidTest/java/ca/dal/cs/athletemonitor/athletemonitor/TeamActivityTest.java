@@ -1,39 +1,38 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.Intent;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import android.util.Log;
-
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 /**
  * Test class for Team Activity
@@ -44,6 +43,11 @@ public class TeamActivityTest {
      * Test user for this test set
      */
     private static User testUser;
+
+    /**
+     * Test team for this test set
+     */
+    private static Team testTeam;
 
     /**
      * Intent used to launch the activity
@@ -62,6 +66,7 @@ public class TeamActivityTest {
     public void cleanupEnvironment() throws Exception {
         AccountManager.setUserLoginState(testUser.getUsername(), false);
         AccountManager.deleteUser(testUser, null);
+        //TODO: TeamManager.deleteTeam(testTeam);
     }
 
     /**
@@ -70,6 +75,9 @@ public class TeamActivityTest {
     @Before
     public void launchActivity() throws Exception {
         testUser = TestingHelper.createTestUser();
+        testTeam = TestingHelper.createTestTeam(testUser.getUsername());
+
+        TeamManager.newTeam(testTeam);
         TestingHelper.setupTestEnvironment(intent, testUser);
         sleep(1000);
         mActivityRule.launchActivity(intent);
@@ -82,10 +90,8 @@ public class TeamActivityTest {
      */
     @Test
     public void testCorrectComponentsTest() throws Exception {
-        //Try to get the button.
-        onView(withId(R.id.createTeamButton));
-        onView(withId(R.id.teamLayoutScrollView));
-        onView(withId(R.id.teamLinearLayout));
+        onView(withId(R.id.teamList));
+        onView(withId(R.id.toolbar));
     }
 
     /**
@@ -94,9 +100,10 @@ public class TeamActivityTest {
      * @throws Exception General exception
      */
     @Test
-    public void testGoCreateTeamButton() throws Exception {
+    public void testCreateTeamButton() throws Exception {
         //Try to click the button.
-        onView(withId(R.id.createTeamButton)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_create_team)).perform(click());
         intended(hasComponent(CreateTeamActivity.class.getName()));
     }
 
@@ -108,9 +115,8 @@ public class TeamActivityTest {
      */
     @Test
     public void testViewTeam() throws Exception{
-        Team testTeam = testUser.getUserTeams().get(0);
-        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText(testTeam.getName()))).perform(click());
-        onView(withText(testTeam.getName()));
+        onView(withId(R.id.teamList));
+        onData(is(withText(testTeam.getName())));
     }
 
     /**
@@ -119,15 +125,92 @@ public class TeamActivityTest {
      */
     @Test
     public void quitTeamTest() throws Exception {
-        Team testTeam = testUser.getUserTeams().get(0);
-        onView(allOf(withParent(withId(R.id.teamLinearLayout)),withText(testTeam.getName()))).perform(click());
-        onView(withText("Quit Team")).perform(click());
+        //create a team not owned by the test user and add the test user to the team
+        Team unownedTeam = TestingHelper.createTestTeam(TestingHelper.createTestUser().getUsername());
+        TeamManager.newTeam(unownedTeam);
+        TeamManager.addMemberToTeam(unownedTeam, testUser);
+        sleep(250);
 
-        try{
-            onView(withText(testTeam.getName())).check(matches(isDisplayed()));
-            fail();
-        }catch(NoMatchingViewException e){
-            // team not found, test is successful
-        }
+        //open the unowned team information, click the actions button and click quit team
+        onView(allOf(withText(unownedTeam.getOwner()))).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_quit_team)).perform(click());
+        onData(not(is(withText(unownedTeam.getName()))));
+    }
+
+    /**
+     * Tests that quit team option is not available for team owners
+     *
+     * @throws Exception
+     */
+    @Test
+    public void teamOwnerCannotQuitTeamTest() throws Exception {
+        onView(withText(testTeam.getName())).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(not(withText(R.string.action_quit_team)));
+    }
+
+    /**
+     * Tests that the action bar has the join team option
+     *
+     * @throws Exception
+     */
+    @Test
+    public void actionBarHasCorrectActions() throws Exception {
+       openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+       onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.action_join_team)));
+       onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.action_create_team)));
+    }
+
+    /**
+     * Tests that transfer ownership UI works
+     *
+     * @throws Exception
+     */
+    @Test
+    public void transferOwnerShipTestSuccess() throws Exception {
+        //create a test user to transfer ownership of a team to
+        User toBeNewOwner = TestingHelper.createTestUser();
+        AccountManager.createUser(toBeNewOwner);
+
+        //create a second team owned by the test user and add the second test user to the team
+        Team secondOwnedTeam = TestingHelper.createTestTeam(testUser.getUsername());
+        TeamManager.newTeam(secondOwnedTeam);
+        TeamManager.addMemberToTeam(secondOwnedTeam, toBeNewOwner);
+        sleep(2500);
+
+        //go to the team details and choose the newly added member
+        onView(withText(secondOwnedTeam.getName())).perform(click());
+        onView(withText(toBeNewOwner.getUsername())).perform(click());
+
+        //transfer ownership
+        onView(withText(R.string.action_transfer_ownership)).perform(click());
+        onView(withText("Yes")).perform(click());
+
+        AccountManager.deleteUser(testUser, null);
+        //TODO: clean up test teams
+    }
+
+    /**
+     * Tests requesting to join team functionality
+     *
+     * @throws Exception
+     */
+    @Test
+    public void requestToJoinTeamTest() throws Exception {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.action_join_team)).perform(click());
+
+        onView(withResourceName("search_src_text")).perform(
+                typeText(testTeam.getName()), pressImeActionButton());
+
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withText("Close")).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withText("Apply")).perform(click());
+        onView(withText("No")).perform(click());
+        onView(withText(testTeam.getName())).perform(click());
+        onView(withText("Apply")).perform(click());
+        onView(withText("Yes")).perform(click());
     }
 }

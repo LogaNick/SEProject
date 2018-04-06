@@ -8,10 +8,10 @@
     </string-array>
     <string name="open_nav_drawer">Home</string> <!-- refactor? -->
     <string name="ButtonText_SignIn">Sign In</string>
-    <string name="ButtonText_RegisterAccount">Register one here...</string>
-    <string name="TextView_NoAccount">Don\'t have an account?</string>
+    <string name="ButtonText_RegisterAccount">Create New Account</string>
+    <string name="TextView_NoAccount">Enter details to create new account</string>
     <string name="TextView_WelcomeBack">We missed you, sign in below!</string>
-    <string name="loginSuccess">Welcome back!</string>
+    <string name="loginSuccess">We\'re logging you in!</string>
     <string name="loginFailure">Invalid username or password.</string>
     <string name="ButtonText_SignOut">Sign Out</string>
     <string name="accountCreated">Account created.</string>
@@ -72,10 +72,39 @@
     <string name="logout_while_offline_warning_save">Save and quit</string>
     <string name="logout_while_offline_warning_quit">Quit</string>
     <string name="submitChanges">Submit Changes</string>
-    <string name="editTeam">Edit Team</string>
+
     <string name="sendInvite">Send Invitation</string>
-    <string name="inviteUser">Invite User</string>
-    <string name="transferOwnership">Transfer Ownership</string>
+
+
     <string name="ownershipTransferred">Ownership transferred.</string>
     <string name="ownershipTransferredFailed">Owner Transfer Failed</string>
+
+
+    <!-- Search Results -->
+    <string name="apply">Apply</string>
+
+    <!-- Team menu options -->
+    <string name="action_join_team">Join a team</string>
+    <string name="action_create_team">Create a team</string>
+    <string name="search_team_name_hint">Enter team name...</string>
+
+    <!-- Team details menu options -->
+    <string name="action_transfer_ownership">Transfer Ownership</string>
+    <string name="action_invite_user">Invite new member</string>
+    <string name="action_edit_team">Edit team</string>
+    <string name="your_team_name">Your Team Name</string>
+    <string name="your_team_motto">Your team motto</string>
+    <string name="team_members">Team Members</string>
+    <string name="name">Name</string>
+    <string name="last_online">last online:</string>
+    <string name="search_for_team_members_hint">Search other users</string>
+    <string name="action_quit_team">Quit team</string>
+    <string name="search_results">Search Results</string>
+    <string name="hint_login_enter_username">Enter username...</string>
+    <string name="hint_login_enter_password">Enter password...</string>
+    <string name="appName">AtheleteMonitor</string>
+    <string name="content_desc_dal_logo">Dalhousie University</string>
+    <string name="register_account">Create Account</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_title_create_new_account">New Account Confirmation</string>
 </resources>

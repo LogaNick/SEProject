@@ -11,7 +11,9 @@
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="0.1" />
+        android:layout_weight="0.1"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <LinearLayout
         android:id="@+id/layout_record_navigation"
@@ -56,5 +58,16 @@
             android:visibility="invisible" />
 
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/toggle_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:checked="false"
+        android:text="Publish Location"
+        app:layout_constraintBottom_toTopOf="@+id/layout_record_navigation"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
