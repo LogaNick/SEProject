@@ -3,27 +3,41 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/goToRecordWorkoutActivity"
-            android:title="@string/activity_main_recorded_workouts" />
+            android:title="@string/activity_main_recorded_workouts"
+            android:icon="@drawable/ic_directions_run_black_24dp"/>
         <item
             android:id="@+id/goToTeamActivity"
-            android:title="@string/activity_main_teams" />
+            android:title="@string/activity_main_teams"
+            android:icon="@drawable/ic_group_black_24dp"
+            />
         <item
             android:id="@+id/goToGoalsActivity"
-            android:title="@string/activity_main_goals" />
+            android:title="@string/activity_main_goals"
+            android:icon="@drawable/ic_check_box_black_24dp"
+            />
         <item
             android:id="@+id/goToWorkoutActivity"
-            android:title="@string/activity_main_workouts" />
+            android:title="@string/activity_main_workouts"
+            android:icon="@drawable/ic_fitness_center_black_24dp"
+            />
         <item
             android:id="@+id/goToExerciseActivity"
-            android:title="@string/activity_main_exercises" />
+            android:title="@string/activity_main_exercises"
+            android:icon="@drawable/ic_playlist_add_black_24dp"
+            />
         <item
             android:id="@+id/goToUserInfoActivity"
-            android:title="@string/activity_main_user_information" />
+            android:title="@string/activity_main_user_information"
+            android:icon="@drawable/ic_person_black_24dp"
+
+            />
     </group>
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/btnSignOut"
-            android:title="Sign Out" />
+            android:title="Sign Out"
+            android:icon="@drawable/ic_lock_outline_black_24dp"
+            />
     </group>
 </menu>
 <!--android:icon="@drawable/ic_menu_camera"-->

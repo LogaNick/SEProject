@@ -18,51 +18,94 @@
             android:layout_height="match_parent"
             android:background="@color/secondaryLightColor">
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/featureBtn"
+                android:layout_width="119dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center"
+
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="312dp"
+                android:clickable="true"
+                android:elevation="6dp"
+                app:backgroundTint="@color/primaryColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/primaryColor"/>
 
-
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintEnd_toEndOf="parent"
-                card_view:cardCornerRadius="12dp"
-                card_view:cardBackgroundColor="@color/secondaryColor">
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                card_view:cardBackgroundColor="@android:color/transparent"
+                card_view:cardCornerRadius="0dp"
+                card_view:cardElevation="2dp">
 
-                <LinearLayout
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    card_view:cardBackgroundColor="@color/secondaryColor"
+                    card_view:cardCornerRadius="12dp"
+                    card_view:cardElevation="0dp">
 
-                    <TextView
-                        android:id="@+id/featureText"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/activity_main_featured_text"
-                        android:textAlignment="center"
-                        android:textSize="40sp"
-                        android:textColor="@color/secondaryTextColor"
-                        android:layout_margin="80dp"
-                        app:layout_constraintBottom_toTopOf="@id/featureBtn" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/featureBtn"
-                        android:layout_width="77dp"
-                        android:layout_height="86dp"
-                        android:layout_gravity="center"
-                        android:clickable="true"
-                        app:layout_constraintTop_toBottomOf="@id/featureText"
-                        app:srcCompat="@android:drawable/ic_menu_add"
-                        card_view:backgroundTint="@color/primaryDarkColor" />
-                </LinearLayout>
+                        <!--
+                        <TextView
+                            android:id="@+id/motivationalText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/activity_main_motivational_text"
+                            android:paddingTop="60dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:textSize="30sp"
+                            android:textStyle="italic"
+                            />
 
+                        <TextView
+                            android:id="@+id/motivationalTextAuthor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/activity_main_motivational_text_author"
+                            android:textAlignment="textEnd"
+                            android:padding="10dp"
+                            /> -->
+
+                        <TextView
+                            android:id="@+id/featureText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="160dp"
+                            android:layout_marginLeft="80dp"
+                            android:layout_marginRight="80dp"
+                            android:layout_marginTop="80dp"
+                            android:paddingTop="80dp"
+                            android:text="@string/activity_main_featured_text"
+                            android:textAlignment="center"
+                            android:textColor="@color/primaryTextColor"
+                            android:textSize="40sp"
+                            app:layout_constraintBottom_toTopOf="@id/featureBtn" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
             </android.support.v7.widget.CardView>
 
             <LinearLayout
@@ -74,13 +117,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/top_layout">
 
                 <Switch
+                    android:theme="@style/SwitchTheme"
                     android:id="@+id/onlineToggleSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:checked="true"
                     android:gravity="right"
-                    android:text="Online" />
+                    android:text="Online"
+                    android:paddingTop="80dp"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="10dp"/>
 
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
@@ -94,7 +141,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:menu="@menu/nav_drawer_menu"
-        app:headerLayout="@layout/nav_header"></android.support.design.widget.NavigationView>
+        app:headerLayout="@layout/nav_header"
+        app:itemTextAppearance="@style/NavItemTheme"/>
 
 
 </android.support.v4.widget.DrawerLayout>

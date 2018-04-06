@@ -16,6 +16,8 @@
     <string name="ButtonText_SignOut">Sign Out</string>
     <string name="accountCreated">Account created.</string>
     <string name="accountNotCreated">Cannot create account.</string>
+    <string name="activity_main_motivational_text">\"I don\'t think limits\"</string>
+    <string name="activity_main_motivational_text_author">- Usain Bolt</string>
     <string name="activity_main_featured_text">Run Now.</string>
     <string name="activity_main_user_information">User Info</string>
     <string name="activity_main_teams">Teams</string>

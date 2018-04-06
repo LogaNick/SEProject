@@ -4,14 +4,15 @@
     android:layout_height="192dp"
     android:background="?attr/colorPrimaryDark"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:backgroundTint="@color/primaryColor"
     android:orientation="vertical"
-    android:gravity="bottom">
+    android:gravity="bottom"
+    android:elevation="2dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        style="@style/HeaderTextTheme"/>
 
 </LinearLayout>
