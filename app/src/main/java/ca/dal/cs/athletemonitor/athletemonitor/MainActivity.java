@@ -2,21 +2,110 @@ package ca.dal.cs.athletemonitor.athletemonitor;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.support.v7.widget.Toolbar;
+
 
 public class MainActivity extends AppCompatActivity {
     private User activeUser = null;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        //Initialize toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton runNow = findViewById(R.id.featureBtn);
+        runNow.setImageResource(R.drawable.ic_directions_run_black_24dp);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+
+        findViewById(R.id.featureBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent instantRecordingIntent = new Intent(MainActivity.this, RecordActivity.class);
+                instantRecordingIntent.putExtras(getIntent().getExtras());
+                instantRecordingIntent.putExtra("instantRecord", true);
+                startActivityForResult(instantRecordingIntent, 1);
+            }
+        });
+
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+
+                        Intent nextIntent;
+
+                        switch (menuItem.getItemId()){
+                            case R.id.goToRecordWorkoutActivity:
+                                nextIntent = new Intent(MainActivity.this, RecordActivity.class);
+                                break;
+                            case R.id.goToExerciseActivity:
+                                nextIntent = new Intent(MainActivity.this, ExerciseActivity.class);
+                                break;
+                            case R.id.goToGoalsActivity:
+                                nextIntent = new Intent(MainActivity.this, GoalsActivity.class);
+                                break;
+                            case R.id.goToTeamActivity:
+                                nextIntent = new Intent(MainActivity.this, TeamActivity.class);
+                                break;
+                            case R.id.goToUserInfoActivity:
+                                nextIntent = new Intent(MainActivity.this, UserInformationActivity.class);
+                                break;
+                            case R.id.goToWorkoutActivity:
+                                nextIntent = new Intent(MainActivity.this, WorkoutActivity.class);
+                                break;
+                            case R.id.btnSignOut:
+                                logOutButtonHandler(navigationView);
+                                nextIntent = null;
+                                break;
+                            default:
+                                nextIntent = new Intent(MainActivity.this, MainActivity.class);
+                        }
+
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        if(nextIntent != null){
+                            nextIntent.putExtra("user", activeUser);
+                            startActivityForResult(nextIntent,1);
+                        }
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
+
+
 
         // retrieve the extras passed by the intent, if there is a username then the user is logged
         // in.  If username doesn't exist, go to sign in.
@@ -26,60 +115,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(loginIntent);
         } else {
             activeUser = (User) extras.getSerializable("user");
-            ((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + activeUser.getUsername());
+            //((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + activeUser.getUsername());
         }
-
-        // Add the exercise button click listener
-        findViewById(R.id.goToExerciseActivityButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent exerciseActivityIntent = new Intent(MainActivity.this, ExerciseActivity.class);
-                exerciseActivityIntent.putExtra("user", activeUser);
-                startActivity(exerciseActivityIntent);
-            }
-        });
-
-        findViewById(R.id.goToUserInfo).setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent userInfoIntent = new Intent(MainActivity.this, UserInformationActivity.class);
-                   userInfoIntent.putExtra("USER", activeUser);
-                   startActivity(userInfoIntent);
-               }
-		});
-
-        // Add the team button click listener
-        findViewById(R.id.teamButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent teamActivityIntent = new Intent(MainActivity.this, TeamActivity.class);
-                teamActivityIntent.putExtra("user", activeUser);
-                startActivity(teamActivityIntent);
-            }
-        });
-
-        // Add the workout button click listener
-        findViewById(R.id.goToWorkoutActivityButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent workoutActivityIntent = new Intent(MainActivity.this, WorkoutActivity.class);
-                workoutActivityIntent.putExtra("user", activeUser);
-                startActivityForResult(workoutActivityIntent, 1);
-            }
-        });
-
-        // Add the goals button click listener
-        findViewById(R.id.goToGoalsActivityButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goalsActivityIntent = new Intent(MainActivity.this, GoalsActivity.class);
-                goalsActivityIntent.putExtra("user", activeUser);
-                startActivity(goalsActivityIntent);
-            }
-        });
-
-
-
 
         findViewById(R.id.goToRecordButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +133,20 @@ public class MainActivity extends AppCompatActivity {
                 AccountManager.setOnline(isChecked);
             }
         });
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Log.d("Reached Here 2", "derpdederp");
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        Log.d("Reached Here 3", "derpdederp");
+        return  super.onOptionsItemSelected(item);
     }
 
     /**

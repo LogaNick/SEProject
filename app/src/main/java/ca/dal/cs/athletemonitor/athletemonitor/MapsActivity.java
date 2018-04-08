@@ -203,6 +203,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
+        boolean instantRecord = intent.getBooleanExtra("instantRecord", false);
 
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference myRef
@@ -218,6 +219,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.e("MAPS", "DB call to UserInfo cancelled");
             }
         });
+        if (instantRecord)
+            toggleRecordStatus(null);
 
         Switch toggle = (Switch) findViewById(R.id.toggle_report);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
