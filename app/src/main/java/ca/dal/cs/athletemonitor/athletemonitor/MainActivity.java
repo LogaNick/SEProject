@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.featureBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent instantRecordingIntent = new Intent(MainActivity.this, RecordActivity.class);
+                Intent instantRecordingIntent = new Intent(MainActivity.this, MapsActivity.class);
                 instantRecordingIntent.putExtras(getIntent().getExtras());
                 instantRecordingIntent.putExtra("instantRecord", true);
                 startActivityForResult(instantRecordingIntent, 1);
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (menuItem.getItemId()){
                             case R.id.goToRecordWorkoutActivity:
-                                nextIntent = new Intent(MainActivity.this, RecordActivity.class);
+                                nextIntent = new Intent(MainActivity.this, MapsActivity.class);
                                 break;
                             case R.id.goToExerciseActivity:
                                 nextIntent = new Intent(MainActivity.this, ExerciseActivity.class);
@@ -105,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
-
         // retrieve the extras passed by the intent, if there is a username then the user is logged
         // in.  If username doesn't exist, go to sign in.
         final Bundle extras = getIntent().getExtras();
@@ -118,22 +116,12 @@ public class MainActivity extends AppCompatActivity {
             //((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + activeUser.getUsername());
         }
 
-        findViewById(R.id.goToRecordButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent recordIntent = new Intent(MainActivity.this, MapsActivity.class);
-                recordIntent.putExtra("user", activeUser);
-                startActivity(recordIntent);
-            }
-        });
-
         ((Switch)findViewById(R.id.onlineToggleSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 AccountManager.setOnline(isChecked);
             }
         });
-
 
     }
 
