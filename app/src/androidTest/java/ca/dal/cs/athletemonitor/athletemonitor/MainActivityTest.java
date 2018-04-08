@@ -92,7 +92,7 @@ public class MainActivityTest {
     public void testFeaturedActivityButton() throws Exception{
         onView(withId(R.id.featureBtn))
                 .perform(click());
-        intended(hasComponent(RecordActivity.class.getName()));
+        intended(hasComponent(MapsActivity.class.getName()));
         onView(withId(R.id.pause_button))
                 .perform(click());
     }

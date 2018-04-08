@@ -25,7 +25,7 @@ public class UserInformationActivity extends AppCompatActivity {
     private UserInformation info = new UserInformation();
 
     protected static final String USER_INFORMATION = "USER_INFORMATION";
-    protected static final String USER = "USER";
+    protected static final String USER = "user";
 
     private static final String TAG = "UserInformationActivity";
     private static final int EDIT_INFO_REQUEST = 0;

@@ -59,7 +59,7 @@ public class TeamDetailActivityTest {
 
     @Rule
     public IntentsTestRule<TeamActivity> mActivityRule =
-            new IntentsTestRule(TeamActivity.class, false, false);
+            new IntentsTestRule<>(TeamActivity.class, false, false);
 
     /**
      * Set up test environment for this test set
@@ -226,7 +226,7 @@ public class TeamDetailActivityTest {
         User requestingUser = TestingHelper.createTestUser();
         AccountManager.createUser(requestingUser);
         TeamManager.requestToJoinTeam(testTeam, requestingUser);
-        sleep(250);
+        sleep(1000);
         pressBack();
 
         onView(allOf(withText("There is a request to join your team!")));
@@ -246,7 +246,7 @@ public class TeamDetailActivityTest {
         User requestingUser = TestingHelper.createTestUser();
         AccountManager.createUser(requestingUser);
         TeamManager.requestToJoinTeam(testTeam, requestingUser);
-        sleep(250);
+        sleep(1000);
         pressBack();
 
         onView(allOf(withText("There is a request to join your team!")));
