@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
@@ -25,7 +26,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
@@ -38,15 +43,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
  * This class contains functionality to allow a user to record their workout
  * while it is in progress.
  */
-public class RecordActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int ACCESS_FINE_LOCATION = 0;
     private static final String DATABASE_REFERENCE = "DATABASE_REFERENCE";
@@ -59,12 +68,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private long timeWhenStopped = 0L;
     private User user;
+    private UserInformation userInformation;
     private boolean isRecording = false;
     private boolean isPaused = false;
 
     private boolean isPublishing = false;
 
     private ArrayList<Location> locationList = new ArrayList<>();
+    private ArrayList<Marker> markerList = new ArrayList<>();
+    private ArrayList<UserLocation> friendLocationList = new ArrayList<>();
     private Polyline currentRoute = null;
     private GoogleMap mMap;
     private FusedLocationProviderClient locationProviderClient;
@@ -79,8 +91,15 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             Location location = locationResult.getLastLocation();
             LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
 
-            if(isPublishing){
-                UserLocation userlocation = new UserLocation(user.getUsername(),location.getTime(),7, location.getLatitude(), location.getLongitude());
+            if (isPublishing) {
+                UserLocation userlocation =
+                        new UserLocation(
+                                user.getUsername(),
+                                location.getTime(),
+                                userInformation != null ? userInformation.getImageId() : 9,
+                                location.getLatitude(),
+                                location.getLongitude()
+                        );
                 updateLocationData(userlocation);
             }
 
@@ -97,6 +116,13 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         }
     };
+    private Runnable userLocRun = new Runnable() {
+        @Override
+        public void run() {
+            retrieveUserLocs();
+        }
+    };
+    private ScheduledExecutorService userLocationPool;
 
     /**
      * This class is used to allow a user to save their workout. It appears
@@ -113,9 +139,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(R.string.activity_record_save_dialog);
+            builder.setMessage(R.string.activity_maps_save_dialog);
             builder.setPositiveButton(
-                    R.string.activity_record_yes,
+                    R.string.activity_maps_yes,
                     new DialogInterface.OnClickListener() {
                         /**
                          * This method saves the user's workout to Firebase.
@@ -133,7 +159,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
             );
             builder.setNegativeButton(
-                    R.string.activity_record_no,
+                    R.string.activity_maps_no,
                     new DialogInterface.OnClickListener() {
                         /**
                          * This method does not do anything, but must be here as per the interface.
@@ -155,7 +181,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+        setContentView(R.layout.activity_maps);
 
         ((MapFragment) getFragmentManager().findFragmentById(R.id.record_map))
                 .getMapAsync(this);
@@ -163,6 +189,9 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         timer = findViewById(R.id.record_chrono);
         recordButton = findViewById(R.id.record_button);
         pauseButton = findViewById(R.id.pause_button);
+
+        userLocationPool = Executors.newScheduledThreadPool(1);
+        userLocationPool.scheduleAtFixedRate(userLocRun, 0, 10, TimeUnit.SECONDS);
 
         if (checkForLocPermission()) {
             createLocationParameters();
@@ -176,6 +205,20 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         user = (User) intent.getSerializableExtra("user");
         boolean instantRecord = intent.getBooleanExtra("instantRecord", false);
 
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef
+                = db.getReference(getString(R.string.activity_user_information_firebase, user.getUsername()));
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userInformation = dataSnapshot.getValue(UserInformation.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("MAPS", "DB call to UserInfo cancelled");
+            }
+        });
         if (instantRecord)
             toggleRecordStatus(null);
 
@@ -185,6 +228,54 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
                 isPublishing = isChecked;
             }
         });
+    }
+
+    private void retrieveUserLocs() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef
+                = db.getReference(getString(R.string.activity_maps_firebase_user_locs));
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> it = dataSnapshot.getChildren().iterator();
+                friendLocationList.clear();
+                while (it.hasNext()) {
+                    UserLocation userLocation = it.next().getValue(UserLocation.class);
+                    friendLocationList.add(userLocation);
+                }
+                populateMapMarkers();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("MAPSACTIVITY", "Failed to retrieve user locs from Firebase.");
+            }
+        });
+    }
+
+    private void populateMapMarkers() {
+        for (Marker m : markerList) {
+            m.remove();
+        }
+
+        for (UserLocation userLoc : friendLocationList) {
+            if (!userLoc.getUsername().equals(user.getUsername()) && isRecent(userLoc.getTime())) {
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(
+                        UserLocation.IMAGE_ID_MAP.get(userLoc.getImageId())
+                );
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(userLoc.getLat(), userLoc.getLon()))
+                        .icon(icon)
+                        .title(userLoc.getUsername())
+                );
+                markerList.add(marker);
+            }
+        }
+    }
+
+    private boolean isRecent(long time) {
+        long elapsed = System.currentTimeMillis() - time;
+        return TimeUnit.MILLISECONDS.toHours(elapsed) < 2;
     }
 
     private void requestLocPermissions() {
@@ -210,24 +301,29 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     /**
-     * This method is used when this RecordActivity is paused to possibly
+     * This method is used when this MapsActivity is paused to possibly
      * disable location updates.
      */
     @Override
     public void onPause() {
         super.onPause();
 
+        userLocationPool.shutdownNow();
+
         if (locationProviderClient != null && !isRecording)
             locationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     /**
-     * This method is used when this RecordActivity is resumed to possibly
+     * This method is used when this MapsActivity is resumed to possibly
      * enable location updates.
      */
     @Override
     public void onResume() {
         super.onResume();
+
+        userLocationPool = Executors.newScheduledThreadPool(1);
+        userLocationPool.scheduleAtFixedRate(userLocRun, 0, 30, TimeUnit.SECONDS);
 
         if (!isRecording) {
             if (checkForLocPermission()) {
@@ -295,7 +391,7 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
             RecordSaveFragment fragment = new RecordSaveFragment();
             Bundle bundle = new Bundle();
-            bundle.putString(DATABASE_REFERENCE, getString(R.string.activity_record_firebase, user.getUsername()));
+            bundle.putString(DATABASE_REFERENCE, getString(R.string.activity_maps_firebase, user.getUsername()));
             bundle.putLong(ELAPSED_TIME, time);
             bundle.putParcelableArrayList(LOCATION_LIST, locationList);
             fragment.setArguments(bundle);
@@ -303,7 +399,10 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         else {
             locationList = new ArrayList<>();
-            currentRoute = null;
+            if (currentRoute != null) {
+                currentRoute.remove();
+                currentRoute = null;
+            }
             timer.setBase(SystemClock.elapsedRealtime());
             timer.start();
             pauseButton.setVisibility(View.VISIBLE);
@@ -410,6 +509,30 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
      */
     protected boolean getIsPaused() {
         return isPaused;
+    }
+
+    /**
+     * This method gets the markerList field
+     * @return the markerList field
+     */
+    protected ArrayList<Marker> getMarkerList() {
+        return markerList;
+    }
+
+    /**
+     * This method gets the friendLocationList field
+     * @return the friendLocationList field
+     */
+    protected ArrayList<UserLocation> getFriendLocationList() {
+        return friendLocationList;
+    }
+
+    /**
+     * This method gets the userLocationPool field
+     * @return the userLocationPool field
+     */
+    protected ExecutorService getUserLocationPool() {
+        return userLocationPool;
     }
 
 }

@@ -10,14 +10,12 @@ import android.support.test.espresso.contrib.NavigationViewActions;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ca.dal.cs.athletemonitor.athletemonitor.listeners.BooleanResultListener;
 import ca.dal.cs.athletemonitor.athletemonitor.testhelpers.TestingHelper;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -94,7 +92,7 @@ public class MainActivityTest {
     public void testFeaturedActivityButton() throws Exception{
         onView(withId(R.id.featureBtn))
                 .perform(click());
-        intended(hasComponent(RecordActivity.class.getName()));
+        intended(hasComponent(MapsActivity.class.getName()));
         onView(withId(R.id.pause_button))
                 .perform(click());
     }
@@ -130,7 +128,7 @@ public class MainActivityTest {
         openNavDrawer();
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.goToRecordWorkoutActivity));
-        intended(hasComponent(RecordActivity.class.getName()));
+        intended(hasComponent(MapsActivity.class.getName()));
     }
 
     /**
@@ -231,4 +229,3 @@ public class MainActivityTest {
     }
 
 }
-

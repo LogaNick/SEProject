@@ -5,9 +5,16 @@ import android.os.RemoteException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.uiautomator.UiDevice;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -21,20 +28,35 @@ import static org.junit.Assert.*;
 
 /**
  * This class contains tests which assert the correct functionality of the
- * Record Activity.
+ * Maps Activity.
  */
-public class RecordActivityUnitTests {
+public class MapsActivityUnitTests {
+
+    /** The default image ID is R.drawable.ic_map_run */
+    private static final int DEFAULT_IMAGE_VALUE = 9;
+    private static final String TEST_USERNAME = "testauston";
+    private static final String TEST_FRIEND = "testzachary";
 
     @Rule
-    public ActivityTestRule<RecordActivity> recordActivityTestRule =
-            new ActivityTestRule<RecordActivity>(RecordActivity.class, false, false);
+    public ActivityTestRule<MapsActivity> mapsActivityTestRule =
+            new ActivityTestRule<MapsActivity>(MapsActivity.class, false, false);
+
+    @BeforeClass
+    public static void initUserLoc() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef
+                = db.getReference("user_locations");
+
+        UserLocation zLoc = new UserLocation(TEST_FRIEND, System.currentTimeMillis(), 0, 0.0, 0.0);
+        myRef.child(TEST_FRIEND).setValue(zLoc);
+    }
 
     @Before
     public void init() {
         Intent intent = new Intent();
-        User user = new User("testauston", "leafs");
+        User user = new User(TEST_USERNAME, "leafs");
         intent.putExtra("user", user);
-        recordActivityTestRule.launchActivity(intent);
+        mapsActivityTestRule.launchActivity(intent);
     }
 
     /**
@@ -44,7 +66,7 @@ public class RecordActivityUnitTests {
     public void clickRecordStart() {
         onView(withId(R.id.record_button)).perform(click());
 
-        assertTrue(recordActivityTestRule.getActivity().getIsRecording());
+        assertTrue(mapsActivityTestRule.getActivity().getIsRecording());
     }
 
     /**
@@ -61,7 +83,7 @@ public class RecordActivityUnitTests {
         }
         onView(withId(R.id.record_button)).perform(click());
 
-        assertFalse(recordActivityTestRule.getActivity().getIsRecording());
+        assertFalse(mapsActivityTestRule.getActivity().getIsRecording());
     }
 
     /**
@@ -72,8 +94,8 @@ public class RecordActivityUnitTests {
         onView(withId(R.id.record_button)).perform(click());
         onView(withId(R.id.pause_button)).perform(click());
 
-        assertTrue(recordActivityTestRule.getActivity().getIsRecording());
-        assertTrue(recordActivityTestRule.getActivity().getIsPaused());
+        assertTrue(mapsActivityTestRule.getActivity().getIsRecording());
+        assertTrue(mapsActivityTestRule.getActivity().getIsPaused());
     }
 
     /**
@@ -91,8 +113,8 @@ public class RecordActivityUnitTests {
         }
         onView(withId(R.id.pause_button)).perform(click());
 
-        assertTrue(recordActivityTestRule.getActivity().getIsRecording());
-        assertFalse(recordActivityTestRule.getActivity().getIsPaused());
+        assertTrue(mapsActivityTestRule.getActivity().getIsRecording());
+        assertFalse(mapsActivityTestRule.getActivity().getIsPaused());
     }
 
     /**
@@ -104,7 +126,7 @@ public class RecordActivityUnitTests {
         onView(withId(R.id.record_button)).perform(click());
         onView(withId(R.id.record_button)).perform(click());
 
-        onView(withText(R.string.activity_record_save_dialog)).check(matches(isDisplayed()));
+        onView(withText(R.string.activity_maps_save_dialog)).check(matches(isDisplayed()));
     }
 
     /**
@@ -125,7 +147,42 @@ public class RecordActivityUnitTests {
             Thread.currentThread().interrupt();
         }
 
-        assertTrue(recordActivityTestRule.getActivity().getIsRecording());
+        assertTrue(mapsActivityTestRule.getActivity().getIsRecording());
+    }
+
+    @Test
+    public void displayUsers() {
+         assertTrue(!mapsActivityTestRule.getActivity().getMarkerList().isEmpty());
+    }
+
+    @Test
+    public void checkMarkerImage() {
+        ArrayList<UserLocation> friendLocationList =
+                mapsActivityTestRule.getActivity().getFriendLocationList();
+
+        if (!mapsActivityTestRule.getActivity().getFriendLocationList().isEmpty()) {
+            // choose a test user
+            for (UserLocation f : friendLocationList) {
+                if (f.getUsername().equals(TEST_USERNAME)) {
+                    assertTrue(f.getImageId() != DEFAULT_IMAGE_VALUE);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void checkUpdateThread() {
+        assertFalse(mapsActivityTestRule.getActivity().getUserLocationPool().isShutdown());
+        assertFalse(mapsActivityTestRule.getActivity().getUserLocationPool().isTerminated());
+    }
+
+    @AfterClass
+    public static void teardownTestLoc() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef
+                = db.getReference("user_locations");
+
+        myRef.child(TEST_FRIEND).setValue(null);
     }
 
     /**

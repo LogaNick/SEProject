@@ -12,7 +12,7 @@ public class UserLocation implements Parcelable {
 
     public static final SparseIntArray IMAGE_ID_MAP = new SparseIntArray();
 
-    /*static {
+    static {
         IMAGE_ID_MAP.put(0, R.drawable.ic_map_bicycle);
         IMAGE_ID_MAP.put(1, R.drawable.ic_map_face);
         IMAGE_ID_MAP.put(2, R.drawable.ic_map_film);
@@ -28,7 +28,7 @@ public class UserLocation implements Parcelable {
         IMAGE_ID_MAP.put(12, R.drawable.ic_map_walk);
         IMAGE_ID_MAP.put(13, R.drawable.ic_map_weight);
         IMAGE_ID_MAP.put(14, R.drawable.ic_map_wheelchair);
-    }*/
+    }
 
     private String username;
     private long time;

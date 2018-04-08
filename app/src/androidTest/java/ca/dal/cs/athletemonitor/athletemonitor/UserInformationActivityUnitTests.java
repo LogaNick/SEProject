@@ -14,6 +14,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER;
@@ -33,6 +34,7 @@ public class UserInformationActivityUnitTests {
     private static final int TEST_WEIGHT = 98;
     private static final String TEST_ATHLETE_TYPE = "Hockey Player";
     private static final String TEST_STATEMENT = "I want to win the Stanley Cup";
+    private static final String TEST_IMAGE_ID = "Weight";
 
     @Rule
     public IntentsTestRule<UserInformationActivity> uiIntentRule =
@@ -64,6 +66,7 @@ public class UserInformationActivityUnitTests {
         onView(withId(R.id.weightDisplayView)).check(matches(withText(TEST_WEIGHT + " kg")));
         onView(withId(R.id.athleteTypeDisplayView)).check(matches(withText(TEST_ATHLETE_TYPE)));
         onView(withId(R.id.statementTextView)).check(matches(withText(TEST_STATEMENT)));
+        onView(withId(R.id.imageIdDisplayView)).check(matches(withText(TEST_IMAGE_ID)));
     }
 
     /**

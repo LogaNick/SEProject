@@ -24,6 +24,7 @@ public class UserInformationUnitTests {
     private static final int TEST_WEIGHT = 98;
     private static final String TEST_ATHLETE_TYPE = "Hockey Player";
     private static final String TEST_STATEMENT = "I want to win the Stanley Cup";
+    private static final int TEST_IMAGE_ID = 9;
     private static final String TEST_EMPTY_STRING = "";
 
     /**
@@ -85,6 +86,7 @@ public class UserInformationUnitTests {
         assertEquals(0, info.age);
         assertEquals(0, info.weight);
         assertEquals(0, info.height);
+        assertEquals(TEST_IMAGE_ID, info.imageId);
     }
 
     /**
@@ -99,6 +101,7 @@ public class UserInformationUnitTests {
                         .weight(TEST_WEIGHT)
                         .athleteType(TEST_ATHLETE_TYPE)
                         .personalStatement(TEST_STATEMENT)
+                        .imageId(TEST_IMAGE_ID)
                         .build();
 
         assertEquals(TEST_FIRST_NAME, info.firstName);
@@ -131,6 +134,7 @@ public class UserInformationUnitTests {
         assertEquals(TEST_WEIGHT, info.getWeight());
         assertEquals(TEST_ATHLETE_TYPE, info.getAthleteType());
         assertEquals(TEST_STATEMENT, info.getPersonalStatement());
+        assertEquals(TEST_IMAGE_ID, info.getImageId());
     }
 
     /**

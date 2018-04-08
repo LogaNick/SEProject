@@ -25,7 +25,7 @@ public class UserInformationActivity extends AppCompatActivity {
     private UserInformation info = new UserInformation();
 
     protected static final String USER_INFORMATION = "USER_INFORMATION";
-    protected static final String USER = "USER";
+    protected static final String USER = "user";
 
     private static final String TAG = "UserInformationActivity";
     private static final int EDIT_INFO_REQUEST = 0;
@@ -75,6 +75,7 @@ public class UserInformationActivity extends AppCompatActivity {
         TextView heightDisplayView = findViewById(R.id.heightDisplayView);
         TextView weightDisplayView = findViewById(R.id.weightDisplayView);
         TextView athleteTypeDisplayView = findViewById(R.id.athleteTypeDisplayView);
+        TextView imageIdDisplayView = findViewById(R.id.imageIdDisplayView);
 
         nameView.setText(getString(
                 R.string.activity_user_information_format_name,
@@ -94,6 +95,10 @@ public class UserInformationActivity extends AppCompatActivity {
         );
         athleteTypeDisplayView.setText(
                 getString(R.string.activity_user_information_format_athlete_type, info.athleteType)
+        );
+        String[] imageArr = getResources().getStringArray(R.array.ImageIds);
+        imageIdDisplayView.setText(
+                getString(R.string.activity_user_information_format_user_image, imageArr[info.imageId])
         );
     }
 

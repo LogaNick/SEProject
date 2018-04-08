@@ -10,17 +10,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.app.Activity.RESULT_OK;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.USER_INFORMATION;
 import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivityUnitTests.TEST_ID;
+import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.*;
 
 /**
@@ -37,6 +40,7 @@ public class UserInformationEditActivityUnitTests {
     private static final int TEST_WEIGHT = 98;
     private static final String TEST_ATHLETE_TYPE = "Hockey Player";
     private static final String TEST_STATEMENT = "I want to win the Stanley Cup";
+    private static final int TEST_IMAGE_ID = 13;
     private static final UserInformation TEST_INFO
             = new UserInformation.UserInformationBuilder(TEST_FIRST_NAME, TEST_LAST_NAME)
             .age(TEST_AGE)
@@ -71,6 +75,8 @@ public class UserInformationEditActivityUnitTests {
         onView(withId(R.id.weightEditText)).check(matches(withText(TEST_WEIGHT + " kg")));
         onView(withId(R.id.athleteTypeEditText)).check(matches(withText(TEST_ATHLETE_TYPE)));
         onView(withId(R.id.statementEditText)).check(matches(withText(TEST_STATEMENT)));
+        //TODO
+//        onView(withId(R.id.imageSpinner)).check(matches(withContentDescription("ic_map_pizza")));
     }
 
     /**
@@ -192,6 +198,17 @@ public class UserInformationEditActivityUnitTests {
         Intent intent = uiEditIntentRule.getActivityResult().getResultData();
         UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
         assertEquals(info.getPersonalStatement(), TEST_STATEMENT);
+    }
+
+    @Test
+    public void editUserImage() {
+        onView(withId(R.id.imageIdSpinner)).perform(click());
+        onData(anything()).atPosition(13).perform(click());
+
+        onView(withId(R.id.saveInfo)).perform(click());
+        Intent intent = uiEditIntentRule.getActivityResult().getResultData();
+        UserInformation info = (UserInformation) intent.getExtras().get(USER_INFORMATION);
+        assertEquals(info.getImageId(), TEST_IMAGE_ID);
     }
 
 }

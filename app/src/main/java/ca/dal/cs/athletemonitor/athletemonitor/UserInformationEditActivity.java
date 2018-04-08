@@ -1,12 +1,19 @@
 package ca.dal.cs.athletemonitor.athletemonitor;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -23,6 +30,44 @@ import static ca.dal.cs.athletemonitor.athletemonitor.UserInformationActivity.US
  * This class allows the user to edit their personal information, and save it to Firebase.
  */
 public class UserInformationEditActivity extends AppCompatActivity {
+
+    /** This class allows for the display of text and an image. */
+    private class ImageIdAdapter extends ArrayAdapter<String> {
+
+        public ImageIdAdapter(Context context) {
+            super(context, android.R.layout.simple_spinner_item);
+            addAll(context.getResources().getStringArray(R.array.ImageIds));
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView label = (TextView) super.getView(position, convertView, parent);
+
+            label.setText(getResources().getStringArray(R.array.ImageIds)[position]);
+            Drawable icon = ResourcesCompat.getDrawable(getResources(), UserLocation.IMAGE_ID_MAP.get(position), null);
+            icon.setBounds(0, 0,icon.getIntrinsicWidth() / 2, icon.getIntrinsicHeight() / 2);
+            label.setPadding(10, 25 , 0, 0);
+            label.setCompoundDrawables(icon, null, null, null);
+            label.setCompoundDrawablePadding(10);
+
+            return label;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            TextView label = (TextView) super.getView(position, convertView, parent);
+
+            label.setText(getResources().getStringArray(R.array.ImageIds)[position]);
+            Drawable icon = ResourcesCompat.getDrawable(getResources(), UserLocation.IMAGE_ID_MAP.get(position), null);
+            icon.setBounds(0, 0,icon.getIntrinsicWidth() / 2, icon.getIntrinsicHeight() / 2);
+            label.setPadding(10, 25 , 0, 0);
+            label.setCompoundDrawables(icon, null, null, null);
+            label.setCompoundDrawablePadding(10);
+
+            return label;
+        }
+
+    }
 
     private User user;
     private UserInformation info;
@@ -64,12 +109,16 @@ public class UserInformationEditActivity extends AppCompatActivity {
         EditText statementEditText = findViewById(R.id.statementEditText);
         String personalStatement = statementEditText.getText().toString();
 
+        Spinner imageIdSpinner = findViewById(R.id.imageIdSpinner);
+        int imageId = imageIdSpinner.getSelectedItemPosition();
+
         info = new UserInformation.UserInformationBuilder(firstName, lastName)
                 .age(age)
                 .height(height)
                 .weight(weight)
                 .athleteType(athleteType)
                 .personalStatement(personalStatement)
+                .imageId(imageId)
                 .build();
     }
 
@@ -98,6 +147,7 @@ public class UserInformationEditActivity extends AppCompatActivity {
         EditText heightEditText = findViewById(R.id.heightEditText);
         EditText weightEditText = findViewById(R.id.weightEditText);
         EditText athleteEditText = findViewById(R.id.athleteTypeEditText);
+        Spinner imageIdSpinner = findViewById(R.id.imageIdSpinner);
 
         nameEditText.setText(getString(
                 R.string.activity_user_information_format_name,
@@ -118,6 +168,9 @@ public class UserInformationEditActivity extends AppCompatActivity {
         athleteEditText.setText(
                 getString(R.string.activity_user_information_format_athlete_type, info.athleteType)
         );
+        ImageIdAdapter imageIdAdapter = new ImageIdAdapter(this);
+        imageIdSpinner.setAdapter(imageIdAdapter);
+        imageIdSpinner.setSelection(info.imageId);
     }
 
     @Override
