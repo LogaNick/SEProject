@@ -174,7 +174,10 @@ public class RecordActivity extends AppCompatActivity implements OnMapReadyCallb
 
         Intent intent = getIntent();
         user = (User) intent.getSerializableExtra("user");
+        boolean instantRecord = intent.getBooleanExtra("instantRecord", false);
 
+        if (instantRecord)
+            toggleRecordStatus(null);
 
         Switch toggle = (Switch) findViewById(R.id.toggle_report);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

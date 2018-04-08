@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.NavigationViewActions;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -76,13 +78,36 @@ public class MainActivityTest {
     }
 
     /**
+     * Tests that the feature text appears.
+     * @throws Exception
+     */
+    @Test
+    public void testFeaturedTextAppears() throws Exception{
+        onView(withId(R.id.featureText)).check(matches(withText("Run Now.")));
+    }
+
+    /**
+     * Tests the featured button on the page (in this case it will start recording a workout).
+     * @throws Exception
+     */
+    @Test
+    public void testFeaturedActivityButton() throws Exception{
+        onView(withId(R.id.featureBtn))
+                .perform(click());
+        intended(hasComponent(RecordActivity.class.getName()));
+        onView(withId(R.id.pause_button))
+                .perform(click());
+    }
+
+    /**
      * Test that the button to transfer to the exercise activity works.
      * @throws Exception
      */
     @Test
     public void testGoToExerciseButton() throws Exception {
-        //Try to click the button.
-        onView(withId(R.id.goToExerciseActivityButton)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToExerciseActivity));
         intended(hasComponent(ExerciseActivity.class.getName()));
     }
 
@@ -91,7 +116,9 @@ public class MainActivityTest {
      */
     @Test
     public void testGoToUserInfoButton() {
-        onView(withId(R.id.goToUserInfo)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToUserInfoActivity));
         intended(hasComponent(UserInformationActivity.class.getName()));
     }
 
@@ -100,7 +127,9 @@ public class MainActivityTest {
      */
     @Test
     public void testGoToRecordButton() throws Exception{
-        onView(withId(R.id.goToRecordButton)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToRecordWorkoutActivity));
         intended(hasComponent(RecordActivity.class.getName()));
     }
 
@@ -110,8 +139,34 @@ public class MainActivityTest {
      */
     @Test
     public void testGoalsButton() {
-        onView(withId(R.id.goToGoalsActivityButton)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToGoalsActivity));
         intended(hasComponent(GoalsActivity.class.getName()));
+    }
+
+    /**
+     * Test that the button to create a new team transfers to the new team activity.
+     * @throws Exception
+     */
+    @Test
+    public void testTeamButton() throws Exception {
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.goToTeamActivity));
+        intended(hasComponent(TeamActivity.class.getName()));
+        sleep(1000);
+    }
+
+    /**
+     * Test that the online/offline toggle switch toggles offline status
+     */
+    @Test
+    public void testOnlineToggleSwitch() throws Exception {
+        sleep(1000);
+        assertTrue(AccountManager.isOnline());
+        onView(withId(R.id.onlineToggleSwitch)).perform(click());
+        assertFalse(AccountManager.isOnline());
     }
 
     /**
@@ -127,7 +182,9 @@ public class MainActivityTest {
         //Create an entry in the online_users node (in Firebase)
         AccountManager.setUserLoginState(testUser.getUsername(), false);
 
-        onView(withId(R.id.btnSignOut)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.btnSignOut));
 
         //check that Firebase has been updated
         AccountManager.isLoggedIn(testUser, TestingHelper.assertFalseBooleanResult());
@@ -138,14 +195,16 @@ public class MainActivityTest {
         /* During testing, there is no login activity to return to,
          * so in its prior form, this test fails. To alleviate this,
          * we simply check that the activity "isFinishing". */
-        assertTrue(mActivityRule.getActivity().isFinishing());
+                assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
     @Test
     public void testSignOutButtonOffline() throws Exception {
         AccountManager.setOnline(false);
 
-        onView(withId(R.id.btnSignOut)).perform(click());
+        openNavDrawer();
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.btnSignOut));
 
         onView(withText(R.string.logout_while_offline_warning)).check(matches(isDisplayed()));
         onView(withText(R.string.logout_while_offline_warning_save)).perform(click());
@@ -158,30 +217,18 @@ public class MainActivityTest {
         assertTrue(mActivityRule.getActivity().isFinishing());
     }
 
-    /**
-     * Test that the button to create a new team transfers to the new team activity.
-     * @throws Exception
-     */
-    @Test
-    public void testTeamButton() throws Exception {
-        // Try to click the button.
-        onView(withId(R.id.teamButton)).perform(click());
-        intended(hasComponent(TeamActivity.class.getName()));
-    }
-
-    /**
-     * Test that the online/offline toggle switch toggles offline status
-     */
-    @Test
-    public void testOnlineToggleSwitch() throws Exception {
-        sleep(1000);
-        assertTrue(AccountManager.isOnline());
-        onView(withId(R.id.onlineToggleSwitch)).perform(click());
-        assertFalse(AccountManager.isOnline());
-    }
-
     @After
     public void release() {
         Intents.release();
     }
+
+    /**
+     * Helper for opening the navigation drawer
+     */
+    public void openNavDrawer(){
+        onView(withId(R.id.drawer_layout))
+                .perform(DrawerActions.open());
+    }
+
 }
+

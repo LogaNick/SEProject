@@ -6,6 +6,7 @@
         <item>Minutes</item>
         <item>Hours</item>
     </string-array>
+    <string name="open_nav_drawer">Home</string> <!-- refactor? -->
     <string name="ButtonText_SignIn">Sign In</string>
     <string name="ButtonText_RegisterAccount">Create New Account</string>
     <string name="TextView_NoAccount">Enter details to create new account</string>
@@ -15,7 +16,15 @@
     <string name="ButtonText_SignOut">Sign Out</string>
     <string name="accountCreated">Account created.</string>
     <string name="accountNotCreated">Cannot create account.</string>
+    <string name="activity_main_motivational_text">\"I don\'t think limits\"</string>
+    <string name="activity_main_motivational_text_author">- Usain Bolt</string>
+    <string name="activity_main_featured_text">Run Now.</string>
     <string name="activity_main_user_information">User Info</string>
+    <string name="activity_main_teams">Teams</string>
+    <string name="activity_main_goals">Goals</string>
+    <string name="activity_main_recorded_workouts">Record Workout</string>
+    <string name="activity_main_workouts">Workouts</string>
+    <string name="activity_main_exercises">Exercises</string>
     <string name="activity_main_record">Record</string>
     <string name="title_activity_user_information">User Information</string>
     <string name="title_activity_user_information_edit">Edit User Information</string>
