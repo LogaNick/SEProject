@@ -10,18 +10,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.support.v7.widget.Toolbar;
 
-
+/**
+ * This class describes the main screen where users can choose an activity
+ * to interact with the application.
+ */
 public class MainActivity extends AppCompatActivity {
+
     private User activeUser = null;
     private DrawerLayout mDrawerLayout;
 
@@ -98,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
                             startActivityForResult(nextIntent,1);
                         }
 
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
-
                         return true;
                     }
                 });
@@ -113,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(loginIntent);
         } else {
             activeUser = (User) extras.getSerializable("user");
-            //((Button)this.findViewById(R.id.btnSignOut)).setText("Signout " + activeUser.getUsername());
         }
 
         ((Switch)findViewById(R.id.onlineToggleSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -127,14 +123,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case android.R.id.home:
-                Log.d("Reached Here 2", "derpdederp");
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
         }
-        Log.d("Reached Here 3", "derpdederp");
-        return  super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     /**

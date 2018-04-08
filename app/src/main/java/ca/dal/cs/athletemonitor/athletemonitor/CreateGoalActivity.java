@@ -28,9 +28,8 @@ public class CreateGoalActivity extends AppCompatActivity{
                 // Get the goal data from the fields
                 String name = ((TextView) findViewById(R.id.newGoalName)).getText().toString();
                 String description = ((TextView) findViewById(R.id.newGoalDescription)).getText().toString();
-                int time = 0;
 
-                ((Button)findViewById(R.id.newGoalSubmitButton)).setEnabled(false);
+                findViewById(R.id.newGoalSubmitButton).setEnabled(false);
                 // Add goal to user
                 user.addUserGoal(new Goal(name, description));
                 AccountManager.updateUser(user);
