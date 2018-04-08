@@ -488,9 +488,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onSuccess(Location location) {
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(16f));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(
-                        new LatLng(location.getLatitude(), location.getLongitude())
-                ));
+                if (location != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(
+                            new LatLng(location.getLatitude(), location.getLongitude())
+                    ));
+                }
             }
         });
     }
